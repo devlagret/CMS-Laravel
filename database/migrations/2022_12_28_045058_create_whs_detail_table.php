@@ -13,7 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('whs_detail', function (Blueprint $table) {
+            $table->id('id');
+            $table->string('manager_name',50);
+            $table->string('contact', 50);
+            $table->string('adress', 50);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('whs_detail');
     }
 };
