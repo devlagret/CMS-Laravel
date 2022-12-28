@@ -14,24 +14,23 @@ return new class extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id('product_id');
-            $table->string('Product_Code');
-            $table->string('Brand');
-            $table->string('Name');
-            $table->string('type');
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('category_id')->on('categories');
-            $table->string('buy_price');
-            $table->string('Price_Recomendation_from_Sup');
-            $table->string('Price_Recomendation');
-            $table->string('Profit_Margin');
-            $table->string('Entry_Date');
-            $table->string('Out_Date');
-            $table->string('Expiration_Date');
+            $table->id('id');
+            $table->string('product_id',50);
+            $table->string('product_code',50);
+            $table->string('brand',50);
+            $table->string('name',100);
+            $table->unsignedBigInteger('category_id',50);
+            $table->foreign('category_id')->references('category_id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('buy_price',20);
+            $table->string('price_rec',20);
+            $table->string('Profit_Margin',5);
+            $table->dateTime('Entry_Date',0);
+            $table->dateTime('Out_Date',0);
+            $table->date('Expiration_Date');
             $table->string('Description');
             $table->string('Property');
-            $table->unsignedBigInteger('supplier_id');
-            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers');
+            $table->unsignedBigInteger('supplier_id',50);
+            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('casade')->onUpdate('casade');
             $table->timestamps();
         });
     }
