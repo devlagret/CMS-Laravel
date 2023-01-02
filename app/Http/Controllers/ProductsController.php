@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Products as product;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         $uri = product::get();

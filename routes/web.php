@@ -21,10 +21,14 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
+$router->get('product', 'ProductsController@index');
 $router->group(['prefix' => 'api/'], function () use ($router) {
     $router->get('product', 'ProductsController@index');
     $router->post('product', 'ProductsController@store');
     $router->get('product/{id}', 'ProductsController@show');
     $router->patch('product/{id}', 'ProductsController@update');
     $router->delete('product/{id}', 'ProductsController@destroy');
+    $router->post('register', 'UserController@register');
+    $router->post('login', 'UserController@login');
+    $router->get('user/{id}', 'UserController@getuser');
 });
