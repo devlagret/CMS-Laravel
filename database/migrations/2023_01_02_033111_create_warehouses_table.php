@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id('id');
             $table->unsignedBigInteger('warehouse_id');
             $table->foreign('warehouse_id')->references('id')->on('whs_detail')->onDelete('restrict')->onUpdate('cascade');
-            $table->string('product_code',50);
+            $table->string('product_code', 50);
             $table->foreign('product_code')->references('product_code')->on('products')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('stock');
-            $table->string('location',50);
+            $table->string('location', 50);
             $table->date('entry_date');
             $table->timestamps();
         });

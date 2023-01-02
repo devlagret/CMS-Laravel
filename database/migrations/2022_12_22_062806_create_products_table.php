@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('products');
         Schema::create('products', function (Blueprint $table) {
             $table->id('id');
             $table->string('product_id',50);
-            $table->string('product_code',50);
+            $table->string('product_code',50)->unique();
             $table->string('brand',50);
             $table->string('name',100);
-            $table->unsignedBigInteger('category_id',0)->default('0');
-            $table->foreign('category_id')->references('category_id')->on('categories')->onDelete('set default')->onUpdate('cascade');
+            $table->unsignedBigInteger('category_id')->nullable()->default('0');
+            $table->foreign('category_id')->references('category_id')->on('categories')->onDelete('set null')->onUpdate('cascade');
             $table->string('buy_price',20);
             $table->string('price_rec',20);
             $table->string('Profit_Margin',5);
@@ -29,8 +30,8 @@ return new class extends Migration
             $table->date('Expiration_Date');
             $table->string('Description');
             $table->string('Property');
-            $table->unsignedBigInteger('supplier_id',0)->default('0');
-            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('set default')->onUpdate('casade');
+            $table->unsignedBigInteger('supplier_id')->nullable()->default('0');
+            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }
