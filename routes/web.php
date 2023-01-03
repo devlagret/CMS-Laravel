@@ -21,7 +21,6 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-$router->get('product', 'ProductsController@index');
 $router->group(['prefix' => 'api/'], function () use ($router) {
     $router->get('product', 'ProductsController@index');
     $router->post('product', 'ProductsController@store');
@@ -30,5 +29,5 @@ $router->group(['prefix' => 'api/'], function () use ($router) {
     $router->delete('product/{id}', 'ProductsController@destroy');
     $router->post('register', 'UserController@register');
     $router->post('login', 'UserController@login');
-    $router->get('user/{id}', 'UserController@getuser');
+    $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getuser']);
 });
