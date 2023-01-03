@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('supplier_id');
             $table->string('supplier_name',100);
             $table->string('contact', 20);
-            $table->string('price_recomendation',20);
+            $table->string('address',50);
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('product_code', 50);
             $table->foreign('product_code')->references('product_code')->on('products')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('stock');
-            $table->string('location', 50);
+            $table->string('location', 50)->nullable();
             $table->date('entry_date');
             $table->timestamps();
         });

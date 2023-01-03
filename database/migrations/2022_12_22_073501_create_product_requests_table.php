@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('product_code')->references('product_code')->on('products')->onDelete('set null')->onUpdate('cascade');
             $table->integer('amount');
             $table->dateTime('order_date');
-            $table->dateTime('out_date');
+            $table->dateTime('out_date')->nullable();
             $table->string('status',10);
             $table->timestamps();
         });
