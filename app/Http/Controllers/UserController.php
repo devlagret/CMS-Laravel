@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserHelper ;
 use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use Illuminate\Http\Request;
 use App\Models\Users;
 use App\Models\Tokens;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+
 
 
 class UserController extends Controller
@@ -66,16 +69,16 @@ class UserController extends Controller
             ]);
         }
         $id = Tokens::where('token', '=', $token->token)->first();
-      
-        return response()->json(['token' => $token->token]);
+        return response()->json(['token' => $token->token, 'usrn' => hash('crc32b',$username)]);
     }
-    public function getuser(Request $request){
-        $this->validate($request, [
-            'username' => 'required|min:3|max:50',
-            'password' => 'required|min:6|'
-        ]);
-
-        $username = $request->input('username');
-        $password = $request->input('password');
+    public function getuser(Request $request, $id){
+        $token = $request->header('token');
+        $uid = Tokens::where('token', '=', $token)->first();
+        $usr = Users::where('id', $uid->id)->first();
+        if(hash('crc32b', $usr->username)==$id){
+            $uh = new UserHelper;
+            return response()->json(['default'=>$usr, 'formated'=>$uh->getUserData($uid->id)]);
+        }
+        return response('Unauthorized.', 401);
     }
 }
