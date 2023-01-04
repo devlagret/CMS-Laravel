@@ -8,6 +8,7 @@ use DateInterval;
 use DateTime;
 use Illuminate\Http\Request;
 use App\Models\Users;
+use App\Models\Logs;
 use App\Models\Tokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -18,6 +19,10 @@ class UserController extends Controller
 {
     //
     public function register(Request $request){
+        $token = $request->header('token');
+        $uid = Tokens::where('token', '=', $token)->first();
+        $usr = Users::where('id', $uid->id)->first();
+        if($usr->role == 'admin'){
         $this->validate($request, [
             'name' => 'required|min:3|max:50',
             'username' => 'required|unique:users|min:3|max:50',
@@ -34,13 +39,21 @@ class UserController extends Controller
             'password' => $password,
             'role' => $role
         ]);
-
+            Logs::create([
+                'user_id' => $uid->id,
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Add User(s)',
+                'detail' => 'Add "'.$name.'" with username "'.$username.'" and "'.$role.'" role'
+            ]); 
         return response()->json(['message' => 'Data added successfully'], 201);
+    }
+        return response('Unauthorized.role='.$usr->role, 401);
+
     }
     public function login(Request $request){
         $this->validate($request, [
-            'username' => 'required|min:3|max:50',
-            'password' => 'required|min:6|'
+            'username' => 'required|max:50',
+            'password' => 'required'
         ]);
 
         $username = $request->input('username');
@@ -48,12 +61,12 @@ class UserController extends Controller
 
         $user = Users::where('username', $username)->first();
         if (!$user) {
-            return response()->json(['message' => 'Login failed'], 401);
+            return response()->json(['message' => 'Login failed, Username not found'], 401);
         }
 
         $isValidPassword = Hash::check($password, $user->password);
         if (!$isValidPassword) {
-            return response()->json(['message' => 'Login failed'], 401);
+            return response()->json(['message' => 'Login failed, wrong password'], 401);
         }
 
         $generateToken = bin2hex(random_bytes(50));
