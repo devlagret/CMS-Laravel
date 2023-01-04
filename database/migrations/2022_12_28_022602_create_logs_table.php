@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('id');
             $table->unsignedBigInteger('user_id',0)->nullable()->default('0');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
-            $table->string('datetime',20);
+            $table->datetime('datetime');
             $table->string('activity', 50);
             $table->string('detail', 100);
         });
