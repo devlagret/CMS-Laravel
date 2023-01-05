@@ -74,11 +74,11 @@ class UserController extends Controller
         if (Tokens::where('id', '=', $user->id)->exists()) {
             // user found
             $token = Tokens::where('id', '=', $user->id)->first();
-            $token->update(['token' => $ftoken]);
+            $token->update(['token' => str_replace('\\', '', $ftoken)]);
         } else {
             $token = Tokens::create([
                 'id' => $user->id,
-                'token' => $ftoken
+                'token' => str_replace('\\','',$ftoken)
             ]);
         }
         $id = Tokens::where('token', '=', $token->token)->first();
