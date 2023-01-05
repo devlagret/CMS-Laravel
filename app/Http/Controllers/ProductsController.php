@@ -38,7 +38,7 @@ class ProductsController extends Controller
         $product->Description = $request->Description;
         $product->Property = $request->Property;
         $product->supplier_id = $request->supplier_id;
-        $project->save();
+        $product->save();
 
         return response()->json($product);
     }
@@ -69,7 +69,7 @@ class ProductsController extends Controller
         // $product->Property = $request->Property;
         // $product->supplier_id = $request->supplier_id;
         // $project->save();
-        $product_req = product_request::whereId($id)->update([
+        $product = product::whereId($id)->update([
             'Product_Code'                 => $request->input('Product_Code'),
             'Brand'                        => $request->input('Brand'),
             'Name'                         => $request->input('Name'),

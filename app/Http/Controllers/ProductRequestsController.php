@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product_Requests;
+use Illuminate\Contracts\Validation\Validator;
 
 class ProductRequestsController extends Controller
 {
     public function index()
     {
         $product_reqs = Product_Requests::get();
-  
+        
         return response()->json($product_reqs);
     }
 
@@ -48,6 +49,24 @@ class ProductRequestsController extends Controller
         // $product_req->out_date = $request->out_date;
         // $product_req->status = $request->status;
         // $product_req->save();
+
+        $validator = $this->validate($request, [
+            'branch_id'    => 'required',
+            'product_code' => 'required',
+            'amount'       => 'required',
+            'order_date'   => 'required',
+            'out_date'     => 'required',
+            'status'       => 'required',
+        ]);
+
+        // if ($validator->fails()) {
+        //     return response()->json([
+        //         ''
+        //     ]);
+        // } else {
+        //     # code...
+        // }
+
         $product_req = Product_Requests::whereId($id)->update([
             'branch_id'       => $request->input('branch_id'),
             'product_code'    => $request->input('product_code'),

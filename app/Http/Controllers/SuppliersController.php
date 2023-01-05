@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Models\Suppliers;
 
 class SuppliersController extends Controller
 {
@@ -38,7 +38,7 @@ class SuppliersController extends Controller
         // $supplier->category_name = $request->category_name;
         // $supplier->category_type = $request->category_type;
         // $supplier->save;
-        $branch = Branches::whereId($id)->update([
+        $supplier = Suppliers::whereId($id)->update([
             'supplier_name' => $request->input('supplier_name'),
             'contact'       => $request->input('contact'),
             'address'       => $request->input('address'),
