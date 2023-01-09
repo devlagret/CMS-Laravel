@@ -34,7 +34,6 @@ class ProductRequestsController extends Controller
     public function show($id)
     {
         $product_req = Product_Requests::find($id);
-
         return response()->json($product_req);
     }
 

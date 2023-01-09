@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Users;
 use App\Models\Branches;
 
 class BranchesController extends Controller
@@ -18,6 +18,12 @@ class BranchesController extends Controller
     
     public function store(Request $request)
     {
+        if(!Users::where('username',$request->input('login_username'))){
+            return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
+        }
+        $addbranch = Branches::create([
+        
+        ]);
         $branch = new Branches;
         $branch->branch_name = $request->branch_name;
         $branch->leader_name = $request->leader_name;
@@ -67,7 +73,6 @@ class BranchesController extends Controller
     public function destroy($id)
     {
         Branches::destroy($id);
-
         return response()->json(['message' => 'Deleted']);
     }
 }
