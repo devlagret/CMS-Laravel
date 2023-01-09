@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Suppliers;
+use App\Models\Users;
+use App\Models\Tokens;
+use App\Models\Logs;
+use Carbon\Carbon;
 
 class SuppliersController extends Controller
 {
@@ -16,13 +20,35 @@ class SuppliersController extends Controller
 
     public function store(Request $request)
     {
-        $supplier = new Suppliers;
-        $supplier->supplier_name = $request->supplier_name;
-        $supplier->contact = $request->contact;
-        $supplier->address = $request->address;
-        $supplier->save;
+        $token = $request->header('token');
+        $uid = Tokens::where('token', '=', $token)->first();
+        $usr = Users::where('id', $uid->id)->first();
 
-        return response()->json($supplier);
+        $validator = $this->validate($request, [
+            'supplier_name'    => 'required',
+            'contact'    => 'required',
+            'address'        => 'required|max:15',
+        ]);
+        $supplier_name = $request->input('supplier_name');
+        $contact = $request->input('contact');
+        $address = $request->input('address');
+
+        $supplier = Suppliers::create([
+            'supplier_name'    => $supplier_name,
+            'contact'    => $contact,
+            'address'    => $address,
+        ]);
+
+        if ($supplier) {
+            Logs::create([
+                'user_id' => $uid->id,
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Add Category(s)',
+                'detail' => 'Add Supplier information with name '.$supplier_name
+            ]); 
+        }
+
+        return response()->json(['message' => 'Data added successfully'], 201);
     }
 
     public function show($id)
@@ -34,10 +60,12 @@ class SuppliersController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $supplier = Suppliers::find($id);
-        // $supplier->category_name = $request->category_name;
-        // $supplier->category_type = $request->category_type;
-        // $supplier->save;
+        $validator = $this->validate($request, [
+            'supplier_name'    => 'required',
+            'contact'    => 'required',
+            'address'        => 'required|max:15',
+        ]);
+        
         $supplier = Suppliers::whereId($id)->update([
             'supplier_name' => $request->input('supplier_name'),
             'contact'       => $request->input('contact'),

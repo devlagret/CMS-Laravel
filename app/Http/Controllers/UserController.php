@@ -53,7 +53,7 @@ class UserController extends Controller
     public function login(Request $request){
         $this->validate($request, [
             'username' => 'required|max:50',
-            'password' => 'required'
+            // 'password' => 'required'
         ]);
 
         $username = $request->input('username');
