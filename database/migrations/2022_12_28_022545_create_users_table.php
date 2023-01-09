@@ -26,14 +26,14 @@ return new class extends Migration
         });
         // Insert some stuff
         DB::table('users')->insert(
-            array(
+            [
                 'username' => 'admin',
                 'name' => 'Admin',
                 'password' => Hash::make('admin'),
                 'role' =>'admin',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
-            )
+            ]
         );
     }
 

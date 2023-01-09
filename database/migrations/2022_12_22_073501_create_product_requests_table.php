@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('product_requests', function (Blueprint $table) {
-            $table->id('request_id');
+            $table->id();
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->foreign('branch_id')->references('branch_id')->on('branches')->onDelete('set null')->onUpdate('cascade');
             $table->string('product_code', 50)->nullable();

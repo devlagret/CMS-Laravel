@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Users;
 use App\Models\Branches;
 use App\Models\Tokens;
-use App\Models\Users;
 use App\Models\Logs;
 use Carbon\Carbon;
 
@@ -20,9 +20,12 @@ class BranchesController extends Controller
 
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
+        if(!Users::where('username',$request->input('login_username'))){
+            return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
+        }
+        $addbranch = Branches::create([
+        
+        ]);
 
         $validator = $this->validate($request, [
             'branch_name'    => 'required',
@@ -44,17 +47,17 @@ class BranchesController extends Controller
             'login_username'    => $login_username,
         ]);
 
-        if ($branch) {
-            Logs::create([
-                'user_id' => $uid->id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Add Branch(s)',
-                'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
-            ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
-        } else {
-            return response()->json("Failure");
-        }
+        // if ($branch) {
+        //     Logs::create([
+        //         'user_id' => $uid->id,
+        //         'datetime' => Carbon::now('Asia/Jakarta'),
+        //         'activity' => 'Add Branch(s)',
+        //         'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
+        //     ]);
+        //     return response()->json(['message' => 'Data added successfully'], 201);
+        // } else {
+        //     return response()->json("Failure");
+        // }
     }
 
     
@@ -104,7 +107,6 @@ class BranchesController extends Controller
     public function destroy($id)
     {
         Branches::destroy($id);
-
         return response()->json(['message' => 'Deleted']);
     }
 }
