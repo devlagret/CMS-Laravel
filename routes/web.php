@@ -20,6 +20,9 @@ $router->get('/', function () use ($router) {
 // Route::prefix('api')->group(function () {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
+
+//  API Version beta 1.0
+
 $prefix = 'api/';
 $router->group(['prefix' => $prefix], function () use ($router) {
     $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
