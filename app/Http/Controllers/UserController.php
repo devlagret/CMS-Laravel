@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
        
-
+  
     //
     public function register(Request $request){
         $token = $request->header('token');
@@ -55,7 +55,7 @@ class UserController extends Controller
     public function login(Request $request){
         $this->validate($request, [
             'username' => 'required|max:50',
-            // 'password' => 'required'
+            'password' => 'required'
         ]);
 
         $username = $request->input('username');

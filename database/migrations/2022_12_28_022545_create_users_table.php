@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
         });
         // Insert some stuff
-        DB::table('users')->insert(
+        DB::table('users')->insert([
             [
                 'username' => 'admin',
                 'name' => 'Admin',
@@ -33,7 +33,14 @@ return new class extends Migration
                 'role' =>'admin',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
-            ]
+            ],[
+                'username' => 'admingudang',
+                'name' => 'Admin Gudang',
+                'password' => Hash::make('admingudang'),
+                'role' => 'admingudang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]]
         );
     }
 
