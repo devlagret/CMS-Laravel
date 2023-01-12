@@ -2,17 +2,20 @@
 
 namespace Database\Factories;
 
-use App\Models\categories;
+use App\Models\Categories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CategoriesFactory extends Factory
 {
-    protected $model = categories::class;
+    protected $model = Categories::class;
 
     public function definition(): array
     {
+        $category = $this->faker->randomElement(['Pangan', 'Non-Pangan']);
+
     	return [
-    	    //
+    	    'category_name' => $this->faker->lexify($category),
+            'category_type' => $this->faker->lexify($category),
     	];
     }
 }
