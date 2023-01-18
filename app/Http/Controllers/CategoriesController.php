@@ -8,9 +8,11 @@ use App\Models\Logs;
 use App\Models\Tokens;
 use App\Models\Users;
 use Carbon\Carbon;
+use App\Helpers\UserHelper;
 
 class CategoriesController extends Controller
 {
+    protected  $uh = new UserHelper;
     public function index()
     {
         $categories = Categories::get();
@@ -20,10 +22,6 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
         $validator = $this->validate($request, [
             'category_name'    => 'required',
             'category_type'    => 'required',
@@ -35,10 +33,10 @@ class CategoriesController extends Controller
             'category_name'    => $category_name,
             'category_type'    => $category_type,
         ]);
-
+ 
         if ($category) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Category(s)',
                 'detail' => 'Add Category with type "'.$category_type.'" named "'.$category_name
@@ -58,10 +56,6 @@ class CategoriesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
         $validator = $this->validate($request, [
             'category_name'    => 'required',
             'category_type'    => 'required',
@@ -76,7 +70,7 @@ class CategoriesController extends Controller
 
         if ($category) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Category(s)',
                 'detail' => 'Update Category with type "'.$category_type.'" named "'.$category_name

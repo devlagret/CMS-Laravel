@@ -8,9 +8,12 @@ use App\Models\Branches;
 use App\Models\Tokens;
 use App\Models\Logs;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use App\Helpers\UserHelper;
 
 class BranchesController extends Controller
 {
+    protected  $uh = new UserHelper;
     public function index()
     {
         $branches = Branches::get();
@@ -20,44 +23,42 @@ class BranchesController extends Controller
 
     public function store(Request $request)
     {
-        if(!Users::where('username',$request->input('login_username'))){
+        if(!Users::where('id',$request->input('uid'))){
             return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
         }
-        $addbranch = Branches::create([
-        
-        ]);
-
         $validator = $this->validate($request, [
             'branch_name'    => 'required',
             'leader_name'    => 'required',
             'contact'        => 'required|max:15',
             'address'        => 'required',
+            'uid' =>'required',
         ]);
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
         $contact = $request->input('contact');
         $address = $request->input('address');
-        $login_username = $request->input('login_username');
+        $uid = $request->input('uid');
     
         $branch = Branches::create([
+            'branch_id' => Str::uuid()->toString(),
             'branch_name'    => $branch_name,
             'leader_name'    => $leader_name,
             'contact'    => $contact,
             'address'    => $address,
-            'login_username'    => $login_username,
+            'uid'    => $uid,
         ]);
 
-        // if ($branch) {
-        //     Logs::create([
-        //         'user_id' => $uid->id,
-        //         'datetime' => Carbon::now('Asia/Jakarta'),
-        //         'activity' => 'Add Branch(s)',
-        //         'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
-        //     ]);
-        //     return response()->json(['message' => 'Data added successfully'], 201);
-        // } else {
-        //     return response()->json("Failure");
-        // }
+         if ($branch) {
+             Logs::create([
+                 'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                 'datetime' => Carbon::now('Asia/Jakarta'),
+                 'activity' => 'Add Branch(s)',
+                 'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
+             ]);
+             return response()->json(['message' => 'Data added successfully'], 201);
+         } else {
+             return response()->json("Failure");
+         }
     }
 
     
@@ -70,10 +71,6 @@ class BranchesController extends Controller
 
     public function update(Request $request, $id)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
         $validator = $this->validate($request, [
             'branch_name'    => 'required',
             'leader_name'    => 'required',
@@ -92,7 +89,7 @@ class BranchesController extends Controller
 
         if ($branch) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Branch(s)',
                 'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name

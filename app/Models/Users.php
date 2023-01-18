@@ -17,7 +17,10 @@ protected $table = 'users';
      * The attributes that are mass assignable.
      *
      * @var string[]
-     */ protected $primaryKey = 'id';
+     */
+    protected $primaryKey = 'uid';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'name', 'username', 'password', 'role'
     ];

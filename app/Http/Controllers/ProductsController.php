@@ -9,9 +9,11 @@ use App\Models\Users;
 use App\Models\Logs;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Helpers\UserHelper;
 
 class ProductsController extends Controller
 {
+    protected  $uh = new UserHelper;
     public function index()
     {
         $products = Product::get();
@@ -21,10 +23,6 @@ class ProductsController extends Controller
 
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-        
         $validator = $this->validate($request, [
             'Product_Code'    => 'required',
             'Brand'    => 'required',
@@ -78,7 +76,7 @@ class ProductsController extends Controller
 
         if ($product) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Product(s)',
                 'detail' => 'Add Product information with Code '.$Product_Code
@@ -98,10 +96,6 @@ class ProductsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
         $validator = $this->validate($request, [
             'Product_Code'    => 'required',
             'Brand'    => 'required',
@@ -142,7 +136,7 @@ class ProductsController extends Controller
 
         if ($product) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Product(s)',
                 'detail' => 'Update Product information with Code '.$Product_Code

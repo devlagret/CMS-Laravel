@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('branches', function (Blueprint $table) {
-            $table->id('branch_id');
+            $table->uuid('branch_id')->primary();
             $table->string('branch_name', 75);
             $table->string('leader_name', 50);
             $table->string('contact', 20);
             $table->string('address', 100);
-            $table->string('login_username', 100);
-            $table->string('login_password', 100);
+            $table->uuid('uid')->nullable()->default('0');
+            $table->foreign('uid')->references('uid')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }

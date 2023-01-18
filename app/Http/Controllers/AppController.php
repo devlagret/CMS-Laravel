@@ -16,7 +16,8 @@ class AppController extends Controller
                 $d[$da->key] = $da->value;
             }
             //var_dump($data);
-            return response()->json($d);
+            return response()->json($d
+        );
         }
         if ($request->isMethod('PUT')) {
             //$this->validate($request, [

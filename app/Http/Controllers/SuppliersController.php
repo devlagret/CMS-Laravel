@@ -8,9 +8,11 @@ use App\Models\Users;
 use App\Models\Tokens;
 use App\Models\Logs;
 use Carbon\Carbon;
+use App\Helpers\UserHelper;
 
 class SuppliersController extends Controller
 {
+    protected  $uh = new UserHelper;
     public function index()
     {
         $suppliers = Suppliers::get();
@@ -20,10 +22,6 @@ class SuppliersController extends Controller
 
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
         $validator = $this->validate($request, [
             'supplier_name'    => 'required',
             'contact'    => 'required',
@@ -41,7 +39,7 @@ class SuppliersController extends Controller
 
         if ($supplier) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Supplier(s)',
                 'detail' => 'Add Supplier information with name '.$supplier_name
@@ -61,11 +59,7 @@ class SuppliersController extends Controller
 
     public function update(Request $request, $id)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
-        $validator = $this->validate($request, [
+            $validator = $this->validate($request, [
             'supplier_name'    => 'required',
             'contact'    => 'required',
             'address'        => 'required|max:15',
@@ -80,7 +74,7 @@ class SuppliersController extends Controller
 
         if ($supplier) {
             Logs::create([
-                'user_id' => $uid->id,
+                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Supplier(s)',
                 'detail' => 'Update Supplier information with name '.$supplier_name

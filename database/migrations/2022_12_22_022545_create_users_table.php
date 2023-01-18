@@ -6,6 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -17,7 +18,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('id');
+            $table->uuid('uid')->primary();
             $table->string('username', 50)->unique();
             $table->string('name', 50);
             $table->string('password')->default('null');
@@ -27,6 +28,7 @@ return new class extends Migration
         // Insert some stuff
         DB::table('users')->insert([
             [
+                'uid' => Str::uuid()->toString(),
                 'username' => 'admin',
                 'name' => 'Admin',
                 'password' => Hash::make('admin'),
@@ -34,6 +36,7 @@ return new class extends Migration
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],[
+                'uid' => Str::uuid()->toString(),
                 'username' => 'admingudang',
                 'name' => 'Admin Gudang',
                 'password' => Hash::make('admingudang'),
