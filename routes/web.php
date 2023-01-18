@@ -21,12 +21,12 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 1.2.0.1
+//  API Version beta 1.2.0.2
 
 $prefix = 'api/';
 $router->group(['prefix' => $prefix], function () use ($router) {
-    $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
     $router->post('login', 'UserController@login');
+    $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
     $router->get('user/all', ['middleware' => 'auth', 'uses' => 'UserController@getAllUser']);
     $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
     $router->get('user/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);

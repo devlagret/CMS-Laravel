@@ -63,7 +63,7 @@ class UserHelper
 	public function getRole($token)
 	{
 		$uid = Tokens::where('token', '=', $token)->first();
-		$usr = Users::where('id', $uid->uid)->first();
+		$usr = Users::where('uid', $uid->uid)->first();
 		return $usr->role;
 	}
 }

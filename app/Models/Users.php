@@ -22,7 +22,7 @@ protected $table = 'users';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'name', 'username', 'password', 'role'
+      'uid', 'name', 'username', 'password', 'role'
     ];
 
     /**

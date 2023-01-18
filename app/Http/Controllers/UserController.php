@@ -48,7 +48,7 @@ class UserController extends Controller
                 'uid' => $uh->getUserData($token)->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add User(s)',
-                'detail' => 'Add "' . $name . '" with username "' . $username . '" and with`` "' . $role . '" role'
+                'detail' => 'Add "' . $name . '" with username "' . $username . '" and with "' . $role . '" role'
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }
