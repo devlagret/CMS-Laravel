@@ -13,7 +13,7 @@ use App\Helpers\UserHelper;
 
 class ProductsController extends Controller
 {
-    protected  $uh = new UserHelper;
+    
     public function index()
     {
         $products = Product::get();
@@ -73,10 +73,10 @@ class ProductsController extends Controller
             'Property'    => $Property,
             'supplier_id'    => $supplier_id,
         ]);
-
+        $uh = new UserHelper;
         if ($product) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Product(s)',
                 'detail' => 'Add Product information with Code '.$Product_Code
@@ -133,10 +133,10 @@ class ProductsController extends Controller
             'supplier_id'                  => $request->input('supplier_id'),
             
         ]);
-
+        $uh = new UserHelper;
         if ($product) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Product(s)',
                 'detail' => 'Update Product information with Code '.$Product_Code

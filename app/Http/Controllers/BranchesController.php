@@ -13,7 +13,7 @@ use App\Helpers\UserHelper;
 
 class BranchesController extends Controller
 {
-    protected  $uh = new UserHelper;
+    
     public function index()
     {
         $branches = Branches::get();
@@ -47,10 +47,10 @@ class BranchesController extends Controller
             'address'    => $address,
             'uid'    => $uid,
         ]);
-
+        $uh = new UserHelper;
          if ($branch) {
              Logs::create([
-                 'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                 'user_id' => $uh->getUserData($request->header('token'))->uid,
                  'datetime' => Carbon::now('Asia/Jakarta'),
                  'activity' => 'Add Branch(s)',
                  'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
@@ -86,10 +86,10 @@ class BranchesController extends Controller
             'contact'        => $request->input('contact'),
             'address'        => $request->input('address'),
         ]);
-
+        $uh = new UserHelper;
         if ($branch) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Branch(s)',
                 'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name

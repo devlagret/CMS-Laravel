@@ -13,7 +13,7 @@ use App\Helpers\UserHelper;
 
 class ProductRequestsController extends Controller
 {
-    protected  $uh = new UserHelper;
+    
     public function index()
     {
         $product_reqs = Product_Requests::get();
@@ -47,10 +47,10 @@ class ProductRequestsController extends Controller
             'out_date'    => $out_date,
             'status'    => $status,
         ]);
-
+        $uh = new UserHelper;
         if ($product_req) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Product Request(s)',
                 'detail' => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
@@ -92,10 +92,10 @@ class ProductRequestsController extends Controller
             'out_date'        => $request->input('out_date'),
             'status'          => $request->input('status'),
         ]);
-
+        $uh = new UserHelper;
         if ($product_req) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Product Request(s)',
                 'detail' => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount

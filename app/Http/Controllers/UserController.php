@@ -20,12 +20,12 @@ class UserController extends Controller
 {
 
 
-    protected  $uh = new UserHelper;
     //
     public function register(Request $request)
     {
+       $uh = new UserHelper;
         $token = $request->header('token');
-        if ($this->uh->getRole($token) == 'admin') {
+        if ($uh->getRole($token) == 'admin') {
             $this->validate($request, [
                 'name' => 'required|min:3|max:50',
                 'username' => 'required|unique:users|min:3|max:50',
@@ -45,7 +45,7 @@ class UserController extends Controller
                 'role' => $role
             ]);
             Logs::create([
-                'uid' => $this->uh->getUserData($token)->uid,
+                'uid' => $uh->getUserData($token)->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add User(s)',
                 'detail' => 'Add "' . $name . '" with username "' . $username . '" and with`` "' . $role . '" role'

@@ -12,7 +12,7 @@ use App\Helpers\UserHelper;
 
 class SuppliersController extends Controller
 {
-    protected  $uh = new UserHelper;
+    
     public function index()
     {
         $suppliers = Suppliers::get();
@@ -36,10 +36,10 @@ class SuppliersController extends Controller
             'contact'    => $contact,
             'address'    => $address,
         ]);
-
+        $uh = new UserHelper;
         if ($supplier) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Supplier(s)',
                 'detail' => 'Add Supplier information with name '.$supplier_name
@@ -71,10 +71,10 @@ class SuppliersController extends Controller
             'contact'       => $request->input('contact'),
             'address'       => $request->input('address'),
         ]);
-
+        $uh = new UserHelper;
         if ($supplier) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Supplier(s)',
                 'detail' => 'Update Supplier information with name '.$supplier_name

@@ -12,7 +12,7 @@ use App\Helpers\UserHelper;
 
 class CategoriesController extends Controller
 {
-    protected  $uh = new UserHelper;
+    
     public function index()
     {
         $categories = Categories::get();
@@ -33,10 +33,10 @@ class CategoriesController extends Controller
             'category_name'    => $category_name,
             'category_type'    => $category_type,
         ]);
- 
+        $uh = new UserHelper;
         if ($category) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Category(s)',
                 'detail' => 'Add Category with type "'.$category_type.'" named "'.$category_name
@@ -67,10 +67,10 @@ class CategoriesController extends Controller
             'category_name'     => $request->input('category_name'),
             'category_type'   => $request->input('category_type'),
         ]);
-
+        $uh = new UserHelper;
         if ($category) {
             Logs::create([
-                'user_id' => $this->uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Category(s)',
                 'detail' => 'Update Category with type "'.$category_type.'" named "'.$category_name
