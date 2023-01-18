@@ -71,3 +71,8 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //$router->post('profile', 'BranchesController@store');
     //$router->delete('profile', 'BranchesController@destroy');
 });
+
+$router->group(['prefix' => $prefix], function () use ($router) {
+    $router->post('json', 'WarehouseController@stockup');
+    $router->get('json', [WarehouseController::class, 'stockup']);
+});

@@ -2,9 +2,245 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categories;
+use App\Models\Logs;
+use App\Models\Products;
+use App\Models\Tokens;
+use App\Models\Users;
 use Illuminate\Http\Request;
+use App\Models\Warehouses;
+use Carbon\Carbon;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 class WarehouseController extends Controller
 {
-    //
+    public function index()
+    {
+        $product_reqs = Categories::get();
+        
+        return response()->json($product_reqs);
+    }
+
+    
+    public function store(Request $request)
+    {
+        $token = $request->header('token');
+        $uid = Tokens::where('token', '=', $token)->first();
+        $usr = Users::where('id', $uid->id)->first();
+        
+        $validator = $this->validate($request, [
+            'branch_id'     => 'required',
+            'product_code'  => 'required',
+            'amount'        => 'required|max:15',
+            'order_date'    => 'required',
+            'out_date'      => 'required',
+            'status'        => 'required',
+        ]);
+        $branch_id = $request->input('branch_id');
+        $product_code = $request->input('product_code');
+        $amount = $request->input('amount');
+        
+        $product_req = Warehouses::create([
+            'branch_id'     => $request->input('branch_id'),
+            'product_code'  => $request->input('product_code'),
+            'amount'        => $request->input('amount'),
+            'order_date'    => $request->input('order_date'),
+            'out_date'      => $request->input('out_date'),
+            'status'        => $request->input('status'),
+        ]);
+
+        if ($product_req) {
+            Logs::create([
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Product Request(s)',
+                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+            ]);
+            return response()->json(['message' => 'Data added successfully'], 201);
+        }else {
+            return response()->json("Failure");
+        }
+
+        return response()->json($product_req);
+    }
+
+    
+    public function show($id)
+    {
+        $product_req = Warehouses::find($id);
+        return response()->json($product_req);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $token = $request->header('token');
+        $uid = Tokens::where('token', '=', $token)->first();
+        $usr = Users::where('id', $uid->id)->first();
+
+        $validator = $this->validate($request, [
+            'branch_id'     => 'required',
+            'product_code'  => 'required',
+            'amount'        => 'required',
+            'order_date'    => 'required',
+            'out_date'      => 'required',
+            'status'        => 'required',
+        ]);
+        $branch_id = $request->input('branch_id');
+        $product_code = $request->input('product_code');
+        $amount = $request->input('amount');
+
+        $product_req = Warehouses::whereId($id)->update([
+            'branch_id'     => $request->input('branch_id'),
+            'product_code'  => $request->input('product_code'),
+            'amount'        => $request->input('amount'),
+            'order_date'    => $request->input('order_date'),
+            'out_date'      => $request->input('out_date'),
+            'status'        => $request->input('status'),
+        ]);
+
+        if ($product_req) {
+            Logs::create([
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Product Request(s)',
+                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+            ]);
+            return response()->json(['message' => 'Data added successfully'], 201);
+        }else {
+            return response()->json("Failure");
+        }
+    }
+
+    public function destroy($id)
+    {
+        Warehouses::destroy($id);
+
+        return response()->json(['message' => 'Deleted']);
+    }
+
+    public function stockup(Request $request)
+    {
+        // $df = dd($request->json()->all());
+        // $input = $request;
+        // $con = $input['items']['skills'];
+        // $data = json_decode($request);
+        // $json = json_decode($request);
+        // $validator = Validator::make(
+        //     $con, [
+        //         'id' => 'digits:8',
+        //         'custom' => 'digits:8',
+        //     ]
+        // );
+        // if ($validator->passes()) {
+        //     if (Arr::has($input, 'id' )) {
+        //         return response()->json($con, 200);
+                
+        // } else {
+        //     return response()->json('error bang', 404);
+        // }
+        // $validation = Validator::make(
+        //     $request->all(),
+        //     [
+        //         'name' => 'required|'
+        //     ]
+        // );
+
+        // if ($validation->fails()) {
+        //     dd($validation->getMessageBag()->all());
+        // } else {
+            
+        // }
+        
+        // return response()->json($json);
+        
+        $rules = [
+            'Supplier_id'=>'required',
+            'update_price'=>'required',
+            'items.*.product_id'=>'required',
+            'items.*.product_code'=>'required',
+            'items.*.buy_price'=>'required',
+            'items.*.stock'=>'required',
+            'items.*.price_rec'=>'required',
+        ];
+        $this->validate($request, $rules);
+        $data = $request->all();
+        
+        $result = [];
+        $items = $request;
+        foreach ($items->items as $item) {
+            $result[] =[
+                'product_id'  => $item['product_id'],
+                'product_code' => $item['product_code'],
+                'stock' => $item['stock'],
+                'brand' => $item['brand'],
+                'name' => $item['name'],
+                'category_id' => $item['category_id'],
+                'buy_price' => $item['buy_price'],
+                'price_rec' => $item['price_rec'],
+                'price_rec_from_sup' => $item['price_rec_from_sup'],
+                'Profit_Margin' => $item['Profit_Margin'],
+                'Description' => $item['Description'],
+                'Property' => $item['Property'],
+                'supplier_id' => $item['supplier_id']
+            ];
+            $product = Products::firstOrCreate($result);
+            // $product = Products::firstOrCreate([
+            //     'product_id'  => $result['product_id'],
+            //     'Product_Code' => $result['product_code'],
+            //     'Brand' => $result['brand'],
+            //     'Name' => $result['name'],
+            //     'category_id' => $result['category_id'],
+            //     'buy_price' => $result['buy_price'],
+            //     'price_rec' => $result['price_rec'],
+            //     'price_rec_from_sup' => $result['price_rec_from_sup'],
+            //     'Profit_Margin' => $result['Profit_Margin'],
+            //     'Description' => $result['Description'],
+            //     'Property' => $result['Property'],
+            //     'Supplier_id' => $result['supplier_id']
+                // 'Product_Code' => '1',
+                // 'id'  => $item['product_id'],
+            // ]);
+            // if ($product->wasRecentlyCreated) {
+                // $store = Products::create($result[0]);
+                    // $store = Products::create([
+                    //     'Product_Code' => $item['product_code'],
+                    //     // 'buy_price' => $item['buy_price'],
+                    //     // 'stock' => $item['stock'],
+                    //     // 'price_rec' => $item['price_rec'], 
+                    //     'brand' => $item['brand'],
+                    //     'name' => $item['name'],
+                    //     'category_id' => $item['category_id'],
+                    //     'buy_price' => $item['buy_price'],
+                    //     'price_rec' => $item['price_rec'],
+                    //     'price_rec_from_sup' => $item['price_rec_from_sup'],
+                    //     'Profit_Margin' => $item['Profit_Margin'],
+                    //     'Description' => $item['Description'],
+                    //     'Property' => $item['Property'],
+                    // ]);
+                    // return response()->json('$ada');
+            // }else {
+                //   $store = Products::create([
+                    //     'Product_Code' => $item['product_code'],
+                    //     // 'buy_price' => $item['buy_price'],
+                    //     // 'stock' => $item['stock'],
+                    //     // 'price_rec' => $item['price_rec'], 
+                    //     'brand' => $item['brand'],
+                    //     'name' => $item['name'],
+                    //     'category_id' => $item['category_id'],
+                    //     'buy_price' => $item['buy_price'],
+                    //     'price_rec' => $item['price_rec'],
+                    //     'price_rec_from_sup' => $item['price_rec_from_sup'],
+                    //     'Profit_Margin' => $item['Profit_Margin'],
+                    //     'Description' => $item['Description'],
+                    //     'Property' => $item['Property'],
+                    // ]);
+                // return response()->json('$item');
+            // }
+
+        // if(collect($data)){
+        //     $phone = $data->array_pluck($array, 'value');
+        }
+        return response()->json($product);
+    }
 }

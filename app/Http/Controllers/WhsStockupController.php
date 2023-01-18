@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Categories;
 use App\Models\Logs;
 use App\Models\Tokens;
 use App\Models\Users;
+use App\Models\whs_stockup;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
-class CategoriesController extends Controller
+class WhsStockupController extends Controller
 {
     public function index()
     {
-        $categories = Categories::get();
+        $categories = whs_stockup::get();
   
         return response()->json($categories);
     }
@@ -31,12 +31,13 @@ class CategoriesController extends Controller
         $category_name = $request->input('category_name');
         $category_type = $request->input('category_type');
 
-        $category = Categories::create([
+        $category = whs_stockup::create([
             'category_name'    => $category_name,
             'category_type'    => $category_type,
         ]);
+
         if ($category) {
-        Logs::create([
+            Logs::create([
                 'user_id'   => $uid->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Add Category(s)',
@@ -50,7 +51,7 @@ class CategoriesController extends Controller
 
     public function show($id)
     {
-        $category = Categories::find($id);
+        $category = whs_stockup::find($id);
 
         return response()->json($category);
     }
@@ -68,7 +69,7 @@ class CategoriesController extends Controller
         $category_name = $request->input('category_name');
         $category_type = $request->input('category_type');
 
-        $category = categories::whereId($id)->update([
+        $category = whs_stockup::whereId($id)->update([
             'category_name'   => $request->input('category_name'),
             'category_type'   => $request->input('category_type'),
         ]);
@@ -88,7 +89,7 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
-        Categories::destroy($id);
+        whs_stockup::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
     }

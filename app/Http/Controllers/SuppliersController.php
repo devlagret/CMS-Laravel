@@ -25,26 +25,24 @@ class SuppliersController extends Controller
         $usr = Users::where('id', $uid->id)->first();
 
         $validator = $this->validate($request, [
-            'supplier_name'    => 'required',
-            'contact'    => 'required',
+            'supplier_name'  => 'required',
+            'contact'        => 'required',
             'address'        => 'required|max:15',
         ]);
         $supplier_name = $request->input('supplier_name');
-        $contact = $request->input('contact');
-        $address = $request->input('address');
 
         $supplier = Suppliers::create([
-            'supplier_name'    => $supplier_name,
-            'contact'    => $contact,
-            'address'    => $address,
+            'supplier_name'  => $request->input('supplier_name'),
+            'contact'        => $request->input('contact'),
+            'address'        => $request->input('address'),
         ]);
 
         if ($supplier) {
             Logs::create([
-                'user_id' => $uid->id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Add Supplier(s)',
-                'detail' => 'Add Supplier information with name '.$supplier_name
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Add Supplier(s)',
+                'detail'    => 'Add Supplier information with name '.$supplier_name
             ]); 
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
@@ -66,8 +64,8 @@ class SuppliersController extends Controller
         $usr = Users::where('id', $uid->id)->first();
 
         $validator = $this->validate($request, [
-            'supplier_name'    => 'required',
-            'contact'    => 'required',
+            'supplier_name'  => 'required',
+            'contact'        => 'required',
             'address'        => 'required|max:15',
         ]);
         $supplier_name = $request->input('supplier_name');
@@ -80,10 +78,10 @@ class SuppliersController extends Controller
 
         if ($supplier) {
             Logs::create([
-                'user_id' => $uid->id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Update Supplier(s)',
-                'detail' => 'Update Supplier information with name '.$supplier_name
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Update Supplier(s)',
+                'detail'    => 'Update Supplier information with name '.$supplier_name
             ]); 
             return response()->json(['message' => 'Data added successfully'], 201);
         } else {

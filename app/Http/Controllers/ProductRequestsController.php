@@ -27,35 +27,32 @@ class ProductRequestsController extends Controller
         $usr = Users::where('id', $uid->id)->first();
         
         $validator = $this->validate($request, [
-            'branch_id'    => 'required',
-            'product_code'    => 'required',
+            'branch_id'     => 'required',
+            'product_code'  => 'required',
             'amount'        => 'required|max:15',
-            'order_date'        => 'required',
-            'out_date'        => 'required',
+            'order_date'    => 'required',
+            'out_date'      => 'required',
             'status'        => 'required',
         ]);
         $branch_id = $request->input('branch_id');
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
-        $order_date = $request->input('order_date');
-        $out_date = $request->input('out_date');
-        $status = $request->input('status');
         
         $product_req = Product_Requests::create([
-            'branch_id'    => $branch_id,
-            'product_code'    => $product_code,
-            'amount'    => $amount,
-            'order_date'    => $order_date,
-            'out_date'    => $out_date,
-            'status'    => $status,
+            'branch_id'     => $request->input('branch_id'),
+            'product_code'  => $request->input('product_code'),
+            'amount'        => $request->input('amount'),
+            'order_date'    => $request->input('order_date'),
+            'out_date'      => $request->input('out_date'),
+            'status'        => $request->input('status'),
         ]);
 
         if ($product_req) {
             Logs::create([
-                'user_id' => $uid->id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Product Request(s)',
-                'detail' => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Product Request(s)',
+                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
@@ -79,32 +76,32 @@ class ProductRequestsController extends Controller
         $usr = Users::where('id', $uid->id)->first();
 
         $validator = $this->validate($request, [
-            'branch_id'    => 'required',
-            'product_code' => 'required',
-            'amount'       => 'required',
-            'order_date'   => 'required',
-            'out_date'     => 'required',
-            'status'       => 'required',
+            'branch_id'     => 'required',
+            'product_code'  => 'required',
+            'amount'        => 'required',
+            'order_date'    => 'required',
+            'out_date'      => 'required',
+            'status'        => 'required',
         ]);
         $branch_id = $request->input('branch_id');
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
 
         $product_req = Product_Requests::whereId($id)->update([
-            'branch_id'       => $request->input('branch_id'),
-            'product_code'    => $request->input('product_code'),
-            'amount'          => $request->input('amount'),
-            'order_date'      => $request->input('order_date'),
-            'out_date'        => $request->input('out_date'),
-            'status'          => $request->input('status'),
+            'branch_id'     => $request->input('branch_id'),
+            'product_code'  => $request->input('product_code'),
+            'amount'        => $request->input('amount'),
+            'order_date'    => $request->input('order_date'),
+            'out_date'      => $request->input('out_date'),
+            'status'        => $request->input('status'),
         ]);
 
         if ($product_req) {
             Logs::create([
-                'user_id' => $uid->id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Product Request(s)',
-                'detail' => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Product Request(s)',
+                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {

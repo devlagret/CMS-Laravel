@@ -35,16 +35,13 @@ class BranchesController extends Controller
         ]);
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
-        $contact = $request->input('contact');
-        $address = $request->input('address');
-        $login_username = $request->input('login_username');
-    
+
         $branch = Branches::create([
-            'branch_name'    => $branch_name,
-            'leader_name'    => $leader_name,
-            'contact'    => $contact,
-            'address'    => $address,
-            'login_username'    => $login_username,
+            'branch_name'    => $request->input('branch_name'),
+            'leader_name'    => $request->input('leader_name'),
+            'contact'        => $request->input('contact'),
+            'address'        => $request->input('address'),
+            'login_username' => $request->input('login_username'),
         ]);
 
         // if ($branch) {
@@ -92,10 +89,10 @@ class BranchesController extends Controller
 
         if ($branch) {
             Logs::create([
-                'user_id' => $uid->id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Update Branch(s)',
-                'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
+                'user_id'   => $uid->id,
+                'datetime'  => Carbon::now('Asia/Jakarta'),
+                'activity'  => 'Update Branch(s)',
+                'detail'    => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
