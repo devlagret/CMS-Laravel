@@ -9,9 +9,11 @@ use App\Models\Tokens;
 use App\Models\Users;
 use App\Models\Logs;
 use Carbon\Carbon;
+use App\Helpers\UserHelper;
 
 class ProductRequestsController extends Controller
 {
+    
     public function index()
     {
         $product_reqs = Product_Requests::get();
@@ -22,10 +24,6 @@ class ProductRequestsController extends Controller
     
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-        
         $validator = $this->validate($request, [
             'branch_id'     => 'required',
             'product_code'  => 'required',
@@ -46,13 +44,13 @@ class ProductRequestsController extends Controller
             'out_date'      => $request->input('out_date'),
             'status'        => $request->input('status'),
         ]);
-
+        $uh = new UserHelper;
         if ($product_req) {
             Logs::create([
-                'user_id'   => $uid->id,
-                'datetime'  => Carbon::now('Asia/Jakarta'),
-                'activity'  => 'Product Request(s)',
-                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Product Request(s)',
+                'detail' => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
@@ -71,10 +69,6 @@ class ProductRequestsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
-
         $validator = $this->validate($request, [
             'branch_id'     => 'required',
             'product_code'  => 'required',
@@ -95,13 +89,13 @@ class ProductRequestsController extends Controller
             'out_date'      => $request->input('out_date'),
             'status'        => $request->input('status'),
         ]);
-
+        $uh = new UserHelper;
         if ($product_req) {
             Logs::create([
-                'user_id'   => $uid->id,
-                'datetime'  => Carbon::now('Asia/Jakarta'),
-                'activity'  => 'Product Request(s)',
-                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'user_id' => $uh->getUserData($request->header('token'))->uid,
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Product Request(s)',
+                'detail' => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {

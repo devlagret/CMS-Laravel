@@ -21,13 +21,15 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 1.1.0
+//  API Version beta 1.2.0.2
 
 $prefix = 'api/';
 $router->group(['prefix' => $prefix], function () use ($router) {
-    $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
     $router->post('login', 'UserController@login');
-    $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getuser']);
+    $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
+    $router->get('user/all', ['middleware' => 'auth', 'uses' => 'UserController@getAllUser']);
+    $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
+    $router->get('user/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
 });
 
 $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($router) {
@@ -60,6 +62,8 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
 
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     $router->get('branch', 'BranchesController@index');
+    $router->get('branch/user', 'BranchesController@index');
+    $router->get('branch/user/{id}', 'BranchesController@index');
     $router->get('branch/{id}', 'BranchesController@show');
     $router->post('branch', 'BranchesController@store');
     $router->put('branch/{id}', 'BranchesController@update');

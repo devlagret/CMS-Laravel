@@ -11,14 +11,15 @@ class Branches extends Model
 
     protected $table = 'branches';
 
-    protected $primaryKey = 'id';
-
+    protected $primaryKey = 'branch_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
+        'branch_id',
         'branch_name',
         'leader_name',
         'contact',
         'address',
-        'login_username',
-        'login_password',
+        'uid',
     ];
 }
