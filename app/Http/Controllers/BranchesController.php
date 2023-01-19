@@ -50,7 +50,7 @@ class BranchesController extends Controller
         $uh = new UserHelper;
          if ($branch) {
              Logs::create([
-                 'user_id' => $uh->getUserData($request->header('token'))->uid,
+                 'uid' => $uh->getUserData($request->header('token'))->uid,
                  'datetime' => Carbon::now('Asia/Jakarta'),
                  'activity' => 'Add Branch(s)',
                  'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
@@ -89,7 +89,7 @@ class BranchesController extends Controller
         $uh = new UserHelper;
         if ($branch) {
             Logs::create([
-                'user_id' => $uh->getUserData($request->header('token'))->uid,
+                'uid' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Branch(s)',
                 'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name

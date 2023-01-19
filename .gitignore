@@ -2,7 +2,7 @@
 /.idea
 Homestead.json
 Homestead.yaml
-
+.env
 .phpunit.result.cache
 stream.html
 t.js

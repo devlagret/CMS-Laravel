@@ -28,16 +28,16 @@ class ProductsFactory extends Factory
          }
 
     	return [
-    	    'Product_Code' => $this->faker->bothify('?###'),
-            'Brand' => $this->faker->company(),
-            'Name' => $this->faker->name(),
+    	    'product_code' => $this->faker->bothify('?###'),
+            'brand' => $this->faker->company(),
+            'name' => $this->faker->name(),
             'category_id' => $this->faker->randomElement($cateids),
             'buy_price' => $this->faker->numerify($buy),
             'price_rec' => $this->faker->numerify($price),
             'price_rec_from_sup' => $this->faker->numerify($price_rec),
-            'Profit_Margin' => $this->faker->lexify($result.'%'),
-            'Description' => $this->faker->sentence(),
-            'Property' => $this->faker->word(),
+            'profit_margin' => $this->faker->lexify($result.'%'),
+            'description' => $this->faker->sentence(),
+            'property' => $this->faker->word(),
             'supplier_id' => $this->faker->randomElement($suppids),
     	];
     }
