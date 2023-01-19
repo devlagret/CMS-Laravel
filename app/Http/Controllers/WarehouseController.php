@@ -132,36 +132,39 @@ class WarehouseController extends Controller
             'items.*.price_rec'=>'required',
         ];
         $this->validate($request, $rules);
-        $data = $request->all();
         
         $result = [];
         $items = $request;
-        for ($i=0; $i < $items->items; $i++) { 
-            $result[] = [
-                // 'id'  => $items->items[$i],
-                'Product_Code' => $items->items[$i]
-                // 'stock' => $items->items[$i],
-                // 'brand' => $items->items[$i],
-                // 'name' => $items->items[$i],
-                // 'category_id' => $items->items[$i],
-                // 'buy_price' => $items->items[$i],
-                // 'price_rec' => $items->items[$i],
-                // 'price_rec_from_sup' => $items->items[$i],
-                // 'Profit_Margin' => $items->items[$i],
-                // 'Description' => $items->items[$i],
-                // 'Property' => $items->items[$i],
-                // 'supplier_id' => $items->items[$i]
+        $data = count($items->items);
+        for ($i=0; $i < count($items->items); $i++) { 
+            $result[$i] = [
+                'id'  => $items->items[$i],
+                'product_code' => $items->items[$i]['product_code'],
+                'stock' => $items->items[$i]['stock'],
+                'brand' => $items->items[$i]['brand'],
+                'name' => $items->items[$i]['name'],
+                'category_id' => $items->items[$i]['category_id'],
+                'buy_price' => $items->items[$i]['buy_price'],
+                'price_rec' => $items->items[$i]['price_rec'],
+                'price_rec_from_sup' => $items->items[$i]['price_rec_from_sup'],
+                'profit_margin' => $items->items[$i]['profit_margin'],
+                'description' => $items->items[$i]['description'],
+                'property' => $items->items[$i]['property'],
+                'supplier_id' => $items->items[$i]['supplier_id']
             ];
         }
-        $product = Products::firstOrCreate(['Product_Code' => $result[4]]);
-        if ($product->wasRecentlyCreated) {
-            return response()->json('$product'); 
-        }else {
-            return response()->json($product);
-        }
+        return response()->json($result);
         
     }
 }
+
+// ====== Error on If always return true when create but when duplicate return error
+// $product = Products::firstOrCreate($result[0]);
+// if ($product->wasRecentlyCreated) {
+//     return response()->json('$product'); 
+// }else {
+//     return response()->json('$Product');
+// }
 
 // $df = dd($request->json()->all());
 // $input = $request;

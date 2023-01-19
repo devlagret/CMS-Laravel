@@ -25,9 +25,9 @@ return new class extends Migration
             $table->string('buy_price',20);
             $table->string('price_rec',20);
             $table->string('price_rec_from_sup', 20)->nullable();
-            $table->string('Profit_Margin',5);
-            $table->string('Description')->nullable();
-            $table->string('Property')->nullable();
+            $table->string('profit_margin',5);
+            $table->string('description')->nullable();
+            $table->string('property')->nullable();
             $table->unsignedBigInteger('supplier_id')->nullable()->default('0');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
