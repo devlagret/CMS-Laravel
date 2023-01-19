@@ -38,7 +38,7 @@ class WhsStockupController extends Controller
 
         if ($category) {
             Logs::create([
-                'user_id'   => $uid->id,
+                'uid'   => $uid->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Add Category(s)',
                 'detail'    => 'Add Category with type "'.$category_type.'" named "'.$category_name
@@ -76,7 +76,7 @@ class WhsStockupController extends Controller
 
         if ($category) {
             Logs::create([
-                'user_id'   => $uid->id,
+                'uid'   => $uid->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Update Category(s)',
                 'detail'    => 'Update Category with type "'.$category_type.'" named "'.$category_name

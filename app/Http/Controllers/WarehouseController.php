@@ -52,7 +52,7 @@ class WarehouseController extends Controller
 
         if ($product_req) {
             Logs::create([
-                'user_id'   => $uid->id,
+                'uid'   => $uid->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
                 'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
@@ -101,7 +101,7 @@ class WarehouseController extends Controller
 
         if ($product_req) {
             Logs::create([
-                'user_id'   => $uid->id,
+                'uid'   => $uid->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
                 'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
