@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 1.2.0.4
+//  API Version beta 1.2.0.5
 
 $prefix = 'api/';
 $router->group(['prefix' => $prefix], function () use ($router) {

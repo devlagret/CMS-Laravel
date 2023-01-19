@@ -138,9 +138,9 @@ class WarehouseController extends Controller
         $data = count($items->items);
         for ($i=0; $i < count($items->items); $i++) { 
             $result[$i] = [
-                'id'  => $items->items[$i],
+                'id'  => $items->items[$i]['id'],
                 'product_code' => $items->items[$i]['product_code'],
-                'stock' => $items->items[$i]['stock'],
+                // 'stock' => $items->items[$i]['stock'],
                 'brand' => $items->items[$i]['brand'],
                 'name' => $items->items[$i]['name'],
                 'category_id' => $items->items[$i]['category_id'],
@@ -153,8 +153,13 @@ class WarehouseController extends Controller
                 'supplier_id' => $items->items[$i]['supplier_id']
             ];
         }
-        return response()->json($result);
-        
+        // return response()->json($result);
+        $product = Products::firstOrCreate($result[0]);
+        if (!$product->wasRecentlyCreated) {
+            return response()->json('$product'); 
+        }else {
+            return response()->json('$Product');
+        }
     }
 }
 
