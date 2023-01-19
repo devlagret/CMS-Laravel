@@ -14,20 +14,16 @@ class Products extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'Product_Code',
-        'Brand',
-        'Name',
-        'type',
+        'product_code',
+        'brand',
+        'name',
         'category_id',
         'buy_price',
         'price_rec_from_sup',
         'price_rec',
-        'Profit_Margin',
-        // 'Entry_Date',
-        // 'Out_Date',
-        // 'Expiration_Date',
-        'Description',
-        'Property',
+        'profit_margin',
+        'description',
+        'property',
         'supplier_id',
     ];
 }

@@ -24,37 +24,31 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         $validator = $this->validate($request, [
-            'Product_Code'        => 'required',
-            'Brand'               => 'required',
-            'Name'                => 'required',
+            'product_code'        => 'required',
+            'brand'               => 'required',
+            'name'                => 'required',
             'category_id'         => 'required',
             'buy_price'           => 'required',
             'price_rec'           => 'required',
             'price_rec_from_sup'  => 'required',
-            'Profit_Margin'       => 'required',
-            // 'Entry_Date'          => 'required',
-            // 'Out_Date'            => 'required',
-            // 'Expiration_Date'     => 'required',
-            'Description'         => 'required',
-            'Property'            => 'required',
-            'supplier_id'         => 'required', 
+            'profit_margin'       => 'required',
+            'description'         => 'required',
+            'property'            => 'required',
+            'supplier_id'         => 'required',
         ]);
-        $Product_Code = $request->input('Product_Code');
+        $product_code = $request->input('product_code');
 
         $product = product::create([
-            'Product_Code'        => $Product_Code,
-            'Brand'               => $request->input('Brand'),
-            'Name'                => $request->input('Name'),
+            'product_code'        => $product_code,
+            'brand'               => $request->input('brand'),
+            'name'                => $request->input('name'),
             'category_id'         => $request->input('category_id'),
             'buy_price'           => $request->input('buy_price'),
             'price_rec'           => $request->input('price_rec'),
             'price_rec_from_sup'  => $request->input('price_rec_from_sup'),
-            'Profit_Margin'       => $request->input('Profit_Margin'),
-            'Entry_Date'          => $request->input('Entry_Date'),
-            'Out_Date'            => $request->input('Out_Date'),
-            'Expiration_Date'     => $request->input('Expiration_Date'),
-            'Description'         => $request->input('Description'),
-            'Property'            => $request->input('Property'),
+            'profit_margin'       => $request->input('profit_margin'),
+            'description'         => $request->input('description'),
+            'property'            => $request->input('property'),
             'supplier_id'         => $request->input('supplier_id'),
         ]);
         $uh = new UserHelper;
@@ -63,7 +57,7 @@ class ProductsController extends Controller
                 'uid' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Product(s)',
-                'detail' => 'Add Product information with Code '.$Product_Code
+                'detail' => 'Add Product information with Code '.$product_code
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
@@ -81,38 +75,31 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $validator = $this->validate($request, [
-            'Product_Code'        => 'required',
-            'Brand'               => 'required',
-            'Name'                => 'required',
+            'product_code'        => 'required',
+            'brand'               => 'required',
+            'name'                => 'required',
             'category_id'         => 'required',
             'buy_price'           => 'required',
-            'Price_Rec'           => 'required',
-            'Price_Rec_from_Sup'  => 'required',
-            'Profit_Margin'       => 'required',
-            'Entry_Date'          => 'required',
-            'Out_Date'            => 'required',
-            'Expiration_Date'     => 'required',
-            'Description'         => 'required',
-            'Property'            => 'required',
+            'price_rec'           => 'required',
+            'price_rec_from_sup'  => 'required',
+            'profit_margin'       => 'required',
+            'description'         => 'required',
+            'property'            => 'required',
             'supplier_id'         => 'required',
         ]);
-        $Product_Code = $request->input('Product_Code');
+        $product_code = $request->input('product_code');
 
         $product = product::whereId($id)->update([
-            'Product_Code'       => $request->input('Product_Code'),
-            'Brand'              => $request->input('Brand'),
-            'Name'               => $request->input('Name'),
-            'type'               => $request->input('type'),
+            'product_code'       => $request->input('product_code'),
+            'brand'              => $request->input('brand'),
+            'name'               => $request->input('name'),
             'category_id'        => $request->input('category_id'),
             'buy_price'          => $request->input('buy_price'),
-            'Price_Rec'          => $request->input('Price_Recomendation'),
-            'Price_Rec_from_Sup' => $request->input('Price_Recomendation_from_Sup'),
-            'Profit_Margin'      => $request->input('Profit_Margin'),
-            'Entry_Date'         => $request->input('Entry_Date'),
-            'Out_Date'           => $request->input('Out_Date'),
-            'Expiration_Date'    => $request->input('Expiration_Date'),
-            'Description'        => $request->input('Description'),
-            'Property'           => $request->input('Property'),
+            'price_rec'          => $request->input('price_rec'),
+            'price_rec_from_sup' => $request->input('price_rec_from_sup'),
+            'profit_margin'      => $request->input('profit_margin'),
+            'description'        => $request->input('description'),
+            'property'           => $request->input('property'),
             'supplier_id'        => $request->input('supplier_id'),
             
         ]);
@@ -122,7 +109,7 @@ class ProductsController extends Controller
                 'uid' => $uh->getUserData($request->header('token'))->uid,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Product(s)',
-                'detail' => 'Update Product information with Code '.$Product_Code
+                'detail' => 'Update Product information with Code '.$product_code
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {

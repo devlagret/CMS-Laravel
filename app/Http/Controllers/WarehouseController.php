@@ -121,43 +121,11 @@ class WarehouseController extends Controller
 
     public function stockup(Request $request)
     {
-        // $df = dd($request->json()->all());
-        // $input = $request;
-        // $con = $input['items']['skills'];
-        // $data = json_decode($request);
-        // $json = json_decode($request);
-        // $validator = Validator::make(
-        //     $con, [
-        //         'id' => 'digits:8',
-        //         'custom' => 'digits:8',
-        //     ]
-        // );
-        // if ($validator->passes()) {
-        //     if (Arr::has($input, 'id' )) {
-        //         return response()->json($con, 200);
-                
-        // } else {
-        //     return response()->json('error bang', 404);
-        // }
-        // $validation = Validator::make(
-        //     $request->all(),
-        //     [
-        //         'name' => 'required|'
-        //     ]
-        // );
-
-        // if ($validation->fails()) {
-        //     dd($validation->getMessageBag()->all());
-        // } else {
-            
-        // }
-        
-        // return response()->json($json);
         
         $rules = [
             'Supplier_id'=>'required',
             'update_price'=>'required',
-            'items.*.product_id'=>'required',
+            'items.*.id'=>'required',
             'items.*.product_code'=>'required',
             'items.*.buy_price'=>'required',
             'items.*.stock'=>'required',
@@ -168,79 +136,136 @@ class WarehouseController extends Controller
         
         $result = [];
         $items = $request;
-        foreach ($items->items as $item) {
-            $result[] =[
-                'product_id'  => $item['product_id'],
-                'product_code' => $item['product_code'],
-                'stock' => $item['stock'],
-                'brand' => $item['brand'],
-                'name' => $item['name'],
-                'category_id' => $item['category_id'],
-                'buy_price' => $item['buy_price'],
-                'price_rec' => $item['price_rec'],
-                'price_rec_from_sup' => $item['price_rec_from_sup'],
-                'Profit_Margin' => $item['Profit_Margin'],
-                'Description' => $item['Description'],
-                'Property' => $item['Property'],
-                'supplier_id' => $item['supplier_id']
+        for ($i=0; $i < $items->items; $i++) { 
+            $result[] = [
+                // 'id'  => $items->items[$i],
+                'Product_Code' => $items->items[$i]
+                // 'stock' => $items->items[$i],
+                // 'brand' => $items->items[$i],
+                // 'name' => $items->items[$i],
+                // 'category_id' => $items->items[$i],
+                // 'buy_price' => $items->items[$i],
+                // 'price_rec' => $items->items[$i],
+                // 'price_rec_from_sup' => $items->items[$i],
+                // 'Profit_Margin' => $items->items[$i],
+                // 'Description' => $items->items[$i],
+                // 'Property' => $items->items[$i],
+                // 'supplier_id' => $items->items[$i]
             ];
-            $product = Products::firstOrCreate($result);
-            // $product = Products::firstOrCreate([
-            //     'product_id'  => $result['product_id'],
-            //     'Product_Code' => $result['product_code'],
-            //     'Brand' => $result['brand'],
-            //     'Name' => $result['name'],
-            //     'category_id' => $result['category_id'],
-            //     'buy_price' => $result['buy_price'],
-            //     'price_rec' => $result['price_rec'],
-            //     'price_rec_from_sup' => $result['price_rec_from_sup'],
-            //     'Profit_Margin' => $result['Profit_Margin'],
-            //     'Description' => $result['Description'],
-            //     'Property' => $result['Property'],
-            //     'Supplier_id' => $result['supplier_id']
-                // 'Product_Code' => '1',
-                // 'id'  => $item['product_id'],
-            // ]);
-            // if ($product->wasRecentlyCreated) {
-                // $store = Products::create($result[0]);
-                    // $store = Products::create([
-                    //     'Product_Code' => $item['product_code'],
-                    //     // 'buy_price' => $item['buy_price'],
-                    //     // 'stock' => $item['stock'],
-                    //     // 'price_rec' => $item['price_rec'], 
-                    //     'brand' => $item['brand'],
-                    //     'name' => $item['name'],
-                    //     'category_id' => $item['category_id'],
-                    //     'buy_price' => $item['buy_price'],
-                    //     'price_rec' => $item['price_rec'],
-                    //     'price_rec_from_sup' => $item['price_rec_from_sup'],
-                    //     'Profit_Margin' => $item['Profit_Margin'],
-                    //     'Description' => $item['Description'],
-                    //     'Property' => $item['Property'],
-                    // ]);
-                    // return response()->json('$ada');
-            // }else {
-                //   $store = Products::create([
-                    //     'Product_Code' => $item['product_code'],
-                    //     // 'buy_price' => $item['buy_price'],
-                    //     // 'stock' => $item['stock'],
-                    //     // 'price_rec' => $item['price_rec'], 
-                    //     'brand' => $item['brand'],
-                    //     'name' => $item['name'],
-                    //     'category_id' => $item['category_id'],
-                    //     'buy_price' => $item['buy_price'],
-                    //     'price_rec' => $item['price_rec'],
-                    //     'price_rec_from_sup' => $item['price_rec_from_sup'],
-                    //     'Profit_Margin' => $item['Profit_Margin'],
-                    //     'Description' => $item['Description'],
-                    //     'Property' => $item['Property'],
-                    // ]);
-                // return response()->json('$item');
-            // }
-
-        // if(collect($data)){
-        //     $phone = $data->array_pluck($array, 'value');
         }
-        return response()->json($product);
+        $product = Products::firstOrCreate(['Product_Code' => $result[4]]);
+        if ($product->wasRecentlyCreated) {
+            return response()->json('$product'); 
+        }else {
+            return response()->json($product);
+        }
+        
     }
 }
+
+// $df = dd($request->json()->all());
+// $input = $request;
+// $con = $input['items']['skills'];
+// $data = json_decode($request);
+// $json = json_decode($request);
+// $validator = Validator::make(
+//     $con, [
+//         'id' => 'digits:8',
+//         'custom' => 'digits:8',
+//     ]
+// );
+// if ($validator->passes()) {
+//     if (Arr::has($input, 'id' )) {
+//         return response()->json($con, 200);
+        
+// } else {
+//     return response()->json('error bang', 404);
+// }
+// $validation = Validator::make(
+//     $request->all(),
+//     [
+//         'name' => 'required|'
+//     ]
+// );
+
+// if ($validation->fails()) {
+//     dd($validation->getMessageBag()->all());
+// } else {
+    
+// }
+
+// return response()->json($json);
+
+// ForEach Method
+// foreach ($items->items as $item) {
+//     $result[] =[
+//         'product_id'  => $item['product_id'],
+//         'product_code' => $item['product_code'],
+//         'stock' => $item['stock'],
+//         'brand' => $item['brand'],
+//         'name' => $item['name'],
+//         'category_id' => $item['category_id'],
+//         'buy_price' => $item['buy_price'],
+//         'price_rec' => $item['price_rec'],
+//         'price_rec_from_sup' => $item['price_rec_from_sup'],
+//         'Profit_Margin' => $item['Profit_Margin'],
+//         'Description' => $item['Description'],
+//         'Property' => $item['Property'],
+//         'supplier_id' => $item['supplier_id']
+//     ];
+
+// $product = Products::firstOrCreate([
+//     'product_id'  => $result['product_id'],
+//     'Product_Code' => $result['product_code'],
+//     'Brand' => $result['brand'],
+//     'Name' => $result['name'],
+//     'category_id' => $result['category_id'],
+//     'buy_price' => $result['buy_price'],
+//     'price_rec' => $result['price_rec'],
+//     'price_rec_from_sup' => $result['price_rec_from_sup'],
+//     'Profit_Margin' => $result['Profit_Margin'],
+//     'Description' => $result['Description'],
+//     'Property' => $result['Property'],
+//     'Supplier_id' => $result['supplier_id']
+    // 'Product_Code' => '1',
+    // 'id'  => $item['product_id'],
+// ]);
+// if ($product->wasRecentlyCreated) {
+    // $store = Products::create($result[0]);
+        // $store = Products::create([
+        //     'Product_Code' => $item['product_code'],
+        //     // 'buy_price' => $item['buy_price'],
+        //     // 'stock' => $item['stock'],
+        //     // 'price_rec' => $item['price_rec'], 
+        //     'brand' => $item['brand'],
+        //     'name' => $item['name'],
+        //     'category_id' => $item['category_id'],
+        //     'buy_price' => $item['buy_price'],
+        //     'price_rec' => $item['price_rec'],
+        //     'price_rec_from_sup' => $item['price_rec_from_sup'],
+        //     'Profit_Margin' => $item['Profit_Margin'],
+        //     'Description' => $item['Description'],
+        //     'Property' => $item['Property'],
+        // ]);
+        // return response()->json('$ada');
+// }else {
+    //   $store = Products::create([
+        //     'Product_Code' => $item['product_code'],
+        //     // 'buy_price' => $item['buy_price'],
+        //     // 'stock' => $item['stock'],
+        //     // 'price_rec' => $item['price_rec'], 
+        //     'brand' => $item['brand'],
+        //     'name' => $item['name'],
+        //     'category_id' => $item['category_id'],
+        //     'buy_price' => $item['buy_price'],
+        //     'price_rec' => $item['price_rec'],
+        //     'price_rec_from_sup' => $item['price_rec_from_sup'],
+        //     'Profit_Margin' => $item['Profit_Margin'],
+        //     'Description' => $item['Description'],
+        //     'Property' => $item['Property'],
+        // ]);
+    // return response()->json('$item');
+// }
+
+// if(collect($data)){
+//     $phone = $data->array_pluck($array, 'value');
