@@ -13,7 +13,7 @@ use App\Helpers\UserHelper;
 class CategoriesController extends Controller
 {
     
-    public function index()
+    public function index($id=null)
     {
         $categories = Categories::get();
   
@@ -75,7 +75,7 @@ class CategoriesController extends Controller
                 'activity' => 'Update Category(s)',
                 'detail' => 'Update Category with type "'.$category_type.'" named "'.$category_name
             ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
+            return response()->json(['message' => 'Data updated successfully'], 200);
         }else {
             return response()->json("Failure");
         }

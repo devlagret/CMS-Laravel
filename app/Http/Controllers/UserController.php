@@ -23,7 +23,7 @@ class UserController extends Controller
     //
     public function register(Request $request)
     {
-       $uh = new UserHelper;
+        $uh = new UserHelper;
         $token = $request->header('token');
         if ($uh->getRole($token) == 'admin') {
             $this->validate($request, [
@@ -36,7 +36,6 @@ class UserController extends Controller
             $username = $request->input('username');
             $password = Hash::make($request->input('password'));
             $role = $request->input('role');
-            //$id = $uh->getUserData($token);
             $user = Users::create([
                 'uid' => Str::uuid()->toString(),
                 'name' => $name,
@@ -60,7 +59,6 @@ class UserController extends Controller
             'username' => 'required|max:50',
             'password' => 'required'
         ]);
-
         $username = $request->input('username');
         $password = $request->input('password');
 
@@ -73,23 +71,92 @@ class UserController extends Controller
         }
 
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        if (Tokens::where('uid', '=', $user->uid)->exists()) {
-            // user found
-            $token = Tokens::where('uid', '=', $user->uid)->first();
-            $token->update(['token' => str_replace('\\', '', $ftoken)]);
-        } else {
-            $token = Tokens::create([
-                'uid' => $user->uid,
-                'token' => str_replace('\\', '', $ftoken)
-            ]);
+        Tokens::updateOrCreate(['uid' => $user->uid], ['token' => str_replace('\\', '', $ftoken)]);
+        return response()->json(['token' => $ftoken]);
+    }
+    public function update(Request $request, $id = null)
+    {
+        $this->validate($request, [
+            'name' => 'min:3|max:50',
+            'username' => '|min:3|max:50',
+            'password' => 'min:6',
+            'role' => 'min:3|max:25'
+        ]);
+        $token = $request->header('token');
+        $name = $request->input('name');
+        $username = $request->input('username');
+        $password = Hash::make($request->input('password'));
+        $role = $request->input('role');
+        $uh = new UserHelper;
+        try {
+            if ($id == null) {
+                $user = Users::where('uid', $uh->getUserData($token, 'uid'))->first();
+                $user->update([
+                    'name' => $name,
+                    'username' => $username,
+                    'password' => $password,
+                ]);
+            } elseif ($uh->getRole($token) == 'admin') {
+                $user = Users::where('uid', $id)->first();
+                if (!$user) {
+                    return response()->json(['message' => 'Update failed, UID not found'], 404);
+                }
+                $user->update([
+                    'name' => $name,
+                    'username' => $username,
+                    'password' => $password,
+                    'role' => $role
+                ]);
+                
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == '1062') {
+                return response()->json(['message' => 'Update failed, Username Already Taken'], 409);
+            }
+          
         }
-        return response()->json(['token' => $token->token]);
+        if (!$user) {
+            return response()->json(['message' => 'Update failed, UID not found'], 404);
+        }
+        Logs::create([
+            'uid' => $uh->getUserData($token)->uid,
+            'datetime' => Carbon::now('Asia/Jakarta'),
+            'activity' => 'Update User(s)',
+            'detail' => 'Update user to : name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
+        ]);
+        return response()->json(['message' => 'Data updated successfully'], 200);
+    }
+    public function destroy(Request $request, $id)
+    {
+        $uh = new UserHelper;
+        $token = $request->header('token');
+        $user = $uh->getUserByid($id);
+        if ($uh->getRole($token) == 'admin') {
+                return response(
+            'Failed', 404);
+            if (!Users::destroy($id)) {
+            }
+            if ($user) {
+                Logs::create([
+                    'uid' => $uh->getUserData($token)->uid,
+                    'datetime' => Carbon::now('Asia/Jakarta'),
+                    'activity' => 'Delete User(s)',
+                    'detail' => 'Deleted user with name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
+                ]);
+            }
+            return response()->json(['message' => 'Deleted']);
+        }
+        return response('Unauthorized', 401);
     }
     public function getUser(Request $request, $id = null)
     {
         if ($id != null) {
             $uh = new UserHelper;
             $d = $uh->getUserById($id);
+            if(!$d){
+                return response('Not Found', 404);
+            }
             return response()->json($d);
         } else {
             $token = $request->header('token');
@@ -100,7 +167,7 @@ class UserController extends Controller
     }
     public function getAllUser(Request $request, $id = null)
     {
-            $uh = new UserHelper;
-            return response()->json($uh->getAllUser());
+        $uh = new UserHelper;
+        return response()->json($uh->getAllUser());
     }
 }

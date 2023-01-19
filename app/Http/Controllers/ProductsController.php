@@ -10,6 +10,8 @@ use App\Models\Logs;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\UserHelper;
+use App\Models\Categories;
+use App\Models\Suppliers;
 
 class ProductsController extends Controller
 {
@@ -146,5 +148,12 @@ class ProductsController extends Controller
         } elseif ($request->code) {
             $product = Product::find($request->code);
         }
+    }
+
+    public function category($id){
+
+    }
+    public function supplier($id){
+        
     }
 }

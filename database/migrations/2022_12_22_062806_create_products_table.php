@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('products');
         Schema::create('products', function (Blueprint $table) {
-            $table->id('id');
+            $table->uuid('id');
             $table->string('product_id',50)->nullable();
             $table->string('product_code',50)->unique();
             $table->string('brand',50)->nullable();
