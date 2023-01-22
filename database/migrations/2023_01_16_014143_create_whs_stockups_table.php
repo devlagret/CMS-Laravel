@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('whs_stockups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('supplier_id')->nullable()->default(12);
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->uuid('supplier_id')->nullable()->default(12);
+            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('cascade');
             $table->json('items');
             $table->timestamps();
         });

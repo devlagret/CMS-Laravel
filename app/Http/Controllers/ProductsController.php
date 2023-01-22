@@ -63,14 +63,15 @@ class ProductsController extends Controller
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
-            return response()->json("Failure");
+            return response()->json("Failure",500);
         }
     }
 
     public function show($id)
     {
         $product = Product::find($id);
-
+        if (!$product) {
+            return response('Product Not Found',404);}
         return response()->json($product);
     }
 
@@ -138,9 +139,19 @@ class ProductsController extends Controller
     }
 
     public function category($id){
-
+        $p = Product::where('id',$id)->first();
+        if (!$p) {
+            return response('Product Not Found', 404);
+        }
+        $c = Categories::where('category_id', $p->category_id)->first();
+        return response()->json($c);
     }
     public function supplier($id){
-        
+        $p = Product::where('id', $id)->first();
+        if (!$p) {
+            return response('Product Not Found', 404);
+        }
+        $s = Suppliers::where('supplier_id', $p->supplier_id)->first();
+        return response()->json($s);
     }
 }

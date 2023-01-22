@@ -57,10 +57,9 @@ class BranchesController extends Controller
              ]);
              return response()->json(['message' => 'Data added successfully'], 201);
          } else {
-             return response()->json("Failure");
+             return response()->json("Failure",500);
          }
     }
-
     
     public function show($id)
     {
@@ -80,7 +79,7 @@ class BranchesController extends Controller
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
         
-        $branch = Branches::whereId($id)->update([
+        $branch = Branches::where('branch_id',$id)->update([
             'branch_name'    => $request->input('branch_name'),
             'leader_name'    => $request->input('leader_name'),
             'contact'        => $request->input('contact'),
@@ -96,14 +95,19 @@ class BranchesController extends Controller
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
-            return response()->json("Failure");
+            return response()->json("Failure",500);
         }
     }
-
     
     public function destroy($id)
     {
         Branches::destroy($id);
         return response()->json(['message' => 'Deleted']);
+    }
+
+    public function user(){
+       $usr = Users::join('branches','users.uid','=','branches.uid')->get();
+        return response()->json($usr);
+        
     }
 }

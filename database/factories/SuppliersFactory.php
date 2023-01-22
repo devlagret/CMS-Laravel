@@ -11,10 +11,11 @@ class SuppliersFactory extends Factory
 
     public function definition(): array
     {
-    	return [
-    	    'supplier_name' => $this->faker->name(),
+        return [
+            'supplier_id' => $this->faker->uuid(),
+            'supplier_name' => $this->faker->name(),
             'contact' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
-    	];
+        ];
     }
 }

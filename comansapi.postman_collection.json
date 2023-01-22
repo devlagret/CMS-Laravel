@@ -117,7 +117,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$X/.N3o4iLn5mFtGZQWPCrOnnm8556eUUf7dUtsUKUx.0gnKAqMnCe",
+									"value": "$2y$10$9muAkrG6R/Z0kQ.nl/.VvuQ3FDy8mpEDwgZOBWoOf/sBuhPL.EIRC",
 									"type": "string"
 								},
 								{
@@ -130,7 +130,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{url}}/api/user/{uid}",
+							"raw": "http://{{url}}/api/user/e9d6022b-1e3b-438b-90b7-f8e26f11ae96",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
@@ -138,7 +138,7 @@
 							"path": [
 								"api",
 								"user",
-								"{uid}"
+								"e9d6022b-1e3b-438b-90b7-f8e26f11ae96"
 							]
 						}
 					},
@@ -152,7 +152,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$NRMWUsiR38U5Sw26NzGSJuc40SegbgksCWT7YEu4EdnPWvJr06T7C",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
 									"type": "string"
 								},
 								{
@@ -188,7 +188,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$X/.N3o4iLn5mFtGZQWPCrOnnm8556eUUf7dUtsUKUx.0gnKAqMnCe",
+									"value": "$2y$10$jCvV/VAkU/8.q4TqHDTO9uWLqs3px2CY6N5ER7h175wSsYtK0urHW",
 									"type": "string"
 								},
 								{
@@ -201,7 +201,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{url}}/api/user/all",
+							"raw": "http://{{url}}/api/user/",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
@@ -209,7 +209,169 @@
 							"path": [
 								"api",
 								"user",
-								"all"
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$9muAkrG6R/Z0kQ.nl/.VvuQ3FDy8mpEDwgZOBWoOf/sBuhPL.EIRC",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "User Satu",
+									"type": "default"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "user123",
+									"type": "default"
+								},
+								{
+									"key": "role",
+									"value": "userr",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/user/e9d6022b-1e3b-438b-90b7-f8e26f11ae96",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"e9d6022b-1e3b-438b-90b7-f8e26f11ae96"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Own User Profile",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$W2ASKYIzeWXp3EQmZyojruKoUk9IWAPcVSe1Bc7obZhS31d2KD4YC",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Users",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/user/",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Admin Main",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$jCvV/VAkU/8.q4TqHDTO9uWLqs3px2CY6N5ER7h175wSsYtK0urHW",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/api/user/",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								""
 							]
 						}
 					},
@@ -555,7 +717,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$bm2JktPMBCEtSvVb7bjQlOJORnbyNGV712GPhLSvWiUVelPOva94K",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
 									"type": "string"
 								},
 								{
@@ -596,39 +758,154 @@
 					"response": []
 				},
 				{
-					"name": "Get Product Category",
+					"name": "Get Products by ID",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"host": true,
+							"connection": true,
+							"accept": true,
+							"user-agent": true
+						}
+					},
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "t",
+								"value": "\\afdhfj\\\\dasdas\\d\\\\\\\\dad\\\\dsa",
+								"type": "default",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8",
+								"type": "default",
+								"disabled": true
+							}
+						],
 						"url": {
-							"raw": "http://{{url}}/api/{id}/category",
+							"raw": "http://{{url}}/api/product/1471e04c-5818-30d7-baa2-60c45ffe80b5",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
-								"{id}",
-								"category"
+								"product",
+								"1471e04c-5818-30d7-baa2-60c45ffe80b5"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Product Supplier",
+					"name": "Get Product Category",
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{url}}/api/{id}/supplier",
+							"raw": "http://{{url}}/api/product/1471e04c-5818-30d7-baa2-60c45ffe80b5/category",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
-								"{id}",
+								"product",
+								"1471e04c-5818-30d7-baa2-60c45ffe80b5",
+								"category"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Product Category",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{url}}/api/product/1471e04c-5818-30d7-baa2-60c45ffe80b5/category",
+									"protocol": "http",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"product",
+										"1471e04c-5818-30d7-baa2-60c45ffe80b5",
+										"category"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"category_id\": \"17065e8c-981d-34bd-b73c-95d84d829aea\",\r\n    \"category_type\": \"Non-Pangan\",\r\n    \"category_name\": \"Non-Pangan\",\r\n    \"created_at\": \"2023-01-20T03:57:23.000000Z\",\r\n    \"updated_at\": \"2023-01-20T03:57:23.000000Z\"\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Product Supplier",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/api/product/1471e04c-5818-30d7-baa2-60c45ffe80b5/supplier",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"1471e04c-5818-30d7-baa2-60c45ffe80b5",
 								"supplier"
 							]
 						}
@@ -651,7 +928,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$bm2JktPMBCEtSvVb7bjQlOJORnbyNGV712GPhLSvWiUVelPOva94K",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
 									"type": "string"
 								},
 								{
@@ -707,7 +984,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$bm2JktPMBCEtSvVb7bjQlOJORnbyNGV712GPhLSvWiUVelPOva94K",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
 									"type": "string"
 								},
 								{
@@ -752,7 +1029,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Produk Copy",
+					"name": "Delete Produk Copy",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"host": true,
@@ -834,6 +1111,21 @@
 				{
 					"name": "Get Branch User",
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {

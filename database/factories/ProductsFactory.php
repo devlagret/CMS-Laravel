@@ -13,8 +13,8 @@ class ProductsFactory extends Factory
 
     public function definition(): array
     {
-        $cateids = Categories::all()->pluck('id')->toArray();
-        $suppids = Suppliers::all()->pluck('id')->toArray();
+        $cateids = Categories::all()->pluck('category_id')->toArray();
+        $suppids = Suppliers::all()->pluck('supplier_id')->toArray();
         $buy = $this->faker->numerify('###000');
         $price = $this->faker->numerify('###000');
         $price_rec = $this->faker->numerify('###000');
@@ -28,7 +28,9 @@ class ProductsFactory extends Factory
          }
 
     	return [
-    	    'product_code' => $this->faker->bothify('?###'),
+            'id' => $this->faker->uuid(),
+            'product_id' => $this->faker->regexify('[A-Z]{2}-[0-9]{3}'),
+    	    'product_code' => $this->faker->ean13(),
             'brand' => $this->faker->company(),
             'name' => $this->faker->name(),
             'category_id' => $this->faker->randomElement($cateids),

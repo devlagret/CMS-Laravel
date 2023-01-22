@@ -14,6 +14,7 @@ class CategoriesFactory extends Factory
         $category = $this->faker->randomElement(['Pangan', 'Non-Pangan']);
 
     	return [
+            'category_id' => $this->faker->uuid(),
     	    'category_name' => $this->faker->lexify($category),
             'category_type' => $this->faker->lexify($category),
     	];

@@ -71,7 +71,7 @@ class UserController extends Controller
         }
 
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        Tokens::updateOrCreate(['uid' => $user->uid], ['token' => str_replace('\\', '', $ftoken)]);
+        Tokens::updateOrCreate(['uid' => $user->uid], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
         return response()->json(['token' => $ftoken]);
     }
     public function update(Request $request, $id = null)

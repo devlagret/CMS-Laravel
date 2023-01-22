@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::dropIfExists('categories');
         Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('category_name', 20);
+            $table->uuid('category_id')->primary();
             $table->string('category_type', 20)->nullable();
+            $table->string('category_name', 20);
             $table->timestamps();
         });
     }

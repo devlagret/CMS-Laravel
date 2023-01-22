@@ -11,9 +11,10 @@ class Suppliers extends Model
 
     protected $table = 'suppliers';
 
-    protected $primaryKey = 'id';
-
+    protected $primaryKey = 'supplier_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
-        'supplier_name', 'contact', 'address'
+        'supplier_id','supplier_name', 'contact', 'address'
     ];
 }

@@ -11,9 +11,10 @@ class Categories extends Model
     
     protected $table = 'categories';
 
-    protected $primaryKey = 'id';
-
+    protected $primaryKey = 'category_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
-        'category_name', 'category_type'
+        'category_id', 'category_name', 'category_type'
     ];
 }
