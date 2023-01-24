@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 1.2.0.6
+//  API Version beta 1.2.0.7
 
 $prefix = 'api/';
 //user relatet api endpoint

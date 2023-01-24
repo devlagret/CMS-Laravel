@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Branches;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BranchesFactory extends Factory
@@ -12,7 +12,7 @@ class BranchesFactory extends Factory
 
     public function definition(): array
     {
-        $uid = Users::all()->pluck('uid')->toArray();
+        $uid = User::all()->pluck('uid')->toArray();
     	return [
             'branch_id' => $this->faker->uuid(),
     	    'branch_name' => $this->faker->company(),

@@ -17,16 +17,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user', function (Blueprint $table) {
             $table->uuid('uid')->primary();
-            $table->string('username', 50)->unique();
-            $table->string('name', 50);
+            $table->string('username')->unique();
+            $table->string('name');
+            $table->string('contact',15);
+            $table->string('email');
             $table->string('password')->default('null');
             $table->string('role', 25)->default('user');
             $table->timestamps();
         });
         // Insert some stuff
-        DB::table('users')->insert([
+        DB::table('user')->insert([
             [
                 'uid' => Str::uuid()->toString(),
                 'username' => 'admin',
@@ -54,6 +56,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user');
     }
 };

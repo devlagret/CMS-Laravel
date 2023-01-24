@@ -6,7 +6,7 @@ use App\Models\Categories;
 use App\Models\Logs;
 use App\Models\Products;
 use App\Models\Tokens;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Warehouses;
 use Carbon\Carbon;
@@ -27,7 +27,7 @@ class WarehouseController extends Controller
     {
         $token = $request->header('token');
         $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
+        $usr = User::where('id', $uid->id)->first();
         
         $validator = $this->validate($request, [
             'branch_id'     => 'required',
@@ -76,7 +76,7 @@ class WarehouseController extends Controller
     {
         $token = $request->header('token');
         $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
+        $usr = User::where('id', $uid->id)->first();
 
         $validator = $this->validate($request, [
             'branch_id'     => 'required',

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\Product_Requests;
 use App\Models\Tokens;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Logs;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;

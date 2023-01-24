@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Tokens;
 use DateInterval;
 use DateTime;
@@ -28,7 +28,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Here you may define how you wish users to be authenticated for your Lumen
+        // Here you may define how you wish User to be authenticated for your Lumen
         // application. The callback which receives the incoming request instance
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
@@ -38,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($token) {
                 $id = Tokens::where('token', '=', $token)->first();
                 if ($id) {
-                    return Users::where('uid', $id->uid)->first();
+                    return User::where('uid', $id->uid)->first();
                 }
             }
         });

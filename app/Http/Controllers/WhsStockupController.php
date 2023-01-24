@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Logs;
 use App\Models\Tokens;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\whs_stockup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class WhsStockupController extends Controller
     {
         $token = $request->header('token');
         $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
+        $usr = User::where('id', $uid->id)->first();
 
         $validator = $this->validate($request, [
             'category_name'    => 'required',
@@ -60,7 +60,7 @@ class WhsStockupController extends Controller
     {
         $token = $request->header('token');
         $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
+        $usr = User::where('id', $uid->id)->first();
 
         $validator = $this->validate($request, [
             'category_name'    => 'required',

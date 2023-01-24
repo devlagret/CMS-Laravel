@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->uuid('uid')->primary();
-            $table->foreign('uid')->references('uid')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('uid')->references('uid')->on('user')->onDelete('cascade')->onUpdate('cascade');
             $table->string('token')->nullable();
             $table->timestamps();
         });
