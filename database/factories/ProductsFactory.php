@@ -30,7 +30,7 @@ class ProductsFactory extends Factory
     	return [
             'id' => $this->faker->uuid(),
             'product_id' => $this->faker->regexify('[A-Z]{2}-[0-9]{3}'),
-    	    'product_code' => $this->faker->ean13(),
+    	      'product_code' => $this->faker->ean13(),
             'brand' => $this->faker->company(),
             'name' => $this->faker->name(),
             'category_id' => $this->faker->randomElement($cateids),

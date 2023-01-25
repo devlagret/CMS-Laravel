@@ -13,27 +13,36 @@ class WhsStockupController extends Controller
 {
     public function index()
     {
-        $categories = whs_stockup::get();
+        $stockups = whs_stockup::get();
   
-        return response()->json($categories);
+        return response()->json($stockups);
     }
 
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $user_id = Tokens::where('token', '=', $token)->first();
-        $usr = User::where('id', $user_id->id)->first();
-
         $validator = $this->validate($request, [
-            'category_name'    => 'required',
-            'category_type'    => 'required',
+            
+            'supplier_id'    => 'required',
+            'product_code'    => 'required',
+            'purchase_date'    => 'required',
+            'total_amont'    => 'required',
+            'quantity'    => 'required',
         ]);
-        $category_name = $request->input('category_name');
-        $category_type = $request->input('category_type');
+        
+        $category_name = $request->input('supplier_id');
+        $category_name = $request->input('product_code');
+        $category_type = $request->input('purchase_date');
+        $category_type = $request->input('total_amont');
+        $category_type = $request->input('quantity');
 
         $category = whs_stockup::create([
-            'category_name'    => $category_name,
-            'category_type'    => $category_type,
+        
+            'supplier_id
+            '    => $category_name,
+            'product_code'    => $category_name,
+            'purchase_date'    => $category_type,
+            'total_amont'    => $category_type,
+            'quantity'    => $category_type,
         ]);
 
         if ($category) {
@@ -47,50 +56,5 @@ class WhsStockupController extends Controller
         }else {
             return response()->json("Failure");
         }
-    }
-
-    public function show($id)
-    {
-        $category = whs_stockup::find($id);
-
-        return response()->json($category);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $token = $request->header('token');
-        $user_id = Tokens::where('token', '=', $token)->first();
-        $usr = User::where('id', $user_id->id)->first();
-
-        $validator = $this->validate($request, [
-            'category_name'    => 'required',
-            'category_type'    => 'required',
-        ]);
-        $category_name = $request->input('category_name');
-        $category_type = $request->input('category_type');
-
-        $category = whs_stockup::whereId($id)->update([
-            'category_name'   => $request->input('category_name'),
-            'category_type'   => $request->input('category_type'),
-        ]);
-
-        if ($category) {
-            Logs::create([
-                'user_id'   => $user_id->id,
-                'datetime'  => Carbon::now('Asia/Jakarta'),
-                'activity'  => 'Update Category(s)',
-                'detail'    => 'Update Category with type "'.$category_type.'" named "'.$category_name
-            ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
-        }else {
-            return response()->json("Failure");
-        }
-    }
-
-    public function destroy($id)
-    {
-        whs_stockup::destroy($id);
-
-        return response()->json(['message' => 'Deleted']);
     }
 }
