@@ -14,10 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('whs_stockups', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('supplier_id')->nullable()->default(12);
-            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('cascade');
-            $table->json('items');
+            $table->uuid();
+            $table->uuid('supplier_id')->nullable()->default('0');
+            $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('set null');
+            $table->string('product_code');
+            $table->foreign('product_code')->references('product_code')->on('products')->onDelete('cascade');
+            $table->date('purchase_date');
+            $table->integer('total_amont');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

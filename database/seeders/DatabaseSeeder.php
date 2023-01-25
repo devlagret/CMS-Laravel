@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // $this->call('CategoriesSeeder');
         // $this->call('SupplierSeeder');
         $this->call([
-            CategoriesSeeder::class,
+            // CategoriesSeeder::class,
             SupplierSeeder::class,
             ProductSeeder::class,
             BranchesSeeder::class,

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('warehouses', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id('id');
             $table->uuid('warehouse_id');
             $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('restrict')->onUpdate('cascade');
             $table->string('product_code', 50);

@@ -85,4 +85,5 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 $router->group(['prefix' => $prefix], function () use ($router) {
     $router->post('json', 'WarehouseController@stockup');
     $router->get('json', [WarehouseController::class, 'stockup']);
+    $router->post('warehouse', 'WarehouseController@store');
 });
