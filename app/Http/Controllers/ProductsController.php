@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Helpers\UserHelper;
 use App\Models\Categories;
 use App\Models\Suppliers;
+use Illuminate\Support\Facades\Auth;
 
 class ProductsController extends Controller
 {
@@ -19,8 +20,8 @@ class ProductsController extends Controller
     public function index()
     {
         $products = Product::get();
-  
-        return response()->json($products);
+        $user = Auth::check();
+        return response()->json([$user,$products]);
     }
 
     public function store(Request $request)
@@ -56,7 +57,7 @@ class ProductsController extends Controller
         $uh = new UserHelper;
         if ($product) {
             Logs::create([
-                'uid' => $uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Product(s)',
                 'detail' => 'Add Product information with Code '.$product_code
@@ -109,7 +110,7 @@ class ProductsController extends Controller
         $uh = new UserHelper;
         if ($product) {
             Logs::create([
-                'uid' => $uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Product(s)',
                 'detail' => 'Update Product information with Code '.$product_code

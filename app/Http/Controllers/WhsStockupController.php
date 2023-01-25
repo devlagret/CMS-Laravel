@@ -21,8 +21,8 @@ class WhsStockupController extends Controller
     public function store(Request $request)
     {
         $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = User::where('id', $uid->id)->first();
+        $user_id = Tokens::where('token', '=', $token)->first();
+        $usr = User::where('id', $user_id->id)->first();
 
         $validator = $this->validate($request, [
             'category_name'    => 'required',
@@ -38,7 +38,7 @@ class WhsStockupController extends Controller
 
         if ($category) {
             Logs::create([
-                'uid'   => $uid->id,
+                'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Add Category(s)',
                 'detail'    => 'Add Category with type "'.$category_type.'" named "'.$category_name
@@ -59,8 +59,8 @@ class WhsStockupController extends Controller
     public function update(Request $request, $id)
     {
         $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = User::where('id', $uid->id)->first();
+        $user_id = Tokens::where('token', '=', $token)->first();
+        $usr = User::where('id', $user_id->id)->first();
 
         $validator = $this->validate($request, [
             'category_name'    => 'required',
@@ -76,7 +76,7 @@ class WhsStockupController extends Controller
 
         if ($category) {
             Logs::create([
-                'uid'   => $uid->id,
+                'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Update Category(s)',
                 'detail'    => 'Update Category with type "'.$category_type.'" named "'.$category_name

@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tokens', function (Blueprint $table) {
-            $table->uuid('uid')->primary();
-            $table->foreign('uid')->references('uid')->on('user')->onDelete('cascade')->onUpdate('cascade');
+            $table->uuid('user_id')->primary();
+            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade')->onUpdate('cascade');
             $table->string('token')->nullable();
             $table->timestamps();
         });

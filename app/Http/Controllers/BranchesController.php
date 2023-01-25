@@ -23,7 +23,7 @@ class BranchesController extends Controller
 
     public function store(Request $request)
     {
-        if(!User::where('id',$request->input('uid'))){
+        if(!User::where('id',$request->input('user_id'))){
             return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
         }
         $validator = $this->validate($request, [
@@ -31,13 +31,13 @@ class BranchesController extends Controller
             'leader_name'    => 'required',
             'contact'        => 'required|max:15',
             'address'        => 'required',
-            'uid' =>'required',
+            'user_id' =>'required',
         ]);
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
         $contact = $request->input('contact');
         $address = $request->input('address');
-        $uid = $request->input('uid');
+        $user_id = $request->input('user_id');
     
         $branch = Branches::create([
             'branch_id' => Str::uuid()->toString(),
@@ -45,12 +45,12 @@ class BranchesController extends Controller
             'leader_name'    => $leader_name,
             'contact'    => $contact,
             'address'    => $address,
-            'uid'    => $uid,
+            'user_id'    => $user_id,
         ]);
         $uh = new UserHelper;
          if ($branch) {
              Logs::create([
-                 'uid' => $uh->getUserData($request->header('token'))->uid,
+                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                  'datetime' => Carbon::now('Asia/Jakarta'),
                  'activity' => 'Add Branch(s)',
                  'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name
@@ -88,7 +88,7 @@ class BranchesController extends Controller
         $uh = new UserHelper;
         if ($branch) {
             Logs::create([
-                'uid' => $uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Branch(s)',
                 'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
@@ -106,7 +106,7 @@ class BranchesController extends Controller
     }
 
     public function user(){
-       $usr = User::join('branches','User.uid','=','branches.uid')->get();
+       $usr = User::join('branches','User.user_id','=','branches.user_id')->get();
         return response()->json($usr);
         
     }

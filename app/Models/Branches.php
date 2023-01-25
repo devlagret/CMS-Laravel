@@ -20,6 +20,6 @@ class Branches extends Model
         'leader_name',
         'contact',
         'address',
-        'uid',
+        'user_id',
     ];
 }

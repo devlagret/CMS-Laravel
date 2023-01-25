@@ -26,8 +26,8 @@ class WarehouseController extends Controller
     public function store(Request $request)
     {
         $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = User::where('id', $uid->id)->first();
+        $user_id = Tokens::where('token', '=', $token)->first();
+        $usr = User::where('id', $user_id->id)->first();
         
         $validator = $this->validate($request, [
             'branch_id'     => 'required',
@@ -52,7 +52,7 @@ class WarehouseController extends Controller
 
         if ($product_req) {
             Logs::create([
-                'uid'   => $uid->id,
+                'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
                 'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
@@ -75,8 +75,8 @@ class WarehouseController extends Controller
     public function update(Request $request, $id)
     {
         $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = User::where('id', $uid->id)->first();
+        $user_id = Tokens::where('token', '=', $token)->first();
+        $usr = User::where('id', $user_id->id)->first();
 
         $validator = $this->validate($request, [
             'branch_id'     => 'required',
@@ -101,7 +101,7 @@ class WarehouseController extends Controller
 
         if ($product_req) {
             Logs::create([
-                'uid'   => $uid->id,
+                'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
                 'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount

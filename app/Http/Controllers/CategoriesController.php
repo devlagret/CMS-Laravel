@@ -36,7 +36,7 @@ class CategoriesController extends Controller
         $uh = new UserHelper;
         if ($category) {
             Logs::create([
-                'uid' => $uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Category(s)',
                 'detail' => 'Add Category with type "'.$category_type.'" named "'.$category_name
@@ -70,7 +70,7 @@ class CategoriesController extends Controller
         $uh = new UserHelper;
         if ($category) {
             Logs::create([
-                'uid' => $uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Category(s)',
                 'detail' => 'Update Category with type "'.$category_type.'" named "'.$category_name

@@ -37,7 +37,7 @@ class SuppliersController extends Controller
         $uh = new UserHelper;
         if ($supplier) {
             Logs::create([
-                'uid' => $uh->getUserData($request->header('token'))->uid,
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Supplier(s)',
                 'detail' => 'Add Supplier information with name '.$supplier_name
@@ -72,7 +72,7 @@ class SuppliersController extends Controller
         $uh = new UserHelper;
         if ($supplier) {
             Logs::create([
-                'uid'   => $uh->getUserData($request->header('token'))->uid,
+                'user_id'   => $uh->getUserData($request->header('token'))->user_id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Update Supplier(s)',
                 'detail'    => 'Update Supplier information with name '.$supplier_name

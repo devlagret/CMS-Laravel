@@ -18,34 +18,40 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user', function (Blueprint $table) {
-            $table->uuid('uid')->primary();
+            $table->uuid('user_id')->primary();
             $table->string('username')->unique();
             $table->string('name');
-            $table->string('contact',15);
+            $table->string('contact', 15);
             $table->string('email');
             $table->string('password')->default('null');
             $table->string('role', 25)->default('user');
             $table->timestamps();
         });
         // Insert some stuff
-        DB::table('user')->insert([
+        DB::table('user')->insert(
             [
-                'uid' => Str::uuid()->toString(),
-                'username' => 'admin',
-                'name' => 'Admin',
-                'password' => Hash::make('admin'),
-                'role' =>'admin',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],[
-                'uid' => Str::uuid()->toString(),
-                'username' => 'admingudang',
-                'name' => 'Admin Gudang',
-                'password' => Hash::make('admingudang'),
-                'role' => 'admingudang',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]]
+                [
+                    'user_id' => Str::uuid()->toString(),
+                    'username' => 'admin',
+                    'name' => 'Admin',
+                    'password' => Hash::make('admin'),
+                    'contact' => '081222333444555',
+                    'email' => 'admin@exmple.com',
+                    'role' => 'admin',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ], [
+                    'user_id' => Str::uuid()->toString(),
+                    'username' => 'admingudang',
+                    'name' => 'Admin Gudang',
+                    'contact' => '081222333444556',
+                    'email' => 'admingudang@exmple.com',
+                    'password' => Hash::make('admingudang'),
+                    'role' => 'admingudang',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]
+            ]
         );
     }
 

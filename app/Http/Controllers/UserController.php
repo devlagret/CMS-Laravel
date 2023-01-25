@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Logs;
 use App\Models\Tokens;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -27,27 +28,32 @@ class UserController extends Controller
         $token = $request->header('token');
         if ($uh->getRole($token) == 'admin') {
             $this->validate($request, [
-                'name' => 'required|min:3|max:50',
-                'username' => 'required|unique:User|min:3|max:50',
+                'name' => 'required|min:3',
+                'username' => 'required|unique:User|min:3',
                 'password' => 'required|min:6|',
+                'contact' => 'required|min:10|max:15',
+                'email' => 'required|min:5|email',
                 'role' => 'min:1|required|max:25'
             ]);
             $name = $request->input('name');
             $username = $request->input('username');
             $password = Hash::make($request->input('password'));
             $role = $request->input('role');
+            $uid = Str::uuid()->toString();
             $user = User::create([
-                'uid' => Str::uuid()->toString(),
+                'user_id' => $uid,
                 'name' => $name,
                 'username' => $username,
+                'contact' => $request->input('contact'),
+                'email' => $request->input('email'),
                 'password' => $password,
                 'role' => $role
             ]);
             Logs::create([
-                'uid' => $uh->getUserData($token)->uid,
+                'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add User(s)',
-                'detail' => 'Add "' . $name . '" with username "' . $username . '" and with "' . $role . '" role'
+                'detail' => 'Add new user with user id : '.$uid
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }
@@ -71,7 +77,7 @@ class UserController extends Controller
         }
 
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        Tokens::updateOrCreate(['uid' => $user->uid], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
+        Tokens::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
         return response()->json(['token' => $ftoken]);
     }
     public function update(Request $request, $id = null)
@@ -90,14 +96,14 @@ class UserController extends Controller
         $uh = new UserHelper;
         try {
             if ($id == null) {
-                $user = User::where('uid', $uh->getUserData($token, 'uid'))->first();
+                $user = User::where('user_id', $uh->getUserData($token, 'user_id'))->first();
                 $user->update([
                     'name' => $name,
                     'username' => $username,
                     'password' => $password,
                 ]);
             } elseif ($uh->getRole($token) == 'admin') {
-                $user = User::where('uid', $id)->first();
+                $user = User::where('user_id', $id)->first();
                 if (!$user) {
                     return response()->json(['message' => 'Update failed, UID not found'], 404);
                 }
@@ -120,7 +126,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Update failed, UID not found'], 404);
         }
         Logs::create([
-            'uid' => $uh->getUserData($token)->uid,
+            'user_id' => $uh->getUserData($token)->user_id,
             'datetime' => Carbon::now('Asia/Jakarta'),
             'activity' => 'Update User(s)',
             'detail' => 'Update user to : name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
@@ -139,7 +145,7 @@ class UserController extends Controller
             }
             if ($user) {
                 Logs::create([
-                    'uid' => $uh->getUserData($token)->uid,
+                    'user_id' => $uh->getUserData($token)->user_id,
                     'datetime' => Carbon::now('Asia/Jakarta'),
                     'activity' => 'Delete User(s)',
                     'detail' => 'Deleted user with name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
@@ -159,10 +165,7 @@ class UserController extends Controller
             }
             return response()->json($d);
         } else {
-            $token = $request->header('token');
-            $uh = new UserHelper;
-            $d = $uh->getUserData($token);
-            return response()->json($d);
+            return response()->json(Auth::user());
         }
     }
     public function getAllUser(Request $request, $id = null)

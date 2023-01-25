@@ -18,11 +18,11 @@ protected $table = 'user';
      *
      * @var string[]
      */
-    protected $primaryKey = 'uid';
+    protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-      'uid', 'name','username','contact', 'email','password', 'role'
+      'user_id', 'name','username','contact', 'email','password', 'role'
     ];
 
     /**

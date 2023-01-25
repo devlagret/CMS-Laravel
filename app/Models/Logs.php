@@ -10,7 +10,7 @@ class Logs extends Model
     protected $table = 'logs';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'uid', 'datetime', 'activity', 'detail'
+        'user_id', 'datetime', 'activity', 'detail'
     ];
     public $timestamps = false;
 

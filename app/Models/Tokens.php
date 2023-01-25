@@ -8,12 +8,12 @@ class Tokens extends Model
 {
     //
     protected $table = 'tokens';
-    protected $primaryKey = 'uid';
+    protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'string';
     
     protected $fillable = [
-        'uid','token'
+        'user_id','token'
     ];
 
 
