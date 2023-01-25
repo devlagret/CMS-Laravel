@@ -28,8 +28,13 @@ class CategoriesController extends Controller
         ]);
         $category_name = $request->input('category_name');
         $category_type = $request->input('category_type');
-
+        $t = str_replace(['-', ' '], '', $category_type);
+        $n = str_replace(' ', '', $category_name);
+        // $id = substr($category_type, 0, 1).'-'.substr($category_name, 0, 2);
+        $id = preg_replace('/([a-z])/', '', $t).'-'.preg_replace('/([a-z])/', '', $n);
+        
         $category = Categories::create([
+            'category_id'      => $id,
             'category_name'    => $category_name,
             'category_type'    => $category_type,
         ]);

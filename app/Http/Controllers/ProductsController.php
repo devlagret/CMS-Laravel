@@ -127,17 +127,6 @@ class ProductsController extends Controller
         return response()->json(['message' => 'Deleted']);
     }
 
-    public function search(Request $request)
-    {
-        if ($request->id) {
-            $product = Product::find($request->id);
-        } elseif ($request->name) {
-            $product = Product::find($request->name);
-        } elseif ($request->code) {
-            $product = Product::find($request->code);
-        }
-    }
-
     public function category($id){
         $p = Product::where('id',$id)->first();
         if (!$p) {

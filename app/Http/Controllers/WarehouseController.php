@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserHelper;
 use App\Models\Categories;
 use App\Models\Logs;
 use App\Models\Products;
@@ -12,64 +13,61 @@ use App\Models\Warehouses;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use stdClass;
 
 class WarehouseController extends Controller
 {
     public function index()
     {
-        $product_reqs = Categories::get();
+        $warehouses = Categories::get();
         
-        return response()->json($product_reqs);
+        return response()->json($warehouses);
     }
 
     
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $uid = Tokens::where('token', '=', $token)->first();
-        $usr = Users::where('id', $uid->id)->first();
         
         $validator = $this->validate($request, [
-            'branch_id'     => 'required',
+            'warehouse_id'  => 'required',
             'product_code'  => 'required',
-            'amount'        => 'required|max:15',
-            'order_date'    => 'required',
-            'out_date'      => 'required',
-            'status'        => 'required',
+            'stock'        => 'required|max:15',
+            'entry_date'    => 'required',
+            'location'      => 'required',
         ]);
-        $branch_id = $request->input('branch_id');
+        $branch_id = $request->input('warehouse_id');
         $product_code = $request->input('product_code');
-        $amount = $request->input('amount');
+        $amount = $request->input('stock');
         
-        $product_req = Warehouses::create([
-            'branch_id'     => $request->input('branch_id'),
+        $warehouse = Warehouses::create([
+            'warehouse_id'  => $request->input('warehouse_id'),
             'product_code'  => $request->input('product_code'),
-            'amount'        => $request->input('amount'),
-            'order_date'    => $request->input('order_date'),
-            'out_date'      => $request->input('out_date'),
-            'status'        => $request->input('status'),
+            'stock'        => $request->input('stock'),
+            'entry_date'    => $request->input('entry_date'),
+            'location'      => $request->input('location'),
         ]);
+        
+        // $uh = new UserHelper;
+        // if ($warehouse) {
+        //     Logs::create([
+        //         'uid'       => $uh->getUserData($request->header('token'))->uid,
+        //         'datetime'  => Carbon::now('Asia/Jakarta'),
+        //         'activity'  => 'Product Request(s)',
+        //         'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+        //     ]);
+        //     return response()->json(['message' => 'Data added successfully'], 201);
+        // }else {
+        //     return response()->json("Failure");
+        // }
 
-        if ($product_req) {
-            Logs::create([
-                'uid'   => $uid->id,
-                'datetime'  => Carbon::now('Asia/Jakarta'),
-                'activity'  => 'Product Request(s)',
-                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
-            ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
-        }else {
-            return response()->json("Failure");
-        }
-
-        return response()->json($product_req);
+        return response()->json($warehouse);
     }
 
     
     public function show($id)
     {
-        $product_req = Warehouses::find($id);
-        return response()->json($product_req);
+        $warehouse = Warehouses::find($id);
+        return response()->json($warehouse);
     }
 
     public function update(Request $request, $id)
@@ -90,7 +88,7 @@ class WarehouseController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
 
-        $product_req = Warehouses::whereId($id)->update([
+        $warehouse = Warehouses::whereId($id)->update([
             'branch_id'     => $request->input('branch_id'),
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
@@ -99,7 +97,7 @@ class WarehouseController extends Controller
             'status'        => $request->input('status'),
         ]);
 
-        if ($product_req) {
+        if ($warehouse) {
             Logs::create([
                 'uid'   => $uid->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
@@ -121,47 +119,56 @@ class WarehouseController extends Controller
 
     public function stockup(Request $request)
     {
+        $warehouse = Warehouses::where('product_code',$request->product_code)->first();
+        $warehouse->stock += $request->stock;
+        $warehouse->save();
         
-        $rules = [
-            'Supplier_id'=>'required',
-            'update_price'=>'required',
-            'items.*.id'=>'required',
-            'items.*.product_code'=>'required',
-            'items.*.buy_price'=>'required',
-            'items.*.stock'=>'required',
-            'items.*.price_rec'=>'required',
-        ];
-        $this->validate($request, $rules);
-        
-        $result = [];
-        $items = $request;
-        $data = count($items->items);
-        for ($i=0; $i < count($items->items); $i++) { 
-            $result[$i] = [
-                'id'  => $items->items[$i]['id'],
-                'product_code' => $items->items[$i]['product_code'],
-                // 'stock' => $items->items[$i]['stock'],
-                'brand' => $items->items[$i]['brand'],
-                'name' => $items->items[$i]['name'],
-                'category_id' => $items->items[$i]['category_id'],
-                'buy_price' => $items->items[$i]['buy_price'],
-                'price_rec' => $items->items[$i]['price_rec'],
-                'price_rec_from_sup' => $items->items[$i]['price_rec_from_sup'],
-                'profit_margin' => $items->items[$i]['profit_margin'],
-                'description' => $items->items[$i]['description'],
-                'property' => $items->items[$i]['property'],
-                'supplier_id' => $items->items[$i]['supplier_id']
-            ];
-        }
-        // return response()->json($result);
-        $product = Products::firstOrCreate($result[0]);
-        if (!$product->wasRecentlyCreated) {
-            return response()->json('$product'); 
-        }else {
-            return response()->json('$Product');
-        }
+        return response()->json($warehouse);
     }
 }
+
+// $rules = [
+//     'Supplier_id'=>'required',
+//     'update_price'=>'required',
+//     'items.*.id'=>'required',
+//     'items.*.product_code'=>'required',
+//     'items.*.buy_price'=>'required',
+//     'items.*.stock'=>'required',
+//     'items.*.price_rec'=>'required',
+// ];
+// $this->validate($request, $rules);
+
+// $result = [];
+// $items = $request;
+// $data = count($items->items);
+// for ($i=0; $i < count($items->items); $i++) { 
+//     $result[$i] = [
+//         'id'  => $items->items[$i]['id'],
+//         'product_code' => $items->items[$i]['product_code'],
+        // 'stock' => $items->items[$i]['stock'],
+//         'brand' => $items->items[$i]['brand'],
+//         'name' => $items->items[$i]['name'],
+//         'category_id' => $items->items[$i]['category_id'],
+//         'buy_price' => $items->items[$i]['buy_price'],
+//         'price_rec' => $items->items[$i]['price_rec'],
+//         'price_rec_from_sup' => $items->items[$i]['price_rec_from_sup'],
+//         'profit_margin' => $items->items[$i]['profit_margin'],
+//         'description' => $items->items[$i]['description'],
+//         'property' => $items->items[$i]['property'],
+//         'supplier_id' => $items->items[$i]['supplier_id']
+//     ];
+// }
+
+// $ar =(object) $result;
+// foreach($result as $k){
+//             }
+// $product = Products::firstOrCreate($result);
+// return response()->json($ar->id);
+// if ($product->wasRecentlyCreated) {
+//     return response()->json('$product'); 
+// }else {
+//     return response()->json('$Product');
+// }
 
 // ====== Error on If always return true when create but when duplicate return error
 // $product = Products::firstOrCreate($result[0]);
