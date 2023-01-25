@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Logs;
 use App\Models\Tokens;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\whs_stockup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

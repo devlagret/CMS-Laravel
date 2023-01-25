@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Suppliers;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Tokens;
 use App\Models\Logs;
 use Carbon\Carbon;

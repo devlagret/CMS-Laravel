@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\Logs;
 use App\Models\Tokens;
-use App\Models\Users;
+use App\Models\User;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
 

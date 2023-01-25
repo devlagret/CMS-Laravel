@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('contact', 20);
             $table->string('address', 100);
             $table->uuid('uid')->nullable()->default('0');
-            $table->foreign('uid')->references('uid')->on('users')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('uid')->references('uid')->on('user')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }

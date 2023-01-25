@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Branches;
 use App\Models\Tokens;
 use App\Models\Logs;
@@ -23,7 +23,7 @@ class BranchesController extends Controller
 
     public function store(Request $request)
     {
-        if(!Users::where('id',$request->input('uid'))){
+        if(!User::where('id',$request->input('uid'))){
             return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
         }
         $validator = $this->validate($request, [
@@ -106,7 +106,7 @@ class BranchesController extends Controller
     }
 
     public function user(){
-       $usr = Users::join('branches','users.uid','=','branches.uid')->get();
+       $usr = User::join('branches','User.uid','=','branches.uid')->get();
         return response()->json($usr);
         
     }

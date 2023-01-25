@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Logs;
 use App\Models\Tokens;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +28,7 @@ class UserController extends Controller
         if ($uh->getRole($token) == 'admin') {
             $this->validate($request, [
                 'name' => 'required|min:3|max:50',
-                'username' => 'required|unique:users|min:3|max:50',
+                'username' => 'required|unique:User|min:3|max:50',
                 'password' => 'required|min:6|',
                 'role' => 'min:1|required|max:25'
             ]);
@@ -36,7 +36,7 @@ class UserController extends Controller
             $username = $request->input('username');
             $password = Hash::make($request->input('password'));
             $role = $request->input('role');
-            $user = Users::create([
+            $user = User::create([
                 'uid' => Str::uuid()->toString(),
                 'name' => $name,
                 'username' => $username,
@@ -62,7 +62,7 @@ class UserController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
-        $user = Users::where('username', $username)->first();
+        $user = User::where('username', $username)->first();
         if (!$user) {
             return response()->json(['message' => 'Login failed, Username not found'], 401);
         }
@@ -90,14 +90,14 @@ class UserController extends Controller
         $uh = new UserHelper;
         try {
             if ($id == null) {
-                $user = Users::where('uid', $uh->getUserData($token, 'uid'))->first();
+                $user = User::where('uid', $uh->getUserData($token, 'uid'))->first();
                 $user->update([
                     'name' => $name,
                     'username' => $username,
                     'password' => $password,
                 ]);
             } elseif ($uh->getRole($token) == 'admin') {
-                $user = Users::where('uid', $id)->first();
+                $user = User::where('uid', $id)->first();
                 if (!$user) {
                     return response()->json(['message' => 'Update failed, UID not found'], 404);
                 }
@@ -135,7 +135,7 @@ class UserController extends Controller
         if ($uh->getRole($token) == 'admin') {
                 return response(
             'Failed', 404);
-            if (!Users::destroy($id)) {
+            if (!User::destroy($id)) {
             }
             if ($user) {
                 Logs::create([
