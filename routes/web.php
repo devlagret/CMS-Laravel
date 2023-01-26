@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 1.3.0.0
+//  API Version beta 1.3.1.0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -81,7 +81,21 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //$router->post('profile', 'BranchesController@store');
     //$router->delete('profile', 'BranchesController@destroy');
 });
-
+//warehouse related api endpoint
+$router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
+    //warehouse order api endpoint
+    $router->post('order', 'ProductOrderRequestController@store');
+    //warehouse detail api endpoint
+    $router->post('detail', 'WhsDetailController@store');
+    $router->post('detail', 'WhsDetailController@store');
+    //$router->delete('profile', 'BranchesController@destroy');
+    //warehouse api endpoint
+    $router->get('warehouse', 'WarehouseController@index');
+    $router->post('warehouse', 'WarehouseController@store');
+    $router->get('warehouse/{id}', 'WarehouseController@show');
+    $router->put('warehouse/{id}', 'WarehouseController@update');
+    $router->delete('warehouse/{id}', 'WarehouseController@destroy');
+});
 $router->group(['prefix' => $prefix], function () use ($router) {
     $router->post('json', 'WarehouseController@stockup');
     $router->get('json', [WarehouseController::class, 'stockup']);

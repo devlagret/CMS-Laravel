@@ -34,7 +34,7 @@ class WarehouseController extends Controller
         $validator = $this->validate($request, [
             'warehouse_id'  => 'required',
             'product_code'  => 'required',
-            'stock'        => 'required|max:15',
+            'stock'         => 'required|max:15',
             'entry_date'    => 'required',
             'location'      => 'required',
         ]);
@@ -50,7 +50,7 @@ class WarehouseController extends Controller
             'location'      => $request->input('location'),
         ]);
 
-        if ($product_req) {
+        if ($warehouse) {
             Logs::create([
                 'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),

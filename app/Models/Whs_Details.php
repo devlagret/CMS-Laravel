@@ -12,6 +12,6 @@ class Whs_Details extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'user_id','warehouse_id','manager_name','contact','adress'
+        'warehouse_id','user_id','manager_name','contact','adress'
     ];
 }
