@@ -85,6 +85,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     //warehouse order api endpoint
     $router->post('order', 'ProductOrderRequestController@store');
+    $router->get('order', 'ProductOrderRequestController@index');
     //warehouse detail api endpoint
     $router->post('detail', 'WhsDetailController@store');
     $router->post('detail', 'WhsDetailController@store');

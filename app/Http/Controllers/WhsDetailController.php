@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Whs_Details;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class WhsDetailController extends Controller
@@ -11,7 +12,6 @@ class WhsDetailController extends Controller
     public function store(Request $request)
     {
         $validator = $this->validate($request, [
-            'user_id'       => 'required',
             'manager_name'  => 'required',
             'contact'       => 'required|max:15',
             'adress'        => 'required',
@@ -19,10 +19,10 @@ class WhsDetailController extends Controller
         
         $uuid = Str::uuid()->toString();
         $whsdetail = Whs_Details::create([
-            'warehouse_id' => $uuid,
-            'user_id'  => $request->input('user_id'),
+            'warehouse_id'  => $uuid,
+            'user_id'       => Auth::id(),
             'manager_name'  => $request->input('manager_name'),
-            'contact'         => $request->input('contact'),
+            'contact'       => $request->input('contact'),
             'adress'    => $request->input('adress'),
         ]);
         
