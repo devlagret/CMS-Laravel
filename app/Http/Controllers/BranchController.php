@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Branches;
-use App\Models\Tokens;
-use App\Models\Logs;
+use App\Models\Branch;
+use App\Models\Token;
+use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Helpers\UserHelper;
 
-class BranchesController extends Controller
+class BranchController extends Controller
 {
     
     public function index()
     {
-        $branches = Branches::get();
+        $branches = Branch::get();
   
         return response()->json($branches);
     }
@@ -39,7 +39,7 @@ class BranchesController extends Controller
         $address = $request->input('address');
         $user_id = $request->input('user_id');
     
-        $branch = Branches::create([
+        $branch = Branch::create([
             'branch_id' => Str::uuid()->toString(),
             'branch_name'    => $branch_name,
             'leader_name'    => $leader_name,
@@ -49,7 +49,7 @@ class BranchesController extends Controller
         ]);
         $uh = new UserHelper;
          if ($branch) {
-             Logs::create([
+             Log::create([
                  'user_id' => $uh->getUserData($request->header('token'))->user_id,
                  'datetime' => Carbon::now('Asia/Jakarta'),
                  'activity' => 'Add Branch(s)',
@@ -63,7 +63,7 @@ class BranchesController extends Controller
     
     public function show($id)
     {
-        $branch = Branches::find($id);
+        $branch = Branch::find($id);
 
         return response()->json($branch);
     }
@@ -79,7 +79,7 @@ class BranchesController extends Controller
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
         
-        $branch = Branches::where('branch_id',$id)->update([
+        $branch = Branch::where('branch_id',$id)->update([
             'branch_name'    => $request->input('branch_name'),
             'leader_name'    => $request->input('leader_name'),
             'contact'        => $request->input('contact'),
@@ -87,7 +87,7 @@ class BranchesController extends Controller
         ]);
         $uh = new UserHelper;
         if ($branch) {
-            Logs::create([
+            Log::create([
                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Branch(s)',
@@ -101,7 +101,7 @@ class BranchesController extends Controller
     
     public function destroy($id)
     {
-        Branches::destroy($id);
+        Branch::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
 

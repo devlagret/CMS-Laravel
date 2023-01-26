@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Branches;
+use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BranchesFactory extends Factory
+class BranchFactory extends Factory
 {
-    protected $model = Branches::class;
+    protected $model = Branch::class;
 
     public function definition(): array
     {

@@ -28,7 +28,7 @@ class WhsDetailController extends Controller
         
         // $uh = new UserHelper;
         // if ($warehouse) {
-        //     Logs::create([
+        //     Log::create([
         //         'uid'       => $uh->getUserData($request->header('token'))->uid,
         //         'datetime'  => Carbon::now('Asia/Jakarta'),
         //         'activity'  => 'Product Request(s)',

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,8 +23,25 @@ return new class extends Migration
             $table->string('group',20);
             $table->timestamps();
         });
-        // Insert some stuff
-        //DB::table('user')->insert([]);
+        // Insert Permisions
+        DB::table('permisions')->insert([
+            [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'super-admin',
+                'label' => 'Akses Admin',
+                'group' => 'DB',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'add-user',
+                'label' => 'Menambahkan User Baru',
+                'group' => 'User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+        ]);
     }
  
     

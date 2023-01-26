@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product_Order_Request;
+use App\Models\ProductOrderRequest;
 use App\Models\Whs_Details;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class ProductOrderRequestController extends Controller
 {
     public function index()
     {
-        $Orequests = Product_Order_Request::get();
+        $Orequests = ProductOrderRequest::get();
         if($Orequests->quantity) {
             // $Orequest = DB::table('product_order_requests')
                         // ->select()
@@ -33,7 +33,7 @@ class ProductOrderRequestController extends Controller
         $product_code  = $request->input('product_code');
         $quantity      = $request->input('quantity');
         $wid           = Whs_Details::where('user_id', Auth::id())->first();
-        $Orequest = Product_Order_Request::create([
+        $Orequest = ProductOrderRequest::create([
             'product_order_requests_id' => Str::uuid()->toString(),
             'warehouse_id'   => $wid->warehouse_id,
             'product_code'   => $product_code,

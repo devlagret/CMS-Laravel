@@ -3,11 +3,11 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Suppliers;
+use App\Models\Supplier;
 
-class SuppliersFactory extends Factory
+class SupplierFactory extends Factory
 {
-    protected $model = Suppliers::class;
+    protected $model = Supplier::class;
 
     public function definition(): array
     {

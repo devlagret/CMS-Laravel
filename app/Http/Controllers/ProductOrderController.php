@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Logs;
-use App\Models\Tokens;
+use App\Models\Log;
+use App\Models\Token;
 use App\Models\User;
-use App\Models\Product_Order;
-use App\Models\Product_Order_Request;
+use App\Models\ProductOrder;
+use App\Models\ProductOrderRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class ProductOrderController extends Controller
 {
     public function index()
     {
-        $stockups = Product_Order_Request::get();
+        $stockups = ProductOrderRequest::get();
         
         return response()->json($stockups);
     }
@@ -36,7 +36,7 @@ class ProductOrderController extends Controller
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
 
-        $category = Product_Order::create([
+        $category = ProductOrder::create([
             'supplier_id'    => $supllier_id,
             'product_code'   => $product_code,
             'purchase_date'  => $purchase_date,
@@ -45,7 +45,7 @@ class ProductOrderController extends Controller
         ]);
 
         // if ($category) {
-        //     Logs::create([
+        //     Log::create([
         //         'uid'   => $uid->id,
         //         'datetime'  => Carbon::now('Asia/Jakarta'),
         //         'activity'  => 'Add Category(s)',

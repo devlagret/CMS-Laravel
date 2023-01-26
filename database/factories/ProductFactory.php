@@ -3,18 +3,18 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Categories;
-use App\Models\Products;
-use App\Models\Suppliers;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Supplier;
 
-class ProductsFactory extends Factory
+class ProductFactory extends Factory
 {
-    protected $model = Products::class;
+    protected $model = Product::class;
 
     public function definition(): array
     {
-        $cateids = Categories::all()->pluck('category_id')->toArray();
-        $suppids = Suppliers::all()->pluck('supplier_id')->toArray();
+        $cateids = Category::all()->pluck('category_id')->toArray();
+        $suppids = Supplier::all()->pluck('supplier_id')->toArray();
         $buy = $this->faker->numerify('###000');
         $price = $this->faker->numerify('###000');
         $price_rec = $this->faker->numerify('###000');

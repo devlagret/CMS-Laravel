@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Products as product;
-use App\Models\Product_Requests;
-use App\Models\Tokens;
+use App\Models\Product as product;
+use App\Models\ProductRequest;
+use App\Models\Token;
 use App\Models\User;
-use App\Models\Logs;
+use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\UserHelper;
-use App\Models\Categories;
-use App\Models\Suppliers;
+use App\Models\Category;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     
     public function index()
@@ -56,7 +56,7 @@ class ProductsController extends Controller
         ]);
         $uh = new UserHelper;
         if ($product) {
-            Logs::create([
+            Log::create([
                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Product(s)',
@@ -109,7 +109,7 @@ class ProductsController extends Controller
         ]);
         $uh = new UserHelper;
         if ($product) {
-            Logs::create([
+            Log::create([
                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Product(s)',
@@ -133,7 +133,7 @@ class ProductsController extends Controller
         if (!$p) {
             return response('Product Not Found', 404);
         }
-        $c = Categories::where('category_id', $p->category_id)->first();
+        $c = Category::where('category_id', $p->category_id)->first();
         return response()->json($c);
     }
     public function supplier($id){
@@ -141,7 +141,7 @@ class ProductsController extends Controller
         if (!$p) {
             return response('Product Not Found', 404);
         }
-        $s = Suppliers::where('supplier_id', $p->supplier_id)->first();
+        $s = Supplier::where('supplier_id', $p->supplier_id)->first();
         return response()->json($s);
     }
 }

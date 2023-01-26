@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Configs;
+use App\Models\Config;
 
 class AppController extends Controller
 {
     //
     public function profile(Request $request){
         if($request->isMethod('GET')){
-            $data = Configs::select('key','value')->where('type', 'profile')->orderBy('key','desc')->get();
+            $data = Config::select('key','value')->where('type', 'profile')->orderBy('key','desc')->get();
             $d = array();
             foreach($data as $da){
                 $d[$da->key] = $da->value;
@@ -26,7 +26,7 @@ class AppController extends Controller
             //]);
             $f = $request->input();
             foreach ( $f as $k => $v){
-            $data = Configs::where([['type', 'profile'],['key',$k]])->first();
+            $data = Config::where([['type', 'profile'],['key',$k]])->first();
             if($data){
                 $data->update(['value' =>$v]);
                 return response()->json(['message' => 'Data updated  successfully'], 201);

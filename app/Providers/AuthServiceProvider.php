@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
-use App\Models\Tokens;
+use App\Models\Token;
 use DateInterval;
 use DateTime;
 use Illuminate\Support\Facades\Gate;
@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('api', function ($request) {
             $token = $request->header('token');
             if ($token) {
-                $id = Tokens::where('token', '=', $token)->first();
+                $id = Token::where('token', '=', $token)->first();
                 if ($id) {
                     return User::where('user_id', $id->user_id)->first();
                 }

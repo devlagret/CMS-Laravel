@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
-use App\Models\Product_Requests;
-use App\Models\Tokens;
+use App\Models\ProductRequest;
+use App\Models\Token;
 use App\Models\User;
-use App\Models\Logs;
+use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
 
-class ProductRequestsController extends Controller
+class ProductRequestController extends Controller
 {
     
     public function index()
     {
-        $product_reqs = Product_Requests::get();
+        $product_reqs = ProductRequest::get();
         
         return response()->json($product_reqs);
     }
@@ -36,7 +36,7 @@ class ProductRequestsController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
         
-        $product_req = Product_Requests::create([
+        $product_req = ProductRequest::create([
             'branch_id'     => $request->input('branch_id'),
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
@@ -46,7 +46,7 @@ class ProductRequestsController extends Controller
         ]);
         $uh = new UserHelper;
         if ($product_req) {
-            Logs::create([
+            Log::create([
                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Product Request(s)',
@@ -63,7 +63,7 @@ class ProductRequestsController extends Controller
     
     public function show($id)
     {
-        $product_req = Product_Requests::find($id);
+        $product_req = ProductRequest::find($id);
         return response()->json($product_req);
     }
 
@@ -81,7 +81,7 @@ class ProductRequestsController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
 
-        $product_req = Product_Requests::whereId($id)->update([
+        $product_req = ProductRequest::whereId($id)->update([
             'branch_id'     => $request->input('branch_id'),
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
@@ -91,7 +91,7 @@ class ProductRequestsController extends Controller
         ]);
         $uh = new UserHelper;
         if ($product_req) {
-            Logs::create([
+            Log::create([
                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Product Request(s)',
@@ -106,7 +106,7 @@ class ProductRequestsController extends Controller
     
     public function destroy($id)
     {
-        Product_Requests::destroy($id);
+        ProductRequest::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
     }

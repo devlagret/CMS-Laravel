@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 1.3.1.2
+//  API Version beta 2.0.0.0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -38,48 +38,48 @@ $router->group(['prefix' => $prefix], function () use ($router) {
 //product related api endpoint
 $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($router) {
     //product request api endpoint
-    $router->get('product/request', 'ProductRequestsController@index');
-    $router->get('product/request/{id}', 'ProductRequestsController@show');
-    $router->post('product/request', 'ProductRequestsController@store');
-    $router->put('product/request/{id}', 'ProductRequestsController@update');
-    $router->delete('product/request/{id}', 'ProductRequestsController@destroy');
+    $router->get('product/request', 'ProductRequestController@index');
+    $router->get('product/request/{id}', 'ProductRequestController@show');
+    $router->post('product/request', 'ProductRequestController@store');
+    $router->put('product/request/{id}', 'ProductRequestController@update');
+    $router->delete('product/request/{id}', 'ProductRequestController@destroy');
     //product supplier api endpoint
-    $router->get('product/supplier', 'SuppliersController@index');
-    $router->get('product/supplier/{id}', 'SuppliersController@show');
-    $router->post('product/supplier', 'SuppliersController@store');
-    $router->put('product/supplier/{id}', 'SuppliersController@update');
-    $router->delete('product/supplier/{id}', 'SuppliersController@destroy');
+    $router->get('product/supplier', 'SupplierController@index');
+    $router->get('product/supplier/{id}', 'SupplierController@show');
+    $router->post('product/supplier', 'SupplierController@store');
+    $router->put('product/supplier/{id}', 'SupplierController@update');
+    $router->delete('product/supplier/{id}', 'SupplierController@destroy');
     //produxt category api endpoint
-    $router->get('product/category', 'CategoriesController@index');
-    $router->get('product/category/{id}', 'CategoriesController@show');
-    $router->post('product/category', 'CategoriesController@store');
-    $router->put('product/category/{id}', 'CategoriesController@update');
-    $router->delete('product/category/{id}', 'CategoriesController@destroy');
+    $router->get('product/category', 'CategoryController@index');
+    $router->get('product/category/{id}', 'CategoryController@show');
+    $router->post('product/category', 'CategoryController@store');
+    $router->put('product/category/{id}', 'CategoryController@update');
+    $router->delete('product/category/{id}', 'CategoryController@destroy');
     //product api endpoint
-    $router->get('product', 'ProductsController@index');
-    $router->post('product', 'ProductsController@store');
-    $router->get('product/{id}', 'ProductsController@show');
-    $router->put('product/{id}', 'ProductsController@update');
-    $router->delete('product/{id}', 'ProductsController@destroy');
-    $router->get('product/{id}/category', 'ProductsController@category');
-    $router->get('product/{id}/supplier', 'ProductsController@supplier');
+    $router->get('product', 'ProductController@index');
+    $router->post('product', 'ProductController@store');
+    $router->get('product/{id}', 'ProductController@show');
+    $router->put('product/{id}', 'ProductController@update');
+    $router->delete('product/{id}', 'ProductController@destroy');
+    $router->get('product/{id}/category', 'ProductController@category');
+    $router->get('product/{id}/supplier', 'ProductController@supplier');
 });
 //branch related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
-    $router->get('branch', 'BranchesController@index');
-    $router->get('branch/user', 'BranchesController@user');
-    $router->get('branch/user/{id}', 'BranchesController@index');
-    $router->get('branch/{id}', 'BranchesController@show');
-    $router->post('branch', 'BranchesController@store');
-    $router->put('branch/{id}', 'BranchesController@update');
-    $router->delete('branch/{id}', 'BranchesController@destroy');
+    $router->get('branch', 'BranchController@index');
+    $router->get('branch/user', 'BranchController@user');
+    $router->get('branch/user/{id}', 'BranchController@index');
+    $router->get('branch/{id}', 'BranchController@show');
+    $router->post('branch', 'BranchController@store');
+    $router->put('branch/{id}', 'BranchController@update');
+    $router->delete('branch/{id}', 'BranchController@destroy');
 });
 //company profile related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     $router->get('profile', 'AppController@profile');
     $router->put('profile', 'AppController@profile');
-    //$router->post('profile', 'BranchesController@store');
-    //$router->delete('profile', 'BranchesController@destroy');
+    //$router->post('profile', 'BranchController@store');
+    //$router->delete('profile', 'BranchController@destroy');
 });
 //warehouse related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
@@ -88,7 +88,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse detail api endpoint
     $router->post('detail', 'WhsDetailController@store');
     $router->post('detail', 'WhsDetailController@store');
-    //$router->delete('profile', 'BranchesController@destroy');
+    //$router->delete('profile', 'BranchController@destroy');
     //warehouse api endpoint
     $router->get('warehouse', 'WarehouseController@index');
     $router->post('warehouse', 'WarehouseController@store');

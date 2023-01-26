@@ -8,8 +8,8 @@ use DateInterval;
 use DateTime;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Logs;
-use App\Models\Tokens;
+use App\Models\Log;
+use App\Models\Token;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -33,7 +33,7 @@ class UserController extends Controller
                 'password' => 'required|min:6|',
                 'contact' => 'required|min:10|max:15',
                 'email' => 'required|min:5|email',
-                'role' => 'min:1|required|max:25'
+                'role_id' => 'min:10'
             ]);
             $name = $request->input('name');
             $username = $request->input('username');
@@ -49,7 +49,7 @@ class UserController extends Controller
                 'password' => $password,
                 'role' => $role
             ]);
-            Logs::create([
+            Log::create([
                 'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add User(s)',
@@ -77,7 +77,7 @@ class UserController extends Controller
         }
 
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        Tokens::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
+        Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
         return response()->json(['token' => $ftoken]);
     }
     public function update(Request $request, $id = null)
@@ -87,13 +87,13 @@ class UserController extends Controller
             'username' => '|min:3|max:50',
             'old_password' => 'min:6',
             'new_password' => 'min:6',
-            'role' => 'min:3|max:25'
+            'role_id' => 'min:3|max:25'
         ]);
         $token = $request->header('token');
         $name = $request->input('name');
         $username = $request->input('username');
         $newPassword = Hash::make($request->input('new_password'));
-        $role = $request->input('role');
+        $role = $request->input('role_id');
         $uh = new UserHelper;
         try {
             if ($id == null) {
@@ -116,7 +116,7 @@ class UserController extends Controller
                     'name' => $name,
                     'username' => $username,
                     'password' => $newPassword,
-                    'role' => $role
+                    'role_id' => $role
                 ]);
                 
             }
@@ -130,7 +130,7 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'Update failed, UID not found'], 404);
         }
-        Logs::create([
+        Log::create([
             'user_id' => $uh->getUserData($token)->user_id,
             'datetime' => Carbon::now('Asia/Jakarta'),
             'activity' => 'Update User(s)',
@@ -149,7 +149,7 @@ class UserController extends Controller
             if (!User::destroy($id)) {
             }
             if ($user) {
-                Logs::create([
+                Log::create([
                     'user_id' => $uh->getUserData($token)->user_id,
                     'datetime' => Carbon::now('Asia/Jakarta'),
                     'activity' => 'Delete User(s)',

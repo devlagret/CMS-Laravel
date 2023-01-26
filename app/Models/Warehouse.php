@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Warehouses extends Model
+class Warehouse extends Model
 {
     protected $table = 'warehouses';
     protected $primaryKey = 'id';

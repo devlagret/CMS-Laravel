@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\UserHelper;
-use App\Models\Categories;
-use App\Models\Logs;
-use App\Models\Products;
-use App\Models\Tokens;
+use App\Models\Category;
+use App\Models\Log;
+use App\Models\Product;
+use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Warehouses;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +19,7 @@ class WarehouseController extends Controller
 {
     public function index()
     {
-        $warehouses = Categories::get();
+        $warehouses = Category::get();
         
         return response()->json($warehouses);
     }
@@ -28,7 +28,7 @@ class WarehouseController extends Controller
     public function store(Request $request)
     {
         $token = $request->header('token');
-        $user_id = Tokens::where('token', '=', $token)->first();
+        $user_id = Token::where('token', '=', $token)->first();
         $usr = User::where('id', $user_id->id)->first();
         
         $validator = $this->validate($request, [
@@ -42,7 +42,7 @@ class WarehouseController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('stock');
         
-        $warehouse = Warehouses::create([
+        $warehouse = Warehouse::create([
             'warehouse_id'  => $request->input('warehouse_id'),
             'product_code'  => $request->input('product_code'),
             'stock'        => $request->input('stock'),
@@ -51,7 +51,7 @@ class WarehouseController extends Controller
         ]);
 
         if ($warehouse) {
-            Logs::create([
+            Log::create([
                 'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
@@ -68,14 +68,14 @@ class WarehouseController extends Controller
     
     public function show($id)
     {
-        $warehouse = Warehouses::find($id);
+        $warehouse = Warehouse::find($id);
         return response()->json($warehouse);
     }
 
     public function update(Request $request, $id)
     {
         $token = $request->header('token');
-        $user_id = Tokens::where('token', '=', $token)->first();
+        $user_id = Token::where('token', '=', $token)->first();
         $usr = User::where('id', $user_id->id)->first();
 
         $validator = $this->validate($request, [
@@ -90,7 +90,7 @@ class WarehouseController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
 
-        $warehouse = Warehouses::whereId($id)->update([
+        $warehouse = Warehouse::whereId($id)->update([
             'branch_id'     => $request->input('branch_id'),
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
@@ -100,7 +100,7 @@ class WarehouseController extends Controller
         ]);
 
         if ($warehouse) {
-            Logs::create([
+            Log::create([
                 'user_id'   => $user_id->id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
@@ -114,14 +114,14 @@ class WarehouseController extends Controller
 
     public function destroy($id)
     {
-        Warehouses::destroy($id);
+        Warehouse::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
     }
 
     public function stockup(Request $request)
     {
-        $warehouse = Warehouses::where('product_code',$request->product_code)->first();
+        $warehouse = Warehouse::where('product_code',$request->product_code)->first();
         $warehouse->stock += $request->stock;
         $warehouse->save();
         
@@ -164,7 +164,7 @@ class WarehouseController extends Controller
 // $ar =(object) $result;
 // foreach($result as $k){
 //             }
-// $product = Products::firstOrCreate($result);
+// $product = Product::firstOrCreate($result);
 // return response()->json($ar->id);
 // if ($product->wasRecentlyCreated) {
 //     return response()->json('$product'); 
@@ -173,7 +173,7 @@ class WarehouseController extends Controller
 // }
 
 // ====== Error on If always return true when create but when duplicate return error
-// $product = Products::firstOrCreate($result[0]);
+// $product = Product::firstOrCreate($result[0]);
 // if ($product->wasRecentlyCreated) {
 //     return response()->json('$product'); 
 // }else {
@@ -231,7 +231,7 @@ class WarehouseController extends Controller
 //         'supplier_id' => $item['supplier_id']
 //     ];
 
-// $product = Products::firstOrCreate([
+// $product = Product::firstOrCreate([
 //     'product_id'  => $result['product_id'],
 //     'Product_Code' => $result['product_code'],
 //     'Brand' => $result['brand'],
@@ -248,8 +248,8 @@ class WarehouseController extends Controller
     // 'id'  => $item['product_id'],
 // ]);
 // if ($product->wasRecentlyCreated) {
-    // $store = Products::create($result[0]);
-        // $store = Products::create([
+    // $store = Product::create($result[0]);
+        // $store = Product::create([
         //     'Product_Code' => $item['product_code'],
         //     // 'buy_price' => $item['buy_price'],
         //     // 'stock' => $item['stock'],
@@ -266,7 +266,7 @@ class WarehouseController extends Controller
         // ]);
         // return response()->json('$ada');
 // }else {
-    //   $store = Products::create([
+    //   $store = Product::create([
         //     'Product_Code' => $item['product_code'],
         //     // 'buy_price' => $item['buy_price'],
         //     // 'stock' => $item['stock'],

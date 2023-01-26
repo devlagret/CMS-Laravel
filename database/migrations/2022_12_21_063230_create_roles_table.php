@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 return new class extends Migration
 {
@@ -24,10 +25,14 @@ return new class extends Migration
             [
                 [
                     'role_id' => Str::uuid()->toString(),
-                    'name' => 'admin'
+                    'name' => 'admin',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
                 ], [
                     'role_id' => Str::uuid()->toString(),
-                    'name' => 'admingudang'
+                    'name' => 'admingudang',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
                 ]
             ]
         );

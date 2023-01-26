@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Suppliers;
+use App\Models\Supplier;
 use App\Models\User;
-use App\Models\Tokens;
-use App\Models\Logs;
+use App\Models\Token;
+use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
 
-class SuppliersController extends Controller
+class SupplierController extends Controller
 {
     
     public function index()
     {
-        $suppliers = Suppliers::get();
+        $suppliers = Supplier::get();
   
         return response()->json($suppliers);
     }
@@ -29,14 +29,14 @@ class SuppliersController extends Controller
         ]);
         $supplier_name = $request->input('supplier_name');
 
-        $supplier = Suppliers::create([
+        $supplier = Supplier::create([
             'supplier_name'  => $request->input('supplier_name'),
             'contact'        => $request->input('contact'),
             'address'        => $request->input('address'),
         ]);
         $uh = new UserHelper;
         if ($supplier) {
-            Logs::create([
+            Log::create([
                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Supplier(s)',
@@ -50,7 +50,7 @@ class SuppliersController extends Controller
 
     public function show($id)
     {
-        $supplier = Suppliers::find($id);
+        $supplier = Supplier::find($id);
 
         return response()->json($supplier);
     }
@@ -64,14 +64,14 @@ class SuppliersController extends Controller
         ]);
         $supplier_name = $request->input('supplier_name');
         
-        $supplier = Suppliers::whereId($id)->update([
+        $supplier = Supplier::whereId($id)->update([
             'supplier_name' => $request->input('supplier_name'),
             'contact'       => $request->input('contact'),
             'address'       => $request->input('address'),
         ]);
         $uh = new UserHelper;
         if ($supplier) {
-            Logs::create([
+            Log::create([
                 'user_id'   => $uh->getUserData($request->header('token'))->user_id,
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Update Supplier(s)',
@@ -85,7 +85,7 @@ class SuppliersController extends Controller
 
     public function destroy($id)
     {
-        Suppliers::destroy($id);
+        Supplier::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
     }

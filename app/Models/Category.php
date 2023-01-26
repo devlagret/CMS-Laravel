@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Branches extends Model
+class Category extends Model
 {
     use HasFactory;
+    
+    protected $table = 'categories';
 
-    protected $table = 'branches';
-
-    protected $primaryKey = 'branch_id';
+    protected $primaryKey = 'category_id';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'branch_id',
-        'branch_name',
-        'leader_name',
-        'contact',
-        'address',
-        'user_id',
+        'category_id', 'category_name', 'category_type'
     ];
 }
