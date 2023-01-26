@@ -36,13 +36,15 @@ class ProductOrderController extends Controller
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
 
-        $category = ProductOrder::create([
+        $order = ProductOrder::create([
             'supplier_id'    => $supllier_id,
             'product_code'   => $product_code,
             'purchase_date'  => $purchase_date,
             'total_amount'   => $total_amount,
             'quantity'       => $quantity,
         ]);
+
+        
 
         // if ($category) {
         //     Log::create([

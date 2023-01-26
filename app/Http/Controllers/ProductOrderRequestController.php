@@ -15,7 +15,7 @@ class ProductOrderRequestController extends Controller
     public function warehouseview()
     {
         $wid       = Whs_Details::where('user_id', Auth::id())->first();
-        $Orequests = Product_Order_Request::where('warehouse_id', $wid->warehouse_id)
+        $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')
                                             // ->orderBy('status')
@@ -29,10 +29,15 @@ class ProductOrderRequestController extends Controller
 
     public function adminview()
     {
-        $Orequests = Product_Order_Request::orderBy('request_date', 'asc')
-                                            ->orderBy('product_code', 'asc')
-                                            // ->orderBy('status')
-                                            ->get();
+        $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
+                                        ->orderBy('product_code', 'asc')
+                                        // ->orderBy('status')
+                                        ->get();
+                                            
+        $status = ProductOrderRequest::where('status','sent')
+                                     ->update(['status' => 2]);
+
+        return response()->json($status);
     }
 
     public function store(Request $request)
