@@ -12,14 +12,27 @@ use Illuminate\Support\Str;
 
 class ProductOrderRequestController extends Controller
 {
-    public function index()
+    public function warehouseview()
     {
-        $Orequests = Product_Order_Request::get();
-        if($Orequests->quantity) {
+        $wid       = Whs_Details::where('user_id', Auth::id())->first();
+        $Orequests = Product_Order_Request::where('warehouse_id', $wid->warehouse_id)
+                                            ->orderBy('request_date', 'desc')
+                                            ->orderBy('product_code', 'asc')
+                                            // ->orderBy('status')
+                                            ->get();
+        // if($Orequests->quantity) {
             // $Orequest = DB::table('product_order_requests')
                         // ->select()
-        }
+        // }
         return response()->json($Orequests);
+    }
+
+    public function adminview()
+    {
+        $Orequests = Product_Order_Request::orderBy('request_date', 'asc')
+                                            ->orderBy('product_code', 'asc')
+                                            // ->orderBy('status')
+                                            ->get();
     }
 
     public function store(Request $request)

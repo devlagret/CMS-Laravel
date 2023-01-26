@@ -18,6 +18,6 @@ class ProductSeeder extends Seeder
     {
         // Factory(Products::class, 10)->create();
         // ProductsFactory::factory()->count(10)->create();
-        Products::factory()->count(10)->create();
+        Products::factory()->count(5)->create();
     }
 }
