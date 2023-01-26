@@ -33,12 +33,12 @@ class UserController extends Controller
                 'password' => 'required|min:6|',
                 'contact' => 'required|min:10|max:15',
                 'email' => 'required|min:5|email',
-                'role_id' => 'min:10'
+                'role_id' => 'required|min:36|max:36'
             ]);
             $name = $request->input('name');
             $username = $request->input('username');
             $password = Hash::make($request->input('password'));
-            $role = $request->input('role');
+            $role = $request->input('role_id');
             $uid = Str::uuid()->toString();
             $user = User::create([
                 'user_id' => $uid,
@@ -47,7 +47,7 @@ class UserController extends Controller
                 'contact' => $request->input('contact'),
                 'email' => $request->input('email'),
                 'password' => $password,
-                'role' => $role
+                'role_id' => $role
             ]);
             Log::create([
                 'user_id' => Auth::id(),
@@ -55,7 +55,11 @@ class UserController extends Controller
                 'activity' => 'Add User(s)',
                 'detail' => 'Add new user with user id : '.$uid
             ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
+            if ($user) {
+                return response()->json(['message' => 'Data added successfully'], 201);
+            }else{
+                return response()->json("Failure", 500);
+            }
         }
         return response('Unauthorized', 401);
     }
