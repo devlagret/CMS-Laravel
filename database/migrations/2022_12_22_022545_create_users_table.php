@@ -4,8 +4,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 return new class extends Migration
@@ -24,10 +24,14 @@ return new class extends Migration
             $table->string('contact', 15);
             $table->string('email');
             $table->string('password')->default('null');
-            $table->string('role', 25)->default('user');
+            $table->uuid('role_id')->nullable()->default('user');
+            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
-        // Insert some stuff
+        //get admin role
+       $role = DB::table('roles')->where('name', 'admin')->first();
+       $role2 = DB::table('roles')->where('name', 'admingudang')->first();
+        // Insert default user
         DB::table('user')->insert(
             [
                 [
@@ -36,8 +40,8 @@ return new class extends Migration
                     'name' => 'Admin',
                     'password' => Hash::make('admin'),
                     'contact' => '081222333444555',
+                    'role_id' => $role->role_id,
                     'email' => 'admin@exmple.com',
-                    'role' => 'admin',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ], [
@@ -46,8 +50,8 @@ return new class extends Migration
                     'name' => 'Admin Gudang',
                     'contact' => '081222333444556',
                     'email' => 'admingudang@exmple.com',
+                    'role_id' => $role2->role_id,
                     'password' => Hash::make('admingudang'),
-                    'role' => 'admingudang',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ]

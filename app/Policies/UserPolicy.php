@@ -22,6 +22,17 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can view any users.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function viewAll(User $user)
+    {
+
+        return 1;
+    }
+    /**
      * Determine whether the user can view the user.
      *
      * @param  \App\Models\User  $user

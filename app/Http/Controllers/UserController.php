@@ -85,22 +85,27 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'min:3|max:50',
             'username' => '|min:3|max:50',
-            'password' => 'min:6',
+            'old_password' => 'min:6',
+            'new_password' => 'min:6',
             'role' => 'min:3|max:25'
         ]);
         $token = $request->header('token');
         $name = $request->input('name');
         $username = $request->input('username');
-        $password = Hash::make($request->input('password'));
+        $newPassword = Hash::make($request->input('new_password'));
         $role = $request->input('role');
         $uh = new UserHelper;
         try {
             if ($id == null) {
                 $user = User::where('user_id', $uh->getUserData($token, 'user_id'))->first();
+                if (!Hash::check($request, $user->password)) 
+                {
+                    return response()->json(['message' => 'wrong password'], 401);
+                };
                 $user->update([
                     'name' => $name,
                     'username' => $username,
-                    'password' => $password,
+                    'password' => $newPassword,
                 ]);
             } elseif ($uh->getRole($token) == 'admin') {
                 $user = User::where('user_id', $id)->first();
@@ -110,7 +115,7 @@ class UserController extends Controller
                 $user->update([
                     'name' => $name,
                     'username' => $username,
-                    'password' => $password,
+                    'password' => $newPassword,
                     'role' => $role
                 ]);
                 
@@ -171,6 +176,9 @@ class UserController extends Controller
     public function getAllUser(Request $request, $id = null)
     {
         $uh = new UserHelper;
+        if ($request->user()->cannot('viewAll', User::class)) {
+            return response()->json($request->user());
+        }
         return response()->json($uh->getAllUser());
     }
 }
