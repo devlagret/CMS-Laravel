@@ -2,8 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Token;
+use Illuminate\Support\Facades\Auth;
 
 class UserHelper
 {
@@ -19,7 +21,7 @@ class UserHelper
 		switch ($option) {
 			case null:
 				$user_id = Token::where('token', '=', $token)->first();
-				$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role, created_at, updated_at from User where user_id = "' . $user_id->user_id . '" limit 1'));
+				$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from User where user_id = "' . $user_id->user_id . '" limit 1'));
 				if (mysqli_connect_errno()) {
 					echo "Failed to connect to MySQL: " . mysqli_connect_error();
 					exit();
@@ -44,7 +46,7 @@ class UserHelper
 	public function getAllUser()
 	{
 		$r = array();
-		$d = mysqli_fetch_all(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role, created_at, updated_at from User'), MYSQLI_ASSOC);
+		$d = mysqli_fetch_all(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from User'), MYSQLI_ASSOC);
 		if (mysqli_connect_errno()) {
 			echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			exit();
@@ -53,18 +55,21 @@ class UserHelper
 	}
 	public function getUserByid($id)
 	{
-		$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role, created_at, updated_at from User where user_id = "' . $id . '" limit 1'));
+		$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from User where user_id = "' . $id . '" limit 1'));
 		if (mysqli_connect_errno()) {
 			echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			exit();
 		}
 		return $r;
 	}
-	public function getRole($token)
+	public function getRole($token = null)
 	{
 		$user_id = Token::where('token', '=', $token)->first();
+		if ($token == null) {
+			$user_id = Auth::id();}
 		$usr = User::where('user_id', $user_id->user_id)->first();
-		return $usr->role;
+		$role = Role::where('role_id', $usr->role_id)->first();
+		return $role->name;
 	}
 
 }
