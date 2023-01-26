@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('product_order_requests', function (Blueprint $table) {
-            $table->uuid('product_order_requests_id');
+            $table->uuid('product_order_requests_id')->primary();
             $table->uuid('warehouse_id')->nullable()->default(null);
             $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('set null')->onUpdate('cascade');
             $table->string('product_code', 50);

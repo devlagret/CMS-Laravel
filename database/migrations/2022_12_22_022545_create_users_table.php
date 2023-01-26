@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('contact', 15);
             $table->string('email');
-            $table->string('password')->default('null');
+            $table->string('password')->nullable();
             $table->string('role', 25)->default('user');
             $table->timestamps();
         });

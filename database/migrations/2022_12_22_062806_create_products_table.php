@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('product_code',50)->unique();
             $table->string('brand',50)->nullable();
             $table->string('name',100);
-            $table->id('category_id')->nullable()->default('0');
+            $table->string('category_id')->nullable()->default('0');
             $table->foreign('category_id')->references('category_id')->on('categories')->onDelete('set null')->onUpdate('cascade');
             $table->string('buy_price',20);
             $table->string('price_rec',20);

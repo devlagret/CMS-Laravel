@@ -6,6 +6,7 @@ use App\Models\Logs;
 use App\Models\Tokens;
 use App\Models\User;
 use App\Models\Product_Order;
+use App\Models\Product_Order_Request;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,8 @@ class ProductOrderController extends Controller
 {
     public function index()
     {
-        $stockups = Product_Order::get();
-  
+        $stockups = Product_Order_Request::get();
+        
         return response()->json($stockups);
     }
 
@@ -36,11 +37,10 @@ class ProductOrderController extends Controller
         $quantity      = $request->input('quantity');
 
         $category = Product_Order::create([
-        
             'supplier_id'    => $supllier_id,
             'product_code'   => $product_code,
             'purchase_date'  => $purchase_date,
-            'total_amont'    => $total_amount,
+            'total_amount'   => $total_amount,
             'quantity'       => $quantity,
         ]);
 

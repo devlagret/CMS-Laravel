@@ -7,14 +7,19 @@ use App\Models\Whs_Details;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductOrderRequestController extends Controller
 {
     public function index()
     {
-        $products = Product_Order_Request::get();
-        $user = Auth::check();
-        return response()->json([$user,$products]);
+        $Orequests = Product_Order_Request::get();
+        if($Orequests->quantity) {
+            // $Orequest = DB::table('product_order_requests')
+                        // ->select()
+        }
+        return response()->json($Orequests);
     }
 
     public function store(Request $request)
@@ -24,16 +29,18 @@ class ProductOrderRequestController extends Controller
             'quantity'       => 'required',
         ]);
         
+        $token = Str::uuid()->toString();
         $product_code  = $request->input('product_code');
         $quantity      = $request->input('quantity');
-        $wid = Whs_Details::where('user_id', Auth::id());
-        $p_order_req = Product_Order_Request::create([
+        $wid           = Whs_Details::where('user_id', Auth::id())->first();
+        $Orequest = Product_Order_Request::create([
+            'product_order_requests_id' => Str::uuid()->toString(),
             'warehouse_id'   => $wid->warehouse_id,
             'product_code'   => $product_code,
             'request_date'   => Carbon::now('Asia/Jakarta'),
             'quantity'       => $quantity,
         ]);
 
-        return response()->json($p_order_req);
+        return response()->json($Orequest);
     }
 }
