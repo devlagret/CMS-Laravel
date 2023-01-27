@@ -2,11 +2,13 @@
 
 namespace App\Helpers;
 
+use App\Models\Permision;
+use App\Models\Privilege;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Token;
 use Illuminate\Support\Facades\Auth;
-
+function getrole(){return 'pah';}
 class UserHelper
 {
 	/**
@@ -62,14 +64,29 @@ class UserHelper
 		}
 		return $r;
 	}
+	/**
+	 * Get usesr's role
+	 * @param mixed $token
+	 * @return mixed
+	 */
 	public function getRole($token = null)
 	{
 		$user_id = Token::where('token', '=', $token)->first();
 		if ($token == null) {
-			$user_id = Auth::id();}
+			$user_id = Auth::user();}
 		$usr = User::where('user_id', $user_id->user_id)->first();
 		$role = Role::where('role_id', $usr->role_id)->first();
 		return $role->name;
 	}
-
+	/**
+	 * Summary of checkPermision
+	 * @param string $user_id
+	 * @param array $permision
+	 * @return bool true if at least 1 given permision found
+	 */
+	public function checkPermision(String $user_id,Array $permision ){
+		$privilege = Privilege::where('role_id', User::where('user_id', $user_id)->value('role_id'))->get('permision_id');
+		$permision = Permision::whereIn('permision_id', $privilege)->whereIn('name', $permision)->exists();
+		return $permision;
+	}
 }

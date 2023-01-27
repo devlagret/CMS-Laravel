@@ -26,7 +26,7 @@ class UserController extends Controller
     {
         $uh = new UserHelper;
         $token = $request->header('token');
-        if ($uh->getRole($token) == 'admin') {
+        if ($request->user()->can('create', User::class)) {
             $this->validate($request, [
                 'name' => 'required|min:3',
                 'username' => 'required|unique:User|min:3',
@@ -86,6 +86,9 @@ class UserController extends Controller
     }
     public function update(Request $request, $id = null)
     {
+        if ($request->user()->cannot('update', User::class)) {
+            return response('Unauthorized', 401);
+        }
         $this->validate($request, [
             'name' => 'min:3|max:50',
             'username' => '|min:3|max:50',
@@ -147,7 +150,7 @@ class UserController extends Controller
         $uh = new UserHelper;
         $token = $request->header('token');
         $user = $uh->getUserByid($id);
-        if ($uh->getRole($token) == 'admin') {
+        if ($request->user()->can('delete', User::class)) {
                 return response(
             'Failed', 404);
             if (!User::destroy($id)) {
@@ -169,6 +172,9 @@ class UserController extends Controller
         if ($id != null) {
             $uh = new UserHelper;
             $d = $uh->getUserById($id);
+            if ($request->user()->cannot('viewAny', User::class)) {
+                return response('Unauthorized', 401);
+            }
             if(!$d){
                 return response('Not Found', 404);
             }
@@ -180,8 +186,8 @@ class UserController extends Controller
     public function getAllUser(Request $request, $id = null)
     {
         $uh = new UserHelper;
-        if ($request->user()->cannot('viewAll', User::class)) {
-            return response()->json($request->user());
+        if ($request->user()->cannot('viewAny', User::class)) {
+            return response('Unauthorized',401);
         }
         return response()->json($uh->getAllUser());
     }
