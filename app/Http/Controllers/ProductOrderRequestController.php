@@ -37,7 +37,7 @@ class ProductOrderRequestController extends Controller
         $status = ProductOrderRequest::where('status','sent')
                                      ->update(['status' => 2]);
 
-        return response()->json($status);
+        return response()->json($Orequests);
     }
 
     public function store(Request $request)

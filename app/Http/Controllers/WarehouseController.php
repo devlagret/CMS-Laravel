@@ -10,8 +10,10 @@ use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use App\Models\Whs_Details;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use stdClass;
 
@@ -19,7 +21,7 @@ class WarehouseController extends Controller
 {
     public function index()
     {
-        $warehouses = Category::get();
+        $warehouses = Warehouse::get();
         
         return response()->json($warehouses);
     }
@@ -27,35 +29,31 @@ class WarehouseController extends Controller
     
     public function store(Request $request)
     {
-        $token = $request->header('token');
-        $user_id = Token::where('token', '=', $token)->first();
-        $usr = User::where('id', $user_id->id)->first();
-        
         $validator = $this->validate($request, [
-            'warehouse_id'  => 'required',
             'product_code'  => 'required',
             'stock'         => 'required|max:15',
-            'entry_date'    => 'required',
             'location'      => 'required',
         ]);
-        $branch_id = $request->input('warehouse_id');
-        $product_code = $request->input('product_code');
-        $amount = $request->input('stock');
         
+        $product_code = $request->input('product_code');
+        $amount       = $request->input('stock');
+        $entry_date   = $request->input('entry_date');
+        $wid          = Whs_Details::where('user_id', Auth::id())->first();
+
         $warehouse = Warehouse::create([
-            'warehouse_id'  => $request->input('warehouse_id'),
+            'warehouse_id'  => $wid->warehouse_id,
             'product_code'  => $request->input('product_code'),
             'stock'        => $request->input('stock'),
-            'entry_date'    => $request->input('entry_date'),
+            'entry_date'    => is_null($entry_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $entry_date,
             'location'      => $request->input('location'),
         ]);
 
         if ($warehouse) {
             Log::create([
-                'user_id'   => $user_id->id,
+                'user_id'   => Auth::id(),
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Product Request(s)',
-                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'detail'    => 'Branch "'.Auth::id().'" Requested Product "'.$product_code.'" with amount "'.$amount
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {

@@ -7,6 +7,7 @@ use App\Models\Token;
 use App\Models\User;
 use App\Models\ProductOrder;
 use App\Models\ProductOrderRequest;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -25,8 +26,7 @@ class ProductOrderController extends Controller
             
             'supplier_id'    => 'required',
             'product_code'   => 'required',
-            'purchase_date'  => 'required',
-            'total_amont'    => 'required',
+            'total_amount'   => 'required',
             'quantity'       => 'required',
         ]);
         
@@ -36,26 +36,36 @@ class ProductOrderController extends Controller
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
 
-        $order = ProductOrder::create([
-            'supplier_id'    => $supllier_id,
-            'product_code'   => $product_code,
-            'purchase_date'  => $purchase_date,
-            'total_amount'   => $total_amount,
-            'quantity'       => $quantity,
-        ]);
-
+        // $order = ProductOrder::create([
+        //     'supplier_id'    => $supllier_id,
+        //     'product_code'   => $product_code,
+        //     'purchase_date'  => is_null($purchase_date) ? Carbon::now('Asia/Jakarta') : $purchase_date,
+        //     'total_amount'   => $total_amount,
+        //     'quantity'       => $quantity,
+        // ]);
         
+        $id = ProductOrderRequest::where('status', 'sent')
+                                 ->where('product_code', $product_code)
+                                //  ->groupBy('product_order_requests_id')
+                                 ->get('product_order_requests_id');
 
-        // if ($category) {
-        //     Log::create([
-        //         'uid'   => $uid->id,
-        //         'datetime'  => Carbon::now('Asia/Jakarta'),
-        //         'activity'  => 'Add Category(s)',
-        //         'detail'    => 'Add Category with type "'.$category_type.'" named "'.$category_name
-        //     ]);
-        //     return response()->json(['message' => 'Data added successfully'], 201);
-        // }else {
-        //     return response()->json("Failure");
-        // }
+        $quan = ProductOrderRequest::where('status', 'sent')
+                                   ->where('product_code', $product_code)
+                                //    ->groupBy('product_order_requests_id')
+                                   ->get(['quantity', 'warehouse_id']);
+
+        $stock = [];
+        $wid = [];
+        foreach ($quan as $value) {
+            $stock[] = $value['quantity'];
+            $wid[] = $value['warehouse_id'];
+        }
+
+        $stockup = Warehouse::whereIn('warehouse_id', $wid)
+                            ->where('product_code', $product_code);
+                            
+        // $stockup->stock += $stock;
+
+        return response()->json($stockup);
     }
 }
