@@ -66,6 +66,13 @@ return new class extends Migration
             //user
             [
                 'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-all-user',
+                'label' => 'Melihat Semua Data User',
+                'group' => 'User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],[
+                'permision_id' => Str::uuid()->toString(),
                 'name' => 'view-user',
                 'label' => 'Melihat Data User',
                 'group' => 'User',
