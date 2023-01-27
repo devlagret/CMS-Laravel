@@ -58,7 +58,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$NRMWUsiR38U5Sw26NzGSJuc40SegbgksCWT7YEu4EdnPWvJr06T7C",
+									"value": "$2y$10$BIAV0lcSOFvA2n8A9T5uh.DZCj91BaJmuYc90QW0EYnC/VSdk8zZ2",
 									"type": "string"
 								},
 								{
@@ -89,9 +89,19 @@
 									"type": "text"
 								},
 								{
-									"key": "role",
-									"value": "user",
+									"key": "role_id",
+									"value": "1374bfe7-a17c-4d85-9886-821e430fb3c5",
 									"type": "text"
+								},
+								{
+									"key": "contact",
+									"value": "081555666777888",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "user@example.com",
+									"type": "default"
 								}
 							]
 						},
@@ -152,7 +162,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"value": "$2y$10$BIAV0lcSOFvA2n8A9T5uh.DZCj91BaJmuYc90QW0EYnC/VSdk8zZ2",
 									"type": "string"
 								},
 								{
@@ -188,7 +198,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$jCvV/VAkU/8.q4TqHDTO9uWLqs3px2CY6N5ER7h175wSsYtK0urHW",
+									"value": "$2y$10$djmfjJSMpVcmRO89sEYg4uMwLcagQxhx/DrtpwaRO2fYbt42BvVdG",
 									"type": "string"
 								},
 								{
@@ -372,6 +382,110 @@
 								"api",
 								"user",
 								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role",
+			"item": [
+				{
+					"name": "Get Role",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}//api/role",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"",
+								"api",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permision",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}//api/permision",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"",
+								"api",
+								"permision"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add role",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "$2y$10$BIAV0lcSOFvA2n8A9T5uh.DZCj91BaJmuYc90QW0EYnC/VSdk8zZ2",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "user",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/role",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"role"
 							]
 						}
 					},
@@ -717,7 +831,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"value": "$2y$10$cAFPnG1RbOETrZJaOwJc5.lGtTfFBkP7OeaOqIKiCWyQtkPPp09XO",
 									"type": "string"
 								},
 								{
@@ -728,20 +842,7 @@
 							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "t",
-								"value": "\\afdhfj\\\\dasdas\\d\\\\\\\\dad\\\\dsa",
-								"type": "default",
-								"disabled": true
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json;charset=UTF-8",
-								"type": "default",
-								"disabled": true
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "http://{{url}}/api/product/",
 							"protocol": "http",
@@ -928,7 +1029,7 @@
 							"apikey": [
 								{
 									"key": "value",
-									"value": "$2y$10$gH7I2IXv.Etz0BfLLLhHu.8BDEC1Ct3DiSaQHuCy3B/2RrAva3LtK",
+									"value": "$2y$10$bm2JktPMBCEtSvVb7bjQlOJORnbyNGV712GPhLSvWiUVelPOva94K",
 									"type": "string"
 								},
 								{
@@ -953,8 +1054,12 @@
 								"disabled": true
 							}
 						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
 						"url": {
-							"raw": "http://{{url}}/api/product/",
+							"raw": "http://{{url}}/api/product/{id}",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
@@ -962,7 +1067,7 @@
 							"path": [
 								"api",
 								"product",
-								""
+								"{id}"
 							]
 						}
 					},
@@ -1356,10 +1461,50 @@
 			"response": []
 		}
 	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
 			"key": "url",
 			"value": "127.0.0.1"
+		},
+		{
+			"key": "token",
+			"value": "$2y$10$wvreSgDq22MjsxdsSOUIC.qcg9/0js7tET0LRMCC6kFC9hk1aTJKK",
+			"type": "default"
 		}
 	]
 }
