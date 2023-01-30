@@ -49,23 +49,30 @@ class ProductOrderController extends Controller
                                 //  ->groupBy('product_order_requests_id')
                                  ->get('product_order_requests_id');
 
-        $quan = ProductOrderRequest::where('status', 'sent')
+        $quan = ProductOrderRequest::where('status', 'accepted')
                                    ->where('product_code', $product_code)
-                                //    ->groupBy('product_order_requests_id')
-                                   ->get(['quantity', 'warehouse_id']);
+                                   ->groupBy('warehouse_id')
+                                   ->selectRaw('sum(quantity) as sum, warehouse_id')
+                                   ->get(['sum', 'warehouse_id']);
 
         $stock = [];
         $wid = [];
+        $num_i = 0;
         foreach ($quan as $value) {
-            $stock[] = $value['quantity'];
+            $stock[] = $value['sum'];
             $wid[] = $value['warehouse_id'];
+            $stockup = Warehouse::where('product_code', $product_code)
+                                ->whereIn('warehouse_id', $wid)
+                                ->increment('stock', $stock[$num_i]);
+                                // ->get('stock')
+                                
+            $num_i++;
         }
-
-        $stockup = Warehouse::whereIn('warehouse_id', $wid)
-                            ->where('product_code', $product_code);
+        // $stockup = "1";
                             
         // $stockup->stock += $stock;
+        // $stockup->save();
 
-        return response()->json($stockup);
+        return response()->json($quan);
     }
 }

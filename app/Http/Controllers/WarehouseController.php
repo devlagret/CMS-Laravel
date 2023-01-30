@@ -52,8 +52,8 @@ class WarehouseController extends Controller
             Log::create([
                 'user_id'   => Auth::id(),
                 'datetime'  => Carbon::now('Asia/Jakarta'),
-                'activity'  => 'Product Request(s)',
-                'detail'    => 'Branch "'.Auth::id().'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'activity'  => 'Warehouse(s)',
+                'detail'    => 'User "'.Auth::id().'" Add Product "'.$product_code.'" to Warehouse "'.$wid->warehouse_id
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
@@ -72,21 +72,14 @@ class WarehouseController extends Controller
 
     public function update(Request $request, $id)
     {
-        $token = $request->header('token');
-        $user_id = Token::where('token', '=', $token)->first();
-        $usr = User::where('id', $user_id->id)->first();
-
         $validator = $this->validate($request, [
-            'branch_id'     => 'required',
             'product_code'  => 'required',
-            'amount'        => 'required',
-            'order_date'    => 'required',
-            'out_date'      => 'required',
-            'status'        => 'required',
+            'stock'         => 'required|max:15',
+            'location'      => 'required',
         ]);
-        $branch_id = $request->input('branch_id');
+        
         $product_code = $request->input('product_code');
-        $amount = $request->input('amount');
+        $wid          = Whs_Details::where('user_id', Auth::id())->first();
 
         $warehouse = Warehouse::whereId($id)->update([
             'branch_id'     => $request->input('branch_id'),
@@ -99,10 +92,10 @@ class WarehouseController extends Controller
 
         if ($warehouse) {
             Log::create([
-                'user_id'   => $user_id->id,
+                'user_id'   => Auth::id(),
                 'datetime'  => Carbon::now('Asia/Jakarta'),
-                'activity'  => 'Product Request(s)',
-                'detail'    => 'Branch "'.$branch_id.'" Requested Product "'.$product_code.'" with amount "'.$amount
+                'activity'  => 'Warehouse(s)',
+                'detail'    => 'User "'.Auth::id().'" update Product "'.$product_code.'" in Warehouse "'.$wid->warehouse_id
             ]);
             return response()->json(['message' => 'Data added successfully'], 201);
         }else {
