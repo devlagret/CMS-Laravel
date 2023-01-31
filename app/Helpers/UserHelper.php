@@ -55,6 +55,11 @@ class UserHelper
 		}
 		return $d;
 	}
+	/**
+	 * get user by id
+	 * @param mixed $id
+	 * @return bool|null|object
+	 */
 	public function getUserByid($id)
 	{
 		$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from User where user_id = "' . $id . '" limit 1'));
@@ -79,13 +84,13 @@ class UserHelper
 		return $role->name;
 	}
 	/**
-	 * Summary of checkPermision
+	 * Check if given user (id) have the given permision
 	 * @param string $user_id
 	 * @param array $permision
 	 * @return bool true if at least 1 given permision found
 	 */
 	public function checkPermision(String $user_id,Array $permision ){
-		$privilege = Privilege::where('role_id', User::where('user_id', $user_id)->value('role_id'))->get('permision_id');
+		$privilege = Privilege::where('role_id', User::find($user_id)->value('role_id'))->get('permision_id');
 		$permision = Permision::whereIn('permision_id', $privilege)->whereIn('name', $permision)->exists();
 		return $permision;
 	}

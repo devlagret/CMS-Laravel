@@ -27,7 +27,7 @@ class UserPolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'view-all-user']) ? Response::allow()
-            : Response::deny('Forbiden', 403);
+            : Response::deny('Unauthorized', 401);
     }
     /**
      * Determine whether the user can view the user.
@@ -41,7 +41,7 @@ class UserPolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'view-user']) ? Response::allow()
-        : Response::deny('Forbiden', 403);
+        : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -55,7 +55,7 @@ class UserPolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'add-user']) ? Response::allow()
-        : Response::deny('Forbiden', 403);
+        : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -70,7 +70,7 @@ class UserPolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'edit-user']) ? Response::allow()
-        : Response::deny('Forbiden', 403);
+        : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -85,6 +85,6 @@ class UserPolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'delete-user']) ? Response::allow()
-        : Response::deny('Forbiden', 403);
+        : Response::deny('Unauthorized', 401);
     }
 }

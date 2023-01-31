@@ -10,7 +10,7 @@ use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
-use App\Models\Whs_Details;
+use App\Models\WhsDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +38,7 @@ class WarehouseController extends Controller
         $product_code = $request->input('product_code');
         $amount       = $request->input('stock');
         $entry_date   = $request->input('entry_date');
-        $wid          = Whs_Details::where('user_id', Auth::id())->first();
+        $wid          = WhsDetail::where('user_id', Auth::id())->first();
 
         $warehouse = Warehouse::create([
             'warehouse_id'  => $wid->warehouse_id,

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Whs_Details;
+
+use App\Models\WhsDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ class WhsDetailController extends Controller
         ]);
         
         $uuid = Str::uuid()->toString();
-        $whsdetail = Whs_Details::create([
+        $whsdetail = WhsDetail::create([
             'warehouse_id'  => $uuid,
             'user_id'       => Auth::id(),
             'manager_name'  => $request->input('manager_name'),
