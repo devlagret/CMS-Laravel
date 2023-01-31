@@ -90,7 +90,7 @@ class UserHelper
 	 * @return bool true if at least 1 given permision found
 	 */
 	public function checkPermision(String $user_id,Array $permision ){
-		$privilege = Privilege::where('role_id', User::find($user_id)->value('role_id'))->get('permision_id');
+		$privilege = Privilege::where('role_id', User::find($user_id)->role_id)->get('permision_id');
 		$permision = Permision::whereIn('permision_id', $privilege)->whereIn('name', $permision)->exists();
 		return $permision;
 	}
