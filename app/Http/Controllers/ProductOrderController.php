@@ -35,14 +35,6 @@ class ProductOrderController extends Controller
         $purchase_date = $request->input('purchase_date');
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
-
-        $order = ProductOrder::create([
-            'supplier_id'    => $supllier_id,
-            'product_code'   => $product_code,
-            'purchase_date'  => is_null($purchase_date) ? Carbon::now('Asia/Jakarta') : $purchase_date,
-            'total_amount'   => $total_amount,
-            'quantity'       => $quantity,
-        ]);
         
         $id = ProductOrderRequest::where('status', 'sent')
                                  ->where('product_code', $product_code)
@@ -60,13 +52,50 @@ class ProductOrderController extends Controller
             $stock[] = $value['sum'];
             $wid[] = $value['warehouse_id'];
         }
+        $q = array_sum($stock);
 
-        for ($i=0; $i < count($wid); $i++) { 
-            $stockup = Warehouse::where('product_code', $product_code)
-                    ->where('warehouse_id', $wid[$i])
-                        ->increment('stock', $stock[$i]);
+        if (($quantity - $q) >= 0) {
+            $remain = $quantity - $q;
+            if ($remain > 0) {
+                $validator = $this->validate($request, [
+                    'quantity1'       => 'required',
+                    'warehouse_id'   => 'required',
+                ]);
+
+                $nwid = $request->input('warehouse_id');
+                $qu = $request->input('quantity1');
+                do {
+                    if ($remain - $qu >0) {
+                        return $this->addstock($nwid, $qu, $product_code);
+                    }
+                    $remain = $remain - $qu;
+                } while ($remain >= 0);
+            }
+            // $order = ProductOrder::create([
+            //     'supplier_id'    => $supllier_id,
+            //     'product_code'   => $product_code,
+            //     'purchase_date'  => is_null($purchase_date) ? Carbon::now('Asia/Jakarta') : $purchase_date,
+            //     'total_amount'   => $total_amount,
+            //     'quantity'       => $quantity,
+            // ]);
+            return response()->json('Data Added');
+        } else {
+            return response()->json('Quantity Kurang');
         }
 
-        return response()->json($quan);
+        // for ($i=0; $i < count($wid); $i++) { 
+        //     $stockup = Warehouse::where('product_code', $product_code)
+        //             ->where('warehouse_id', $wid[$i])
+        //                 ->increment('stock', $stock[$i]);
+        // }
+    }
+
+    public function addstock($nwid, $stock, $product_code)
+    {
+        $addstock = Warehouse::where('product_code', $product_code)
+                                    ->where('warehouse_id', $nwid)
+                                    ->increament('stock', $stock);
+
+        return response()->json($addstock);
     }
 }
