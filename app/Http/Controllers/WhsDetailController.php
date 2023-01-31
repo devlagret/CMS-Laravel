@@ -12,6 +12,9 @@ class WhsDetailController extends Controller
 {
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', WhsDetail::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'manager_name'  => 'required',
             'contact'       => 'required|max:15',

@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Auth;
 class ProductController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Product::class)) {
+            return response('Unauthorized', 401);
+        }
         $products = Product::get();
         $user = Auth::check();
         return response()->json([$user,$products]);
@@ -26,6 +29,9 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', Product::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'product_code'        => 'required',
             'brand'               => 'required',
@@ -68,8 +74,11 @@ class ProductController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->user()->cannot('view', Product::class)||$request->user()->cannot('viewAny', Product::class)) {
+            return response('Unauthorized', 401);
+        } 
         $product = Product::find($id);
         if (!$product) {
             return response('Product Not Found',404);}
@@ -78,6 +87,9 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+        if ($request->user()->cannot('update', Product::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'product_code'        => 'required',
             'brand'               => 'required',
@@ -121,14 +133,20 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', Product::class)) {
+            return response('Unauthorized', 401);
+        }
         Product::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
     }
 
-    public function category($id){
+    public function category(Request $request, $id){
+        if ($request->user()->cannot('view', Product::class) || $request->user()->cannot('viewAny', Product::class)) {
+            return response('Unauthorized', 401);
+        } 
         $p = Product::where('id',$id)->first();
         if (!$p) {
             return response('Product Not Found', 404);
@@ -136,7 +154,10 @@ class ProductController extends Controller
         $c = Category::where('category_id', $p->category_id)->first();
         return response()->json($c);
     }
-    public function supplier($id){
+    public function supplier(Request $request, $id){
+        if ($request->user()->cannot('view', Product::class) || $request->user()->cannot('viewAny', Product::class)) {
+            return response('Unauthorized', 401);
+        } 
         $p = Product::where('id', $id)->first();
         if (!$p) {
             return response('Product Not Found', 404);

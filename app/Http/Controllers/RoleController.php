@@ -15,7 +15,7 @@ use SebastianBergmann\Exporter\Exporter;
 class RoleController extends Controller
 {
     public function index(Request $request,$id=null){
-        if ($request->user()->cannot('viewAny', Role::class)) {
+        if ($request->user()->cannot('viewAny', Role::class) && $request->user()->cannot('viewAny', Role::class)) {
             return response('Unauthorized', 401);
         }
         if ($id != null) {

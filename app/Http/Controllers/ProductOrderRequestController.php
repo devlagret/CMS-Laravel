@@ -12,8 +12,11 @@ use Illuminate\Support\Str;
 
 class ProductOrderRequestController extends Controller
 {
-    public function warehouseview()
+    public function warehouseview(Request $request)
     {
+        if ($request->user()->cannot('viewAny', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $wid       = WhsDetail::where('user_id', Auth::id())->first();
         $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->orderBy('request_date', 'desc')
@@ -27,8 +30,11 @@ class ProductOrderRequestController extends Controller
         return response()->json($Orequests);
     }
 
-    public function adminview()
+    public function adminview(Request $request)
     {
+        if ($request->user()->cannot('viewAny', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
                                         ->orderBy('product_code', 'asc')
                                         // ->orderBy('status')
@@ -42,6 +48,9 @@ class ProductOrderRequestController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'product_code'   => 'required',
             'quantity'       => 'required',
@@ -64,6 +73,9 @@ class ProductOrderRequestController extends Controller
 
     public function adminedit(Request $request)
     {
+        if ($request->user()->cannot('update', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'request_id'    => 'required',
             'status'        => 'required',
@@ -81,6 +93,9 @@ class ProductOrderRequestController extends Controller
 
     public function warehousedit(Request $request)
     {
+        if ($request->user()->cannot('update', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'request_id'    => 'required',
             'product_code'  => 'required',

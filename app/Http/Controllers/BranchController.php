@@ -14,8 +14,11 @@ use App\Helpers\UserHelper;
 class BranchController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
         $branches = Branch::get();
   
         return response()->json($branches);
@@ -23,6 +26,9 @@ class BranchController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
         if(!User::where('id',$request->input('user_id'))){
             return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
         }
@@ -61,15 +67,20 @@ class BranchController extends Controller
          }
     }
     
-    public function show($id)
+    public function show(Request $request , $id)
     {
         $branch = Branch::find($id);
-
+        if ($request->user()->cannot('view', Branch::class)||$request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
         return response()->json($branch);
     }
 
     public function update(Request $request, $id)
     {
+        if ($request->user()->cannot('update', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'branch_name'    => 'required',
             'leader_name'    => 'required',
@@ -99,13 +110,19 @@ class BranchController extends Controller
         }
     }
     
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
+        if ($request->user()->cannot('delete', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
         Branch::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
 
-    public function user(){
+    public function user(Request $request){
+        if ($request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
        $usr = User::join('branches','User.user_id','=','branches.user_id')->get();
         return response()->json($usr);
         

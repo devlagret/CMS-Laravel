@@ -13,8 +13,11 @@ use App\Helpers\UserHelper;
 class SupplierController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
         $suppliers = Supplier::get();
   
         return response()->json($suppliers);
@@ -22,6 +25,9 @@ class SupplierController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'supplier_name'  => 'required',
             'contact'        => 'required',
@@ -48,8 +54,11 @@ class SupplierController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->user()->cannot('viewAny', Supplier::class)&&$request->user()->cannot('viewAny', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
         $supplier = Supplier::find($id);
 
         return response()->json($supplier);
@@ -57,6 +66,9 @@ class SupplierController extends Controller
 
     public function update(Request $request, $id)
     {
+        if ($request->user()->cannot('update', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
             $validator = $this->validate($request, [
             'supplier_name'  => 'required',
             'contact'        => 'required',
@@ -83,8 +95,11 @@ class SupplierController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
         Supplier::destroy($id);
 
         return response()->json(['message' => 'Deleted']);

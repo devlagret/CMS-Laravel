@@ -14,8 +14,12 @@ use App\Helpers\UserHelper;
 class ProductRequestController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
+        $uh = new UserHelper();
+        if ($request->user()->cannot('viewAny', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $product_reqs = ProductRequest::get();
         
         return response()->json($product_reqs);
@@ -24,6 +28,9 @@ class ProductRequestController extends Controller
     
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'branch_id'     => 'required',
             'product_code'  => 'required',
@@ -57,12 +64,18 @@ class ProductRequestController extends Controller
             return response()->json("Failure");
         }
 
-        return response()->json($product_req);
+        //return response()->json($product_req);
     }
 
     
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->user()->cannot('update', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($request->user()->cannot('view', ProductRequest::class)||$request->user()->cannot('viewAny', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $product_req = ProductRequest::find($id);
         return response()->json($product_req);
     }
@@ -104,8 +117,11 @@ class ProductRequestController extends Controller
     }
 
     
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         ProductRequest::destroy($id);
 
         return response()->json(['message' => 'Deleted']);

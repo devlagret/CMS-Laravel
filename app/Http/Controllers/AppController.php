@@ -10,6 +10,9 @@ class AppController extends Controller
     //
     public function profile(Request $request){
         if($request->isMethod('GET')){
+            if ($request->user()->cannot('viewAny', Config::class)) {
+                return response('Unauthorized', 401);
+            }
             $data = Config::select('key','value')->where('type', 'profile')->orderBy('key','desc')->get();
             $d = array();
             foreach($data as $da){
@@ -24,6 +27,9 @@ class AppController extends Controller
             //    'key' => 'required|max:10',
             //    'value' => 'required|max:100'
             //]);
+            if ($request->user()->cannot('update', Config::class)) {
+                return response('Unauthorized', 401);
+            }
             $f = $request->input();
             foreach ( $f as $k => $v){
             $data = Config::where([['type', 'profile'],['key',$k]])->first();

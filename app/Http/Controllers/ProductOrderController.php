@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
-use App\Models\Token;
 use App\Models\User;
-use App\Models\ProductOrder;
 use App\Models\ProductOrderRequest;
 use App\Models\Warehouse;
 use Carbon\Carbon;
@@ -13,8 +11,11 @@ use Illuminate\Http\Request;
 
 class ProductOrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $stockups = ProductOrderRequest::get();
         
         return response()->json($stockups);
@@ -22,6 +23,9 @@ class ProductOrderController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             
             'supplier_id'    => 'required',

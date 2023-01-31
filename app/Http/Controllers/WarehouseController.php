@@ -19,8 +19,11 @@ use stdClass;
 
 class WarehouseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
         $warehouses = Warehouse::get();
         
         return response()->json($warehouses);
@@ -29,6 +32,9 @@ class WarehouseController extends Controller
     
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'product_code'  => 'required',
             'stock'         => 'required|max:15',
@@ -55,23 +61,27 @@ class WarehouseController extends Controller
                 'activity'  => 'Warehouse(s)',
                 'detail'    => 'User "'.Auth::id().'" Add Product "'.$product_code.'" to Warehouse "'.$wid->warehouse_id
             ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
+            return response()->json(['message' => 'Data added successfully','Data'=> $warehouse], 201);
         }else {
-            return response()->json("Failure");
+            return response()->json("Failure",500);
         }
-
-        return response()->json($warehouse);
     }
 
     
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
         $warehouse = Warehouse::find($id);
         return response()->json($warehouse);
     }
 
     public function update(Request $request, $id)
     {
+        if ($request->user()->cannot('update', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'product_code'  => 'required',
             'stock'         => 'required|max:15',
@@ -79,7 +89,7 @@ class WarehouseController extends Controller
         ]);
         
         $product_code = $request->input('product_code');
-        $wid          = Whs_Details::where('user_id', Auth::id())->first();
+        $wid          = WhsDetail::where('user_id', Auth::id())->first();
 
         $warehouse = Warehouse::whereId($id)->update([
             'branch_id'     => $request->input('branch_id'),
@@ -103,8 +113,11 @@ class WarehouseController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
         Warehouse::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
@@ -112,6 +125,9 @@ class WarehouseController extends Controller
 
     public function stockup(Request $request)
     {
+        if ($request->user()->cannot('update', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
         $warehouse = Warehouse::where('product_code',$request->product_code)->first();
         $warehouse->stock += $request->stock;
         $warehouse->save();

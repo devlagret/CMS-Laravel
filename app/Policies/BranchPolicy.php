@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use App\Helpers\UserHelper;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class BranchPolicy
 {
@@ -19,6 +21,9 @@ class BranchPolicy
     public function viewAny(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -31,6 +36,7 @@ class BranchPolicy
     public function view(User $user, Branch $branch)
     {
         //
+        return 1;
     }
 
     /**
@@ -42,6 +48,9 @@ class BranchPolicy
     public function create(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -54,6 +63,9 @@ class BranchPolicy
     public function update(User $user, Branch $branch)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -66,5 +78,8 @@ class BranchPolicy
     public function delete(User $user, Branch $branch)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 }
