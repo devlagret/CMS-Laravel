@@ -61,4 +61,41 @@ class ProductOrderRequestController extends Controller
 
         return response()->json($Orequest);
     }
+
+    public function adminedit(Request $request)
+    {
+        $validator = $this->validate($request, [
+            'request_id'    => 'required',
+            'status'        => 'required',
+        ]);
+        $status = intval($request->input('status'));
+        $id = $request->request_id;
+
+        $Orequest = ProductOrderRequest::where('product_order_requests_id', $id)
+                                       ->update([
+            'status'        => $status,
+        ]);
+
+        return response()->json($Orequest);
+    }
+
+    public function warehousedit(Request $request)
+    {
+        $validator = $this->validate($request, [
+            'request_id'    => 'required',
+            'product_code'  => 'required',
+            'quantity'      => 'required'
+        ]);
+        $id = $request->request_id;
+        $pcode = $request->input('product_code');
+        $qu = $request->input('quantity');
+
+        $Orequest = ProductOrderRequest::where('product_order_requests_id', $id)
+                                       ->update([
+            'product_code'  => $pcode,
+            'quantity'      => $qu,
+        ]);
+
+        return response()->json('successfull');
+    }
 }
