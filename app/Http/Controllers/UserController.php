@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\UserHelper;
+use App\Models\Permision;
+use App\Models\Privilege;
 use Carbon\Carbon;
 use DateInterval;
 use DateTime;
@@ -79,10 +81,11 @@ class UserController extends Controller
         if (!Hash::check($password, $user->password)) {
             return response()->json(['message' => 'Login failed, wrong password'], 401);
         }
-
+        $privilege = Privilege::where('role_id', $user->role_id)->get('permision_id');
+        $permision = Permision::whereIn('permision_id', $privilege)->get(['permision_id as id','alter as name','label']);
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
-        return response()->json(['token' => $ftoken]);
+        //Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
+        return response()->json([$permision,'token' => $ftoken]);
     }
     public function update(Request $request, $id = null)
     {
@@ -187,7 +190,7 @@ class UserController extends Controller
     {
         $uh = new UserHelper;
         if ($request->user()->cannot('viewAny', User::class)) {
-            return response('Unauthorized',401);
+            return response('Unauthorizsed',401);
         }
         return response()->json($uh->getAllUser());
     }

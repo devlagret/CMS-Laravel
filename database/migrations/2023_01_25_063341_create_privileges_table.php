@@ -17,7 +17,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('privileges', function (Blueprint $table) {
-            $table->uuid('previlige_id')->primary();
+            //$table->uuid('previlige_id')->primary();
             $table->uuid('permision_id');
             $table->foreign('permision_id')->references('permision_id')->on('permisions')->onDelete('restrict')->onUpdate('restrict');
             $table->uuid('role_id');
@@ -28,7 +28,7 @@ return new class extends Migration
         $role = DB::table('roles')->where('name', 'admin')->first();
         $permision = DB::table('permisions')->where('label','Akses Admin')->first();
         DB::table('privileges')->insert([
-            'previlige_id' => Str::uuid(),
+            //'previlige_id' => Str::uuid(),
             'permision_id' => $permision->permision_id,
             'role_id' => $role->role_id,
             'created_at' => Carbon::now(),
