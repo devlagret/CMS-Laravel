@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.4.0.0
+//  API Version beta 2.5.0.0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -31,9 +31,16 @@ $router->group(['prefix' => $prefix], function () use ($router) {
     $router->get('user/all', ['middleware' => 'auth', 'uses' => 'UserController@getAllUser']);
     $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
     $router->get('user/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
+    //role related
     $router->get('role/', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
+    $router->get('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
+    $router->put('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@update']);
+    $router->get('role/{id}/permision', ['middleware' => 'auth', 'uses' => 'PermisionController@viewrole']);
+    $router->delete('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@destroy']);
     $router->get('permision/', ['middleware' => 'auth', 'uses' => 'PermisionController@index']);
+    $router->get('permision/{id}', ['middleware' => 'auth', 'uses' => 'PermisionController@view']);
     $router->post('role/', ['middleware' => 'auth', 'uses' => 'RoleController@store']);
+    //
     $router->delete('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@destroy']);
     $router->put('user/', ['middleware' => 'auth', 'uses' => 'UserController@update']);
     $router->put('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@update']);
@@ -105,4 +112,10 @@ $router->group(['prefix' => $prefix], function () use ($router) {
     $router->post('admin', 'ProductOrderController@store');
     $router->get('json', [WarehouseController::class, 'stockup']);
     $router->post('warehouse', 'WarehouseController@store');
+});
+//test
+$router->group(['prefix' => $prefix], function () use ($router){
+    $router->post('test','AppController@test');
+    $router->get('test/{id}','AppController@test');
+    $router->put('test','AppController@test');
 });

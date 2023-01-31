@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductOrderRequest;
-use App\Models\Whs_Details;
+use App\Models\WhsDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class ProductOrderRequestController extends Controller
 {
     public function warehouseview()
     {
-        $wid       = Whs_Details::where('user_id', Auth::id())->first();
+        $wid       = WhsDetail::where('user_id', Auth::id())->first();
         $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')
@@ -50,7 +50,7 @@ class ProductOrderRequestController extends Controller
         $token = Str::uuid()->toString();
         $product_code  = $request->input('product_code');
         $quantity      = $request->input('quantity');
-        $wid           = Whs_Details::where('user_id', Auth::id())->first();
+        $wid           = WhsDetail::where('user_id', Auth::id())->first();
         $Orequest = ProductOrderRequest::create([
             'product_order_requests_id' => Str::uuid()->toString(),
             'warehouse_id'   => $wid->warehouse_id,

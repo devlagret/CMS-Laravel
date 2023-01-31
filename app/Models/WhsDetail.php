@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Whs_Details extends Model
+class WhsDetail extends Model
 {
     protected $table = 'whs_detail';
 

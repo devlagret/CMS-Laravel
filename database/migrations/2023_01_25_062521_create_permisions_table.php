@@ -134,7 +134,7 @@ return new class extends Migration
             [
                 'permision_id' => Str::uuid()->toString(),
                 'name' => 'view-user-privilege',
-                'label' => 'Melihat Data User',
+                'label' => 'Melihat data perizinan User',
                 'group' => 'Hak Istimewa',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -164,27 +164,34 @@ return new class extends Migration
             [
                 'permision_id' => Str::uuid()->toString(),
                 'name' => 'view-user-permision',
-                'label' => 'Melihat Data Perizinan',
+                'label' => 'Melihat Data Perizinan User',
                 'group' => 'Perizinan',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ], [
                 'permision_id' => Str::uuid()->toString(),
-                'name' => 'add-user-permision',
+                'name' => 'view-permision',
+                'label' => 'Melihat semua Data Perizinan',
+                'group' => 'Perizinan',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'add-permision',
                 'label' => 'Menambahkan Perizinan Baru',
                 'group' => 'Perizinan',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ], [
                 'permision_id' => Str::uuid()->toString(),
-                'name' => 'edit-user-permision',
+                'name' => 'edit-permision',
                 'label' => 'Mengubah Data Perizinan',
                 'group' => 'Perizinan',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ], [
                 'permision_id' => Str::uuid()->toString(),
-                'name' => 'delete-user-permision',
+                'name' => 'delete-permision',
                 'label' => 'Menghapus Data Perizinan',
                 'group' => 'Perizinan',
                 'created_at' => Carbon::now(),
