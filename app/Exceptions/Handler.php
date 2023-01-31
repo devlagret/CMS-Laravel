@@ -23,37 +23,7 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    protected array $exceptionMap = [
-        ModelNotFoundException::class => [
-            'code' => 404,
-            'message' => 'Could not find what you were looking for.',
-            'adaptMessage' => false,
-        ],
-
-        NotFoundHttpException::class => [
-            'code' => 404,
-            'message' => 'Could not find what you were looking for.',
-            'adaptMessage' => false,
-        ],
-
-        MethodNotAllowedHttpException::class => [
-            'code' => 405,
-            'message' => 'This method is not allowed for this endpoint.',
-            'adaptMessage' => false,
-        ],
-
-        ValidationException::class => [
-            'code' => 422,
-            'message' => 'Some data failed validation in the request',
-            'adaptMessage' => false,
-        ],
-
-        \InvalidArgumentException::class => [
-            'code' => 400,
-            'message' => 'You provided some invalid input value',
-            'adaptMessage' => true,
-        ],
-    ];
+    
 
     /**
      * Report or log an exception.
@@ -81,36 +51,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        $response = $this->formatException($exception);
-
-        // return parent::render($request, $exception);
-        return response()->json(['error' => $response], $response['status']?? 500);
-    }
-
-    protected function formatException(\Throwable $exception): array
-    {
-        # We get the class name for the exception that was raised
-        $exceptionClass = get_class($exception);
-
-        # we see if we have registered it in the mapping - if it isn't
-        # we create an initial structure as an 'Internal Server Error'
-        # note that this can always be revised at a later time
-        $definition = $this->exceptionMap[$exceptionClass] ?? [
-            'code' => 500,
-            'message' => $exception->getMessage() ?? 'Something went wrong while processing your request',
-            'adaptMessage' => false,
-        ];
-    
-        if (! empty($definition['adaptMessage'])) {
-        
-            $definition['message'] = $exception->getMessage() ?? $definition['message'];
-        
-        }
-        
-        return [
-            'status' => $definition['code'] ?? 500,
-            'title' => $definition['title'] ?? 'Error',
-            'description' => $definition['message'],
-        ];
+        return parent::render($request, $exception);
     }
 }

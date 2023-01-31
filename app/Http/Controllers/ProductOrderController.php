@@ -23,9 +23,9 @@ class ProductOrderController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->user()->cannot('create', ProductOrderRequest::class)) {
-            return response('Unauthorized', 401);
-        }
+        // if ($request->user()->cannot('create', ProductOrderRequest::class)) {
+        //     return response('Unauthorized', 401);
+        // }
         $validator = $this->validate($request, [
             
             'supplier_id'    => 'required',
