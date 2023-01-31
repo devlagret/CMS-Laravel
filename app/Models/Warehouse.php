@@ -9,10 +9,6 @@ class Warehouse extends Model
     protected $table = 'warehouses';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'warehouse_id',
-        'product_code',
-        'stock',
-        'entry_date',
-        'location',
+        'warehouse_id', 'product_code', 'stock', 'entry_date', 'location',
     ];
 }

@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use App\Helpers\UserHelper;
 use App\Models\Config;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Http\Client\Response;
 
 class ConfigPolicy
 {
@@ -19,6 +21,9 @@ class ConfigPolicy
     public function viewAny(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -42,6 +47,9 @@ class ConfigPolicy
     public function create(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -54,6 +62,9 @@ class ConfigPolicy
     public function update(User $user, Config $config)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -66,5 +77,8 @@ class ConfigPolicy
     public function delete(User $user, Config $config)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 }

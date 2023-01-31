@@ -14,6 +14,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         $cateids = Category::all()->pluck('category_id')->toArray();
+        $pco = $this->faker->randomElement($cateids);
         $suppids = Supplier::all()->pluck('supplier_id')->toArray();
         $buy = $this->faker->numerify('###000');
         $price = $this->faker->numerify('###000');
@@ -29,11 +30,11 @@ class ProductFactory extends Factory
 
     	return [
             'id' => $this->faker->uuid(),
-            'product_id' => $this->faker->regexify('[A-Z]{2}-[0-9]{3}'),
+            'product_id' => $this->faker->regexify($pco.'-[0-9]{3}'),
     	      'product_code' => $this->faker->ean13(),
             'brand' => $this->faker->company(),
             'name' => $this->faker->name(),
-            'category_id' => $this->faker->randomElement($cateids),
+            'category_id' => $this->faker->regexify($pco),
             'buy_price' => $this->faker->numerify($buy),
             'price_rec' => $this->faker->numerify($price),
             'price_rec_from_sup' => $this->faker->numerify($price_rec),

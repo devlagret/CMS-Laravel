@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use App\Helpers\UserHelper;
 use App\Models\ProductOrder;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class ProductOrderPolicy
 {
@@ -19,6 +21,9 @@ class ProductOrderPolicy
     public function viewAny(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -42,6 +47,9 @@ class ProductOrderPolicy
     public function create(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -54,6 +62,9 @@ class ProductOrderPolicy
     public function update(User $user, ProductOrder $productOrder)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        : Response::deny('Unauthorized', 401);
     }
 
     /**
@@ -66,5 +77,8 @@ class ProductOrderPolicy
     public function delete(User $user, ProductOrder $productOrder)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        : Response::deny('Unauthorized', 401);
     }
 }

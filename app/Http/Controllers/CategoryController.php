@@ -13,8 +13,11 @@ use App\Helpers\UserHelper;
 class CategoryController extends Controller
 {
     
-    public function index($id=null)
+    public function index(Request $request, $id=null)
     {
+        if ($request->user()->cannot('viewAny', Category::class)) {
+            return response('Unauthorized', 401);
+        }
         $categories = Category::get();
   
         return response()->json($categories);
@@ -22,6 +25,9 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->user()->cannot('create', Category::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'category_name'    => 'required',
             'category_type'    => 'required',
@@ -52,8 +58,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request,$id)
     {
+        if ($request->user()->cannot('view', Category::class)||$request->user()->cannot('viewAny', Category::class)) {
+            return response('Unauthorized', 401);
+        }
         $category = Category::find($id);
 
         return response()->json($category);
@@ -61,6 +70,9 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
+        if ($request->user()->cannot('update', Category::class)) {
+            return response('Unauthorized', 401);
+        }
         $validator = $this->validate($request, [
             'category_name'    => 'required',
             'category_type'    => 'required',
@@ -86,8 +98,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->cannot('delete', Category::class)) {
+            return response('Unauthorized', 401);
+        }
         Category::destroy($id);
 
         return response()->json(['message' => 'Deleted']);
