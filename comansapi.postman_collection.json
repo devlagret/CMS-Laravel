@@ -122,21 +122,6 @@
 				{
 					"name": "Get User",
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "$2y$10$9muAkrG6R/Z0kQ.nl/.VvuQ3FDy8mpEDwgZOBWoOf/sBuhPL.EIRC",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -157,21 +142,6 @@
 				{
 					"name": "Get All User",
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "$2y$10$BIAV0lcSOFvA2n8A9T5uh.DZCj91BaJmuYc90QW0EYnC/VSdk8zZ2",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -395,25 +365,10 @@
 				{
 					"name": "Get Role",
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "{{token}}",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{url}}//api/role",
+							"raw": "http://{{url}}//api/role/",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
@@ -421,7 +376,51 @@
 							"path": [
 								"",
 								"api",
-								"role"
+								"role",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}//api/role/{{role id}}",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"",
+								"api",
+								"role",
+								"{{role id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role Permision",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}//api/role/{{role id}}/permision",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"",
+								"api",
+								"role",
+								"{{role id}}",
+								"permision"
 							]
 						}
 					},
@@ -448,23 +447,29 @@
 					"response": []
 				},
 				{
+					"name": "Get Permision by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}//api/permision/81e92fbc-0c0b-4366-bc10-cafd4a2cf04d",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"",
+								"api",
+								"permision",
+								"81e92fbc-0c0b-4366-bc10-cafd4a2cf04d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Add role",
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "$2y$10$BIAV0lcSOFvA2n8A9T5uh.DZCj91BaJmuYc90QW0EYnC/VSdk8zZ2",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -473,7 +478,12 @@
 								{
 									"key": "name",
 									"value": "user",
-									"type": "default"
+									"type": "text"
+								},
+								{
+									"key": "permision",
+									"value": "",
+									"type": "text"
 								}
 							]
 						},
@@ -486,6 +496,66 @@
 							"path": [
 								"api",
 								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "permision",
+									"value": "81e92fbc-0c0b-4366-bc10-cafd4a2cf04d, 5a47471b-5973-4fce-a0d7-0aeba5a57c91 , f589575c-48a8-4575-9e9b-4cea1f091a65, 6113a291-3265-4071-bb46-dcd8d5fb176f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/role/61b894b1-cd15-4561-932a-e9986228ef5",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"role",
+								"61b894b1-cd15-4561-932a-e9986228ef5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "user",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/role/10b121f6-9e2e-45ac-9679-6c58378563c7",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"role",
+								"10b121f6-9e2e-45ac-9679-6c58378563c7"
 							]
 						}
 					},
@@ -1434,19 +1504,58 @@
 			]
 		},
 		{
-			"name": "New Request Copy",
+			"name": "test",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permision[]",
+							"value": "1223",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "permision[]",
+							"value": "2535",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "permision[]",
+							"value": "2534",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "per",
+							"value": "25, 25, 24 , 21",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "prs",
+							"value": "123133 12312 12133",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
 				"url": {
-					"raw": "http://{{url}}/api/",
+					"raw": "http://{{url}}/api/test/145545664,ioioiu,4242",
 					"protocol": "http",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"api",
-						""
+						"test",
+						"145545664,ioioiu,4242"
 					]
 				}
 			},
@@ -1503,8 +1612,12 @@
 		},
 		{
 			"key": "token",
-			"value": "$2y$10$wvreSgDq22MjsxdsSOUIC.qcg9/0js7tET0LRMCC6kFC9hk1aTJKK",
+			"value": "$2y$10$HCUVEQPxJLn3sDrahIUHcuNZnA3MktrdA6HP6mAVISBpxywQ7w4I6",
 			"type": "default"
+		},
+		{
+			"key": "role id",
+			"value": "$2y$10$XyGMzhvmJbtGsVUh1dTQSe.qJGHBBuhzC42GB24Rwf7UZMqT85V5u"
 		}
 	]
 }
