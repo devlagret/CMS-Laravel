@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\UserHelper;
 use App\Models\Permision;
 use App\Models\Privilege;
+use App\Models\Role;
 use Carbon\Carbon;
 use DateInterval;
 use DateTime;
@@ -37,11 +38,13 @@ class UserController extends Controller
                 'email' => 'required|min:5|email',
                 'role_id' => 'required|min:36|max:36'
             ]);
-            $name = $request->input('name');
-            $username = $request->input('username');
+            $name = trim($request->input('name'));
+            $username = trim($request->input('username'));
             $password = Hash::make($request->input('password'));
-            $role = $request->input('role_id');
+            $role = trim($request->input('role_id'));
             $uid = Str::uuid()->toString();
+            if (!Role::find($role)) {
+                return response('Role id Not Found', 404);}
             $user = User::create([
                 'user_id' => $uid,
                 'name' => $name,
@@ -71,7 +74,7 @@ class UserController extends Controller
             'username' => 'required|max:50',
             'password' => 'required'
         ]);
-        $username = $request->input('username');
+        $username = trim($request->input('username'));
         $password = $request->input('password');
 
         $user = User::where('username', $username)->first();
@@ -84,8 +87,8 @@ class UserController extends Controller
         $privilege = Privilege::where('role_id', $user->role_id)->get('permision_id');
         $permision = Permision::whereIn('permision_id', $privilege)->get(['permision_id as id','alter as name','label']);
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        //Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
-        return response()->json([$permision,'token' => $ftoken]);
+        Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace('\\', bin2hex(random_bytes(1)), $ftoken)]);
+        return response()->json(['token' => $ftoken,'permision'=>$permision,]);
     }
     public function update(Request $request, $id = null)
     {
