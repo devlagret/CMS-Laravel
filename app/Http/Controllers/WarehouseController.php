@@ -67,13 +67,21 @@ class WarehouseController extends Controller
         }
     }
 
-    
     public function show(Request $request, $id)
     {
         if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
         $warehouse = Warehouse::find($id);
+        return response()->json($warehouse);
+    }
+
+    public function showProduct(Request $request, $productCode)
+    {
+        if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        $warehouse = Warehouse::where('product_code', $productCode)->get(['warehouse_id', 'stock']);
         return response()->json($warehouse);
     }
 

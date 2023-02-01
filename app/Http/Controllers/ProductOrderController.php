@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Log;
+use App\Models\ProductOrder;
 use App\Models\User;
 use App\Models\ProductOrderRequest;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
 
 class ProductOrderController extends Controller
 {
@@ -26,8 +28,7 @@ class ProductOrderController extends Controller
         // if ($request->user()->cannot('create', ProductOrderRequest::class)) {
         //     return response('Unauthorized', 401);
         // }
-        $validator = $this->validate($request, [
-            
+        $validator = $this->validate($request, [ 
             'supplier_id'    => 'required',
             'product_code'   => 'required',
             'total_amount'   => 'required',
@@ -39,6 +40,14 @@ class ProductOrderController extends Controller
         $purchase_date = $request->input('purchase_date');
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
+
+        $order = ProductOrder::create([
+                'supplier_id'    => $supllier_id,
+                'product_code'   => $product_code,
+                'purchase_date'  => is_null($purchase_date) ? Carbon::now('Asia/Jakarta') : $purchase_date,
+                'total_amount'   => $total_amount,
+                'quantity'       => $quantity,
+        ]);
         
         $id = ProductOrderRequest::where('status', 'sent')
                                  ->where('product_code', $product_code)
@@ -61,10 +70,6 @@ class ProductOrderController extends Controller
         if (($quantity - $q) >= 0) {
             $remain = $quantity - $q;
             if ($remain > 0) {
-                $validator = $this->validate($request, [
-                    'quantity1'       => 'required',
-                    'warehouse_id'   => 'required',
-                ]);
 
                 $nwid = $request->input('warehouse_id');
                 $qu = $request->input('quantity1');
@@ -75,13 +80,6 @@ class ProductOrderController extends Controller
                     $remain = $remain - $qu;
                 } while ($remain >= 0);
             }
-            // $order = ProductOrder::create([
-            //     'supplier_id'    => $supllier_id,
-            //     'product_code'   => $product_code,
-            //     'purchase_date'  => is_null($purchase_date) ? Carbon::now('Asia/Jakarta') : $purchase_date,
-            //     'total_amount'   => $total_amount,
-            //     'quantity'       => $quantity,
-            // ]);
             return response()->json('Data Added');
         } else {
             return response()->json('Quantity Kurang');
@@ -94,8 +92,13 @@ class ProductOrderController extends Controller
         // }
     }
 
-    public function addstock($nwid, $stock, $product_code)
+    public function ditribute(Request $request, $nwid, $stock, $product_code)
     {
+        $validator = $this->validate($request, [
+            'quantity1'       => 'required',
+            'warehouse_id'   => 'required',
+        ]);
+
         $addstock = Warehouse::where('product_code', $product_code)
                                     ->where('warehouse_id', $nwid)
                                     ->increament('stock', $stock);
