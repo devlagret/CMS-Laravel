@@ -33,7 +33,7 @@ class ProductPolicy
      * @param  \App\Models\Product  $product
      * @return mixed
      */
-    public function view(User $user, Product $product)
+    public function view(User $user)
     {
         //
     }
@@ -59,7 +59,7 @@ class ProductPolicy
      * @param  \App\Models\Product  $product
      * @return mixed
      */
-    public function update(User $user, Product $product)
+    public function update(User $user)
     {
         //
         $uh = new UserHelper();
@@ -74,7 +74,7 @@ class ProductPolicy
      * @param  \App\Models\Product  $product
      * @return mixed
      */
-    public function delete(User $user, Product $product)
+    public function delete(User $user)
     {
         //
         $uh = new UserHelper();

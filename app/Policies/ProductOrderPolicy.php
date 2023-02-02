@@ -33,7 +33,7 @@ class ProductOrderPolicy
      * @param  \App\Models\ProductOrder  $productOrder
      * @return mixed
      */
-    public function view(User $user, ProductOrder $productOrder)
+    public function view(User $user)
     {
         //
     }
@@ -59,7 +59,7 @@ class ProductOrderPolicy
      * @param  \App\Models\ProductOrder  $productOrder
      * @return mixed
      */
-    public function update(User $user, ProductOrder $productOrder)
+    public function update(User $user)
     {
         //
         $uh = new UserHelper();
@@ -74,7 +74,7 @@ class ProductOrderPolicy
      * @param  \App\Models\ProductOrder  $productOrder
      * @return mixed
      */
-    public function delete(User $user, ProductOrder $productOrder)
+    public function delete(User $user)
     {
         //
         $uh = new UserHelper();

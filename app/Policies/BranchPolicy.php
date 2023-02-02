@@ -33,7 +33,7 @@ class BranchPolicy
      * @param  \App\Models\Branch  $branch
      * @return mixed
      */
-    public function view(User $user, Branch $branch)
+    public function view(User $user)
     {
         //
         return 1;
@@ -60,7 +60,7 @@ class BranchPolicy
      * @param  \App\Models\Branch  $branch
      * @return mixed
      */
-    public function update(User $user, Branch $branch)
+    public function update(User $user)
     {
         //
         $uh = new UserHelper();
@@ -75,7 +75,7 @@ class BranchPolicy
      * @param  \App\Models\Branch  $branch
      * @return mixed
      */
-    public function delete(User $user, Branch $branch)
+    public function delete(User $user)
     {
         //
         $uh = new UserHelper();

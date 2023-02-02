@@ -19,10 +19,16 @@ class ProductOrderRequestController extends Controller
         }
         $wid       = WhsDetail::where('user_id', Auth::id())->first();
         $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
-                                            ->orderBy('request_date', 'desc')
-                                            ->orderBy('product_code', 'asc')
-                                            // ->orderBy('status')
-                                            ->get();
+                                        ->orderByRaw("CASE status
+                                            WHEN 'accepted' THEN 1
+                                            WHEN 'sent' THEN 2
+                                            WHEN 'transferred' THEN 3
+                                            ELSE 4
+                                            END")
+                                        ->orderBy('request_date', 'desc')
+                                        ->orderBy('product_code', 'asc')
+                                            
+                                        ->get();
         // if($Orequests->quantity) {
             // $Orequest = DB::table('product_order_requests')
                         // ->select()
@@ -40,8 +46,8 @@ class ProductOrderRequestController extends Controller
                                         // ->orderBy('status')
                                         ->get();
                                             
-        $status = ProductOrderRequest::where('status','sent')
-                                     ->update(['status' => 2]);
+        // $status = ProductOrderRequest::where('status','sent')
+        //                              ->update(['status' => 2]);
 
         return response()->json($Orequests);
     }
@@ -52,8 +58,8 @@ class ProductOrderRequestController extends Controller
             return response('Unauthorized', 401);
         }
         $validator = $this->validate($request, [
-            'product_code'   => 'required',
-            'quantity'       => 'required',
+            'product_code' => 'required',
+            'quantity'     => 'required',
         ]);
         
         $token = Str::uuid()->toString();
@@ -112,5 +118,18 @@ class ProductOrderRequestController extends Controller
         ]);
 
         return response()->json('successfull');
+    }
+
+    public function showProduct(Request $request, $productCode)
+    {
+        if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        $Orequest = ProductOrderRequest::where('product_code', $productCode)
+                                       ->whereIn('status', ['sent', 'accepted'])
+                                       ->orderBy('request_date', 'desc')
+                                       ->get(['product_order_requests_id','warehouse_id','request_date','quantity', 'status']);
+        
+        return response()->json($Orequest);
     }
 }
