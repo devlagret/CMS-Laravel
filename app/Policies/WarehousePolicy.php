@@ -60,7 +60,7 @@ class WarehousePolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role', 'view-product-order-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 

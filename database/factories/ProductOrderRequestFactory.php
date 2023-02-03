@@ -17,7 +17,7 @@ class ProductOrderRequestFactory extends Factory
     {
         $wids = Warehouse::all()->pluck('warehouse_id')->toArray();
         $wid = $this->faker->randomElement($wids);
-        $pids = Warehouse::all()->pluck('product_code')->toArray();
+        $pids = Warehouse::where('warehouse_id', $wid)->pluck('product_code')->toArray();
         $pid = $this->faker->randomElement($pids);
 
     	return [

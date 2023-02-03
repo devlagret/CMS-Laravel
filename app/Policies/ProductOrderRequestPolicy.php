@@ -21,7 +21,7 @@ class ProductOrderRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role', 'view-product-order-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -74,6 +74,13 @@ class ProductOrderRequestPolicy
      * @return mixed
      */
     public function delete(User $user)
+    {
+        //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
+    }
+    public function updatew(User $user)
     {
         //
         $uh = new UserHelper();

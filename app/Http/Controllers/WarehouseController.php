@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use stdClass;
+use Symfony\Component\VarDumper\VarDumper;
 
 use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\isNull;
@@ -146,21 +147,17 @@ class WarehouseController extends Controller
         $pid = $request->input('product_order_requests_id');
         
         $wid = WhsDetail::where('user_id', Auth::id())->first();
-        $stock = RequestOrder::where('warehouse_id', $wid)
-                            ->orWhere('product_order_requests_id', $pid)
-                            ->first('quantity');
+        $stock = RequestOrder::where('product_order_requests_id', $pid)
+                            ->first();
         
-        if ($request->filled('product_order_requests_id')) {
+        if (!$request->filled('product_order_requests_id')) {
             $warehouse = Warehouse::where('warehouse_id',$wid->warehouse_id)
                                 ->where('product_code',$product_code)
-                                ->update(['stock', DB::raw('stock +'.$stock->quantity)]);
-
-            // $warehouse->stock += $stock->quantity;
-            // $warehouse->save();
-            // echo 'berhasil';
-            return response()->json('berhasil');
-        }
+                                ->increment('stock', $stock->quantity);
             
+            return response()->json($warehouse);
+        }
+        return response()->json($stock);
         
         
         
