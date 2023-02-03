@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('warehouse_batches', function (Blueprint $table) {
             $table->uuid('warehouse_id');
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('cascade');
             $table->uuid('batch_id');
             $table->foreign('batch_id')->references('batch_id')->on('batches')->onDelete('cascade');
             $table->timestamps();
