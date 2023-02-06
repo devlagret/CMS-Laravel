@@ -21,7 +21,7 @@ class ProductOrderRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role', 'view-product-order-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -35,7 +35,7 @@ class ProductOrderRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -49,7 +49,7 @@ class ProductOrderRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'add-product-order-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -63,7 +63,7 @@ class ProductOrderRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -77,7 +77,14 @@ class ProductOrderRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'delete-product-order-request']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
+    }
+    public function updatew(User $user)
+    {
+        //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'edit-product-order-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 }

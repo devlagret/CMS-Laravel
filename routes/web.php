@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.5.1.4
+//  API Version beta 2.5.4.0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -67,6 +67,10 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->post('product/category', 'CategoryController@store');
     $router->put('product/category/{id}', 'CategoryController@update');
     $router->delete('product/category/{id}', 'CategoryController@destroy');
+    //product order api endpoint
+    $router->get('product/order', 'ProductOrderController@index');
+    $router->post('product/order', 'ProductOrderController@store');
+    $router->post('product/order/distribute', 'ProductOrderController@distribute');
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');
@@ -96,30 +100,25 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 //warehouse related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     //warehouse order api endpoint
-    $router->post('warehouse/order', 'ProductOrderRequestController@store');
-    $router->get('warehouse/worder', 'ProductOrderRequestController@warehouseview');
-    $router->get('admin/aorder', 'ProductOrderRequestController@adminview');
-    $router->put('admin/editorder', 'ProductOrderRequestController@adminedit');
-    $router->put('warehouse/weditorder', 'ProductOrderRequestController@warehousedit');
+    $router->get('warehouse/request', 'ProductOrderRequestController@view');
+    $router->get('warehouse/request/{productCode}', 'ProductOrderRequestController@showProduct');
+    $router->post('warehouse/request', 'ProductOrderRequestController@store');
+    $router->put('warehouse/request', 'ProductOrderRequestController@edit');
     //warehouse detail api endpoint
-    $router->post('detail', 'WhsDetailController@store');
-    $router->post('detail', 'WhsDetailController@store');
+    $router->post('warehouse/detail', 'WhsDetailController@store');
     //warehouse api endpoint
     $router->get('warehouse', 'WarehouseController@index');
-    $router->post('warehouse', 'WarehouseController@store');
+    $router->get('warehouse/all/{productCode}', 'WarehouseController@showProduct');
     $router->get('warehouse/{id}', 'WarehouseController@show');
+    $router->post('warehouse', 'WarehouseController@store');
+    $router->put('warehouse/request/{product_code}', 'WarehouseController@stockup');
     $router->put('warehouse/{id}', 'WarehouseController@update');
     $router->delete('warehouse/{id}', 'WarehouseController@destroy');
-});
-//admin related api endpoint
-$router->group(['prefix' => $prefix], function () use ($router) {
-    $router->post('admin', 'ProductOrderController@store');
-    $router->get('json', [WarehouseController::class, 'stockup']);
-    $router->post('warehouse', 'WarehouseController@store');
 });
 //test
 $router->group(['prefix' => $prefix], function () use ($router){
     $router->post('test','AppController@test');
     $router->get('test/{id}','AppController@test');
     $router->put('test','AppController@test');
+    
 });

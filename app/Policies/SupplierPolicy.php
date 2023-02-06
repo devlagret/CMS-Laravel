@@ -33,7 +33,7 @@ class SupplierPolicy
      * @param  \App\Models\Supplier  $supplier
      * @return mixed
      */
-    public function view(User $user, Supplier $supplier)
+    public function view(User $user)
     {
         //
     }
@@ -59,7 +59,7 @@ class SupplierPolicy
      * @param  \App\Models\Supplier  $supplier
      * @return mixed
      */
-    public function update(User $user, Supplier $supplier)
+    public function update(User $user)
     {
         //
         $uh = new UserHelper();
@@ -74,7 +74,7 @@ class SupplierPolicy
      * @param  \App\Models\Supplier  $supplier
      * @return mixed
      */
-    public function delete(User $user, Supplier $supplier)
+    public function delete(User $user)
     {
         //
         $uh = new UserHelper();

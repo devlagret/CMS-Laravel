@@ -33,7 +33,7 @@ class CategoryPolicy
      * @param  \App\Models\Category  $category
      * @return mixed
      */
-    public function view(User $user, Category $category)
+    public function view(User $user)
     {
         //
     }
@@ -59,7 +59,7 @@ class CategoryPolicy
      * @param  \App\Models\Category  $category
      * @return mixed
      */
-    public function update(User $user, Category $category)
+    public function update(User $user)
     {
         //
         $uh = new UserHelper();
@@ -74,7 +74,7 @@ class CategoryPolicy
      * @param  \App\Models\Category  $category
      * @return mixed
      */
-    public function delete(User $user, Category $category)
+    public function delete(User $user)
     {
         //
         $uh = new UserHelper();
