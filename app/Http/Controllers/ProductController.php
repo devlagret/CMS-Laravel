@@ -15,17 +15,14 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    
     public function index(Request $request)
     {
         if ($request->user()->cannot('viewAny', Product::class)) {
             return response('Unauthorized', 401);
         }
-        $products = DB::table('products')->simplePaginate(10);
-        $user = Auth::check();
-        return response()->json([$user,$products]);
+        $products = Product::get();
+        return response()->json($products);
     }
-
     public function store(Request $request)
     {
         if ($request->user()->cannot('create', Product::class)) {
@@ -86,7 +83,6 @@ class ProductController extends Controller
             return response()->json("Failure",500);
         }
     }
-
     public function show(Request $request, $id)
     {
         if ($request->user()->cannot('view', Product::class)||$request->user()->cannot('viewAny', Product::class)) {
@@ -97,7 +93,6 @@ class ProductController extends Controller
             return response('Product Not Found',404);}
         return response()->json($product);
     }
-
     public function update(Request $request, $id)
     {
         if ($request->user()->cannot('update', Product::class)) {
@@ -145,7 +140,6 @@ class ProductController extends Controller
             return response()->json("Failure");
         }
     }
-
     public function destroy(Request $request, $id)
     {
         if ($request->user()->cannot('delete', Product::class)) {
@@ -155,7 +149,6 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Deleted']);
     }
-
     public function category(Request $request, $id){
         if ($request->user()->cannot('view', Product::class) || $request->user()->cannot('viewAny', Product::class)) {
             return response('Unauthorized', 401);
@@ -177,5 +170,65 @@ class ProductController extends Controller
         }
         $s = Supplier::where('supplier_id', $p->supplier_id)->first();
         return response()->json($s);
+    }
+    public function trash(Request $request, $id = null)
+    {
+        if ($request->user()->cannot('viewAny', Product::class)) {
+            return response('Unauthorized', 401);
+        }
+        if($id!=null){
+            $trash = product::onlyTrashed()->find($id);
+            if(!$trash){return response('Id Not Found',404);}
+            if($trash->isEmpty()){return response('No Product Trased',404);}
+           return response()->json($trash);
+        }
+        $trash = Product::onlyTrashed()->get();
+        if($trash->isEmpty()){return response('No Product Trased', 404);}
+        return response()->json($trash);
+    
+    }
+    public function restore(Request $request, $id)
+    {
+        if ($request->user()->cannot('viewAny', Product::class)) {
+            return response('Unauthorized', 401);
+        }
+        $this->validate($request, ['id'=>'required|min:36']);
+        $id = explode(",", str_replace(" ", "", $request['id']));
+        $restore = product::whereIn('id',$id)->restore();
+        if(!$restore){
+            return response('Failure',500);
+        }
+        return response('Restore Sucess');
+    }
+    public function restoreAll(Request $request)
+    {
+        $restore = product::onlyTrashed()->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function delete(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', product::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($request->isMethod('DELETE')) {
+            $delete = product::onlyTrashed()->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        if ($request->isMethod('POST')) {
+            $this->validate($request, ['user_id' => 'required|min:36']);
+            $id = explode(",", str_replace(" ", "", $request['user_id']));
+            $delete = product::whereIn('user_id', $id)->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        return response('Forbiden Method', 403);
     }
 }
