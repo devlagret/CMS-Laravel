@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.5.1.1
+//  API Version beta 2.5.1.2
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -29,10 +29,12 @@ $router->group(['prefix' => $prefix], function () use ($router) {
     $router->post('login', 'UserController@login');
     $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
     $router->get('user/all', ['middleware' => 'auth', 'uses' => 'UserController@getAllUser']);
+    $router->get('user/deleted', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
     $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
     $router->get('user/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
     //role related
     $router->get('role/', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
+    $router->get('role/deleted', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
     $router->get('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
     $router->put('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@update']);
     $router->get('role/{id}/permision', ['middleware' => 'auth', 'uses' => 'PermisionController@viewrole']);

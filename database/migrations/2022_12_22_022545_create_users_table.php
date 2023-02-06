@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('contact', 15);
             $table->string('email');
-            $table->string('password')->default('null');
+            $table->string('password')->invinsible()->default('null');
             $table->uuid('role_id')->nullable()->default('user');
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();

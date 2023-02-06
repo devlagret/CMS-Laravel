@@ -31,6 +31,7 @@ return new class extends Migration
             $table->uuid('supplier_id')->nullable()->default('0');
             $table->foreign('supplier_id')->references('supplier_id')->on('suppliers')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
