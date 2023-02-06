@@ -118,7 +118,7 @@ class ProductController extends Controller
         ]);
         $product_code = $request->input('product_code');
 
-        $product = product::whereId($id)->update([
+        $product = product::where('id',$id)->update([
             'product_code'       => $request->input('product_code'),
             'brand'              => $request->input('brand'),
             'name'               => $request->input('name'),
