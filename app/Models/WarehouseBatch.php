@@ -8,6 +8,6 @@ class WarehouseBatch extends Model
 {
     protected $table = 'warehousebatches';
     protected $fillable = [
-        'warehouse_id', 'batch_id'
+        'warehouse_id', 'batch_id', 'product_id', 'quantity', 'expired_date'
     ];
 }
