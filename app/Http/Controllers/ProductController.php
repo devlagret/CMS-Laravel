@@ -10,6 +10,7 @@ use App\Helpers\UserHelper;
 use App\Models\Category;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -112,7 +113,7 @@ class ProductController extends Controller
         ]);
         $product_code = $request->input('product_code');
 
-        $product = product::whereId($id)->update([
+        $product = product::where('id',$id)->update([
             'product_code'       => $request->input('product_code'),
             'brand'              => $request->input('brand'),
             'name'               => $request->input('name'),

@@ -10,7 +10,7 @@ use App\Models\ProductOrderRequest;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\isEmpty;
 
@@ -21,7 +21,7 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = ProductOrder::get();
+        $stockups = DB::table('product_order')->simplePaginate(15);
         
         return response()->json($stockups);
     }

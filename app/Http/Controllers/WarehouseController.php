@@ -32,7 +32,7 @@ class WarehouseController extends Controller
         if ($request->user()->cannot('viewAny', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
-        $warehouses = Warehouse::get();
+        $warehouses = DB::table('warehouses')->simplePaginate(10);
         
         return response()->json($warehouses);
     }

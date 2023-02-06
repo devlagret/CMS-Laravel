@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
+use Illuminate\Support\Str;
 
 class ProductRequestController extends Controller
 {
@@ -44,6 +45,7 @@ class ProductRequestController extends Controller
         $amount = $request->input('amount');
         
         $product_req = ProductRequest::create([
+            'request_id'    => Str::uuid()->toString(),
             'branch_id'     => $request->input('branch_id'),
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
@@ -94,7 +96,7 @@ class ProductRequestController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
 
-        $product_req = ProductRequest::whereId($id)->update([
+        $product_req = ProductRequest::where('request_id',$id)->update([
             'branch_id'     => $request->input('branch_id'),
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),

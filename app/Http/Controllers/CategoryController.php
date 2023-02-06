@@ -80,7 +80,7 @@ class CategoryController extends Controller
         $category_name = $request->input('category_name');
         $category_type = $request->input('category_type');
 
-        $category = Category::whereId($id)->update([
+        $category = Category::where('category_id', $id)->update([
             'category_name'   => $request->input('category_name'),
             'category_type'   => $request->input('category_type'),
         ]);

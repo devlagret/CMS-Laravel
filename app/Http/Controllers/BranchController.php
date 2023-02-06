@@ -10,6 +10,7 @@ use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Helpers\UserHelper;
+use Illuminate\Support\Facades\DB;
 
 class BranchController extends Controller
 {
@@ -19,7 +20,7 @@ class BranchController extends Controller
         if ($request->user()->cannot('viewAny', Branch::class)) {
             return response('Unauthorized', 401);
         }
-        $branches = Branch::get();
+        $branches = DB::table('branches')->simplePaginate(10);
   
         return response()->json($branches);
     }

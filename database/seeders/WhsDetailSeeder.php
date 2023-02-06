@@ -17,20 +17,19 @@ class WhsDetailSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0; $i < 2; $i++) { 
-        $cateids = User::all()->pluck('user_id')->toArray();
-        $uid = array_rand($cateids);
-        $arr1 = ['?????!!!!','????'];
-        $mn = array_rand($arr1);
-
-            WhsDetail::firstOrCreate([
-                'warehouse_id' => Str::uuid()->toString(),
-                'user_id' => $cateids[$uid],
-                'manager_name' => $arr1[$mn],
-                'contact' => rand(),
-                'adress' => $arr1[$mn],
-            ]);
+        $uids = User::all()->pluck('user_id')->toArray();
+        foreach ($uids as  $uid) {
+            $arr1 = '?????!!!!';
+    
+                WhsDetail::firstOrCreate([
+                    'warehouse_id' => Str::uuid()->toString(),
+                    'user_id' => $uid,
+                    'manager_name' => $arr1,
+                    'contact' => rand(),
+                    'adress' => $arr1,
+                ]);
+        }
+        // $uid = array_rand($cateids);
             // dd($cateids);
         }
-    }
 }
