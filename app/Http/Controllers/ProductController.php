@@ -10,6 +10,7 @@ use App\Helpers\UserHelper;
 use App\Models\Category;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -20,7 +21,7 @@ class ProductController extends Controller
         if ($request->user()->cannot('viewAny', Product::class)) {
             return response('Unauthorized', 401);
         }
-        $products = Product::get();
+        $products = DB::table('products')->simplePaginate(5);
         $user = Auth::check();
         return response()->json([$user,$products]);
     }

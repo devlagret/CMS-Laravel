@@ -9,6 +9,7 @@ use App\Models\Token;
 use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
+use Illuminate\Support\Str;
 
 class SupplierController extends Controller
 {
@@ -31,11 +32,12 @@ class SupplierController extends Controller
         $validator = $this->validate($request, [
             'supplier_name'  => 'required',
             'contact'        => 'required',
-            'address'        => 'required|max:15',
+            'address'        => 'required',
         ]);
         $supplier_name = $request->input('supplier_name');
 
         $supplier = Supplier::create([
+            'supplier_id'    => Str::uuid()->toString(),
             'supplier_name'  => $request->input('supplier_name'),
             'contact'        => $request->input('contact'),
             'address'        => $request->input('address'),
