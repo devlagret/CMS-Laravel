@@ -74,11 +74,11 @@ class SupplierController extends Controller
             $validator = $this->validate($request, [
             'supplier_name'  => 'required',
             'contact'        => 'required',
-            'address'        => 'required|max:15',
+            'address'        => 'max:15',
         ]);
         $supplier_name = $request->input('supplier_name');
         
-        $supplier = Supplier::whereId($id)->update([
+        $supplier = Supplier::where('supplier_id', $id)->update([
             'supplier_name' => $request->input('supplier_name'),
             'contact'       => $request->input('contact'),
             'address'       => $request->input('address'),

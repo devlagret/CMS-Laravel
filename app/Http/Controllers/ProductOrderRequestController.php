@@ -17,7 +17,8 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
             $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
-                                            ->get();
+                                            ->get()
+                                            ->simplePaginate(10);
             return response()->json($Orequests);
         }elseif ($request->user()->can('viewAny', ProductOrderRequest::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();

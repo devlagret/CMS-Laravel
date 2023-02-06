@@ -21,7 +21,7 @@ class ProductController extends Controller
         if ($request->user()->cannot('viewAny', Product::class)) {
             return response('Unauthorized', 401);
         }
-        $products = DB::table('products')->simplePaginate(5);
+        $products = DB::table('products')->simplePaginate(10);
         $user = Auth::check();
         return response()->json([$user,$products]);
     }
