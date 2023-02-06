@@ -74,7 +74,7 @@ class SupplierController extends Controller
             $validator = $this->validate($request, [
             'supplier_name'  => 'required',
             'contact'        => 'required',
-            'address'        => 'max:15',
+            'address'        => 'required',
         ]);
         $supplier_name = $request->input('supplier_name');
         
