@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('warehousebatches', function (Blueprint $table) {
-            $table->unsignedBigInteger('warehouse_id');
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+        Schema::create('batchproducts', function (Blueprint $table) {
             $table->uuid('batch_id');
-            $table->foreign('batch_id')->references('batch_id')->on('batchproducts')->onDelete('cascade');
+            $table->foreign('batch_id')->references('batch_id')->on('batches')->onDelete('cascade');
+            $table->uuid('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
+            $table->integer('quantity');
+            $table->date('expired_date');
         });
     }
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warehousebatches');
+        Schema::dropIfExists('batchproducts');
     }
 };
