@@ -17,7 +17,7 @@ class PermisionController extends Controller
         }
         $group = Permision::orderBy('group')->distinct()->get('group');
         $per = array();
-        foreach($group as $v){ $per[$v->group]=Permision::where('group',$v->group)->get(['permision_id', 'label as name']); }
+        foreach($group as $v){ $per[$v->group]=Permision::where('group',$v->group)->get(['permision_id', 'label', 'alter as name']); }
         return response()->json($per);
     }
     public function view(Request $request,$id){
