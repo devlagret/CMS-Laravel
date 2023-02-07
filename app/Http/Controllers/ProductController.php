@@ -35,7 +35,6 @@ class ProductController extends Controller
             'category_id'         => 'required',
             'buy_price'           => 'required',
             'price_rec'           => 'required',
-            'price_rec_from_sup'  => 'required',
             'description'         => 'required',
             'property'            => 'required',
             'supplier_id'         => 'required',
@@ -48,12 +47,6 @@ class ProductController extends Controller
         $data = $data+1;
         $Val = ($data < 100) ? (($data < 10) ? '00'.$data : '0'.$data) : $data ;
         $pid = $cateid .'-'. $Val;
-
-
-        throw_if(
-            $p_code === 0 && $p_code <= 0,
-            new \InvalidArgumentException('Product Code is Empty')
-        );
 
         $product = product::create([
             'id'                  => Str::uuid()->toString(),
@@ -78,7 +71,7 @@ class ProductController extends Controller
                 'activity' => 'Add Product(s)',
                 'detail' => 'New Product '.$p_code.'has Been Added'
             ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
+            return response()->json(['message' => 'Data added successfully', 'data' => $product], 201);
         }else {
             return response()->json("Failure",500);
         }
@@ -105,7 +98,6 @@ class ProductController extends Controller
             'category_id'         => 'required',
             'buy_price'           => 'required',
             'price_rec'           => 'required',
-            'price_rec_from_sup'  => 'required',
             'profit_margin'       => 'required',
             'description'         => 'required',
             'property'            => 'required',
@@ -135,7 +127,7 @@ class ProductController extends Controller
                 'activity' => 'Update Product(s)',
                 'detail' => 'Update Product information with Code '.$product_code
             ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
+            return response()->json(['message' => 'Data updated successfully'], 201);
         }else {
             return response()->json("Failure");
         }

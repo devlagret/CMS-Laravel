@@ -36,6 +36,9 @@ class ProductPolicy
     public function view(User $user)
     {
         //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        : Response::deny('Unauthorized', 401);
     }
 
     /**

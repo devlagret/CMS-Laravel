@@ -108,12 +108,11 @@ class WarehouseController extends Controller
         $wid          = WhsDetail::where('user_id', Auth::id())->first();
 
         $warehouse = Warehouse::whereId($id)->update([
-            'branch_id'     => $request->input('branch_id'),
+            'warehouse_id'  => $wid->warehouse_id,
             'product_code'  => $request->input('product_code'),
-            'amount'        => $request->input('amount'),
-            'order_date'    => $request->input('order_date'),
-            'out_date'      => $request->input('out_date'),
-            'status'        => $request->input('status'),
+            'stock'        => $request->input('stock'),
+            'location'      => $request->input('location'),
+            'entry_date'        => Carbon::today('Asia/Jakarta')->toDateString(),
         ]);
 
         if ($warehouse) {
@@ -123,7 +122,7 @@ class WarehouseController extends Controller
                 'activity'  => 'Warehouse(s)',
                 'detail'    => 'User "'.Auth::id().'" update Product "'.$product_code.'" in Warehouse "'.$wid->warehouse_id
             ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
+            return response()->json(['message' => 'Data updated successfully'], 201);
         }else {
             return response()->json("Failure");
         }
