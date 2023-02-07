@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductOrder extends Model
 {
+    use SoftDeletes;
     protected $table = 'product_order';
 
     protected $primaryKey = 'product_order_id';

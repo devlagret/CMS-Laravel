@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('batch_id')->primary();
             $table->date('entry_date');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
