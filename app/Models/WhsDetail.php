@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WhsDetail extends Model
 {
+    use SoftDeletes;
     protected $table = 'whs_detail';
 
     protected $primaryKey = 'warehouse_id';

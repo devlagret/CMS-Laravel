@@ -22,6 +22,7 @@ return new class extends Migration
             $table->uuid('user_id')->nullable()->default('0');
             $table->foreign('user_id')->references('user_id')->on('user')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

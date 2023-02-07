@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->enum('status', ['sent', 'accepted', 'transferred']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
