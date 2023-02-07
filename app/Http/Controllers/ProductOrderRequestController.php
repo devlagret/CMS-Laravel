@@ -17,11 +17,10 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
             $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
-                                            ->get()
                                             ->simplePaginate(10);
             return response()->json($Orequests);
         }elseif ($request->user()->can('viewAny', ProductOrderRequest::class)) {
-            $wid       = WhsDetail::where('user_id', Auth::id())->first();
+            $wid       = WhsDetail::where('user_id', Auth::id())->firsimplest();
             $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->orderByRaw("CASE status
                                                 WHEN 'accepted' THEN 1
@@ -31,7 +30,7 @@ class ProductOrderRequestController extends Controller
                                                 END")
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
-                                            ->get();
+                                            ->simplePaginate(10);
             return response()->json($Orequests);
         }else {
             return response('Unauthorized', 401);

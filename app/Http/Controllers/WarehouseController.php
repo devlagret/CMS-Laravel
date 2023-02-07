@@ -81,6 +81,9 @@ class WarehouseController extends Controller
             return response('Unauthorized', 401);
         }
         $warehouse = Warehouse::find($id);
+        if (!$warehouse) {
+            return response()->json('Data Not Found', 404);
+        }
         return response()->json($warehouse);
     }
 
