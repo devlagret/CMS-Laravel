@@ -94,17 +94,18 @@ class CategoryController extends Controller
         // $id = substr($category_type, 0, 1).'-'.substr($category_name, 0, 2);
         $num = 2;
         $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
-        $count = Category::where('category_id', 'like', $cid . '%')->get('category_id');
-        while ($count && count($count) != 1 ) {
-            $num++;
-        }
+        $count = Category::where('category_id', 'like', $cid.'%')->get('category_id');
+        // while ($count > 1) {
+        //     $num++;
+        //     $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
+        // }
 
-        Category::destroy($id);
-        $category = Category::create([
-            'category_id' => $cid,
-            'category_name' => $category_name,
-            'category_type' => $category_type,
-        ]);
+        // Category::destroy($id);
+        // $category = Category::create([
+        //     'category_id' => $cid,
+        //     'category_name' => $category_name,
+        //     'category_type' => $category_type,
+        // ]);
         
         // $uh = new UserHelper;
         // if ($category) {
@@ -118,7 +119,7 @@ class CategoryController extends Controller
         // }else {
         //     return response()->json("Failure");
         // }
-        return response()->json(count($count));
+        return response()->json($cid);
     }
 
     public function destroy(Request $request, $id)

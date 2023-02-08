@@ -72,7 +72,7 @@ class SupplierController extends Controller
             return response('Unauthorized', 401);
         }
 
-        $supplier = Supplier::where('supplier_name', 'LIKE', '%'.$name.'%')->get();
+        $supplier = Supplier::where('supplier_name', 'LIKE', '%'.$name.'%')->paginate(9);
 
         return response()->json($supplier);
     }
