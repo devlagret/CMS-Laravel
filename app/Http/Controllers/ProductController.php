@@ -20,7 +20,7 @@ class ProductController extends Controller
         if ($request->user()->cannot('viewAny', Product::class)) {
             return response('Unauthorized', 401);
         }
-        $products = Product::simplePaginate(10);
+        $products = Product::Paginate(10);
         return response()->json($products);
     }
     public function store(Request $request)

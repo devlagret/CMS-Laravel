@@ -21,7 +21,7 @@ class ProductRequestController extends Controller
         if ($request->user()->cannot('viewAny', ProductRequest::class)) {
             return response('Unauthorized', 401);
         }
-        $product_reqs = ProductRequest::simplePaginate(10);
+        $product_reqs = ProductRequest::paginate(10);
         
         return response()->json($product_reqs);
     }
