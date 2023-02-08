@@ -18,15 +18,29 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $role = Role::where('name', 'admin')->first();
-        User::firstOrCreate([
-            'user_id' => Str::uuid()->toString(),
-            'username' => 'admin',
-            'name' => 'Admin',
-            'password' => Hash::make('admin'),
-            'contact' => '081222333444555',
-            'role_id' => $role->role_id,
-            'email' => 'admin@exmple.com',
-        ]);
+        $role1 = Role::whereIn('name', ['branch', 'user'])->get();
+        foreach ($role1 as $role) {
+            if ($role->name == 'branch') {
+                User::updateOrCreate([
+                    'user_id' => Str::uuid()->toString(),
+                    'username' => 'branch',
+                    'name' => 'Branch',
+                    'password' => Hash::make('branch'),
+                    'contact' => '081222333444555',
+                    'role_id' => $role->role_id,
+                    'email' => 'branch@exmple.com',
+                ]);
+            } elseif ($role->name == 'user') {
+                User::updateOrCreate([
+                    'user_id' => Str::uuid()->toString(),
+                    'username' => 'user',
+                    'name' => 'User',
+                    'password' => Hash::make('user'),
+                    'contact' => '081222333444555',
+                    'role_id' => $role->role_id,
+                    'email' => 'user@exmple.com',
+                ]);
+            }
+        }
     }
 }

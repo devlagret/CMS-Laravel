@@ -18,19 +18,47 @@ class PrivilegeSeeder extends Seeder
      */
     public function run()
     {
-        $role = Role::where('name', 'admingudang')->first();
-        $permision = Permision::whereIn('label',[
-            'Melihat Profil Gudang', 'Mengubah Profil Gudang', 'Menambahkan Profil Gudang Baru', 'Menghapus Profil Gudang', 
-            'Melihat Data Request Order', 'Menambahkan Request Order Baru', 'Mengubah Data Request Order', 'Menghapus Data Request Order', 
-            'Melihat Data Gudang', 'Mengubah Data Gudang', 'Menghapus Data Gudang', 'Menambahkan Gudang Baru', ])->get();
-        foreach ($permision as $p) {
-            Privilege::create([
-                //'previlige_id' => Str::uuid(),
-                'permision_id' => $p->permision_id,
-                'role_id' => $role->role_id,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]);
+        $role = Role::whereIn('name', ['admingudang', 'branch', 'user'])->get();
+        foreach ($role as $role) {
+            if ($role->name == 'branch'){
+                $permision = Permision::whereIn('label',[
+                    'Melihat Data Cabang', 'Mengubah Data Cabang', 'Menghapus Data Cabang', 'Menambahkan Cabang Baru','Melihat Data Gudang', 'Melihat Profil Gudang', 'Melihat Data Produk', 'Mengubah Data Request Produk', 'Menghapus Data Request Produk', 'Mengubah Data Request Produk', 'Menambahkan Request Produk Baru'])->get();
+                foreach ($permision as $p) {
+                    Privilege::create([
+                        //'previlige_id' => Str::uuid(),
+                        'permision_id' => $p->permision_id,
+                        'role_id' => $role->role_id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }elseif ($role->name == 'user'){
+                $permision = Permision::whereIn('label',[
+                    'Melihat Profil Perusahaan', 'Melihat Data User'])->get();
+                foreach ($permision as $p) {
+                    Privilege::create([
+                        //'previlige_id' => Str::uuid(),
+                        'permision_id' => $p->permision_id,
+                        'role_id' => $role->role_id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }elseif ($role->name == 'admingudang'){
+                $permision = Permision::whereIn('label',[
+                    'Melihat Profil Gudang', 'Mengubah Profil Gudang', 'Menambahkan Profil Gudang Baru', 'Menghapus Profil Gudang', 
+                    'Melihat Data Request Order', 'Menambahkan Request Order Baru', 'Mengubah Data Request Order', 'Menghapus Data Request Order', 
+                    'Melihat Data Gudang', 'Mengubah Data Gudang', 'Menghapus Data Gudang', 'Menambahkan Gudang Baru', ])->get();
+                foreach ($permision as $p) {
+                    Privilege::create([
+                        //'previlige_id' => Str::uuid(),
+                        'permision_id' => $p->permision_id,
+                        'role_id' => $role->role_id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }
         }
     }
 }

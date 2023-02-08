@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $arr1 = ['Branch', 'User'];
+        $arr1 = ['branch', 'user'];
         foreach ($arr1 as $name) {
             Role::firstOrCreate([
                 'role_id' => Str::uuid()->toString(),
