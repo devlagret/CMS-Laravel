@@ -63,7 +63,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     //product supplier api endpoint
     $router->get('product/supplier', 'SupplierController@index');
     $router->get('product/supplier/{id}', 'SupplierController@show');
-    $router->get('product/supplier/name/{name}', 'SupplierController@showByName');
+    $router->post('product/supplier/name', 'SupplierController@showByName');
     $router->post('product/supplier', 'SupplierController@store');
     $router->put('product/supplier/{id}', 'SupplierController@update');
     $router->delete('product/supplier/{id}', 'SupplierController@destroy');

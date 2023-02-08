@@ -36,21 +36,16 @@ class CategoryController extends Controller
         $category_type = $request->input('category_type');
         $t = str_replace(['-', ' '], '', $category_type);
         $n = str_replace(' ', '', $category_name);
-        // $id = substr($category_type, 0, 1).'-'.substr($category_name, 0, 2);
-        $id = preg_replace('/([a-z])/', '', $t).'-'.preg_replace('/([a-z])/', '', $n);
-        $nums = 0;
-        $num = Category::where('category_id', 'like', $id . '%')->orderBy('category_id', 'desc')->first('category_id');
-        if ($num) {
-            $num = json_encode(array($num), JSON_NUMERIC_CHECK);
-            $num = intval(preg_replace('/[^0-9]/', '', $num)); 
-            $num = $nums+1;
-            $id = preg_replace('/([a-z])/', '', $t).'-'.preg_replace('/([a-z])/', '', $n).'-'.$num;
-        }else {
-            $id = preg_replace('/([a-z])/', '', $t).'-'.preg_replace('/([a-z])/', '', $n).'-'.$nums;
-        }
+        
+        $num = 1;
+        do {
+            $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
+            $a = Category::where('category_id', 'like', $cid . '%')->count();
+            $num++;
+        } while ($a > 1);
         
         $category = Category::create([
-            'category_id'      => $id,
+            'category_id'      => $cid,
             'category_name'    => $category_name,
             'category_type'    => $category_type,
         ]);
@@ -70,10 +65,13 @@ class CategoryController extends Controller
 
     public function show(Request $request,$id)
     {
-        if ($request->user()->cannot('view', Category::class)||$request->user()->cannot('viewAny', Category::class)) {
-            return response('Unauthorized', 401);
-        }
+        // if ($request->user()->cannot('view', Category::class)||$request->user()->cannot('viewAny', Category::class)) {
+        //     return response('Unauthorized', 401);
+        // }
         $category = Category::find($id);
+        if (!$category) {
+            return response()->json('Supplier Not Found', 404);
+        }
 
         return response()->json($category);
     }
@@ -91,35 +89,37 @@ class CategoryController extends Controller
         $category_type = $request->input('category_type');
         $t = str_replace(['-', ' '], '', $category_type);
         $n = str_replace(' ', '', $category_name);
-        // $id = substr($category_type, 0, 1).'-'.substr($category_name, 0, 2);
-        $num = 2;
-        $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
-        $count = Category::where('category_id', 'like', $cid.'%')->get('category_id');
-        // while ($count > 1) {
-        //     $num++;
-        //     $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
-        // }
+        $num = 1;
+        do {
+            $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
+            $a = Category::where('category_id', 'like', $cid . '%')->count();
+            $num++;
+        } while ($a > 1);
 
-        // Category::destroy($id);
-        // $category = Category::create([
-        //     'category_id' => $cid,
-        //     'category_name' => $category_name,
-        //     'category_type' => $category_type,
-        // ]);
+        $category = Category::find($id);
+        if (!$category) {
+            return response()->json('Supplier Not Found', 404);
+        }else {
+            Category::destroy($id);
+            Category::create([
+                'category_id' => $cid,
+                'category_name' => $category_name,
+                'category_type' => $category_type,
+            ]);
+        }
         
-        // $uh = new UserHelper;
-        // if ($category) {
-        //     Log::create([
-        //         'user_id' => $uh->getUserData($request->header('token'))->user_id,
-        //         'datetime' => Carbon::now('Asia/Jakarta'),
-        //         'activity' => 'Update Category(s)',
-        //         'detail' => 'Update Category with type "'.$category_type.'" named "'.$category_name
-        //     ]);
-        //     return response()->json(['message' => 'Data updated successfully'], 200);
-        // }else {
-        //     return response()->json("Failure");
-        // }
-        return response()->json($cid);
+        $uh = new UserHelper;
+        if ($category) {
+            Log::create([
+                'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Update Category(s)',
+                'detail' => 'Update Category with type "'.$category_type.'" named "'.$category_name
+            ]);
+            return response()->json(['message' => 'Data updated successfully'], 200);
+        }else {
+            return response()->json("Failure");
+        }
     }
 
     public function destroy(Request $request, $id)

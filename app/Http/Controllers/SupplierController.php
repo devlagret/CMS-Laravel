@@ -66,12 +66,16 @@ class SupplierController extends Controller
         return response()->json($supplier);
     }
 
-    public function showByName(Request $request, $name)
+    public function showByName(Request $request)
     {
         if ($request->user()->cannot('viewAny', Supplier::class)&&$request->user()->cannot('viewAny', Supplier::class)) {
             return response('Unauthorized', 401);
         }
+        $validator = $this->validate($request, [
+            'supplier_name' => 'required',
+        ]);
 
+        $name = $request->input('supplier_name');
         $supplier = Supplier::where('supplier_name', 'LIKE', '%'.$name.'%')->paginate(9);
 
         return response()->json($supplier);
