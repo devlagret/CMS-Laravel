@@ -30,7 +30,7 @@ class BranchController extends Controller
         if ($request->user()->cannot('create', Branch::class)) {
             return response('Unauthorized', 401);
         }
-        if(!User::where('id',$request->input('user_id'))){
+        if(!User::where('user_id',$request->input('user_id'))){
             return response()->json(['message' => 'Username not found, please make sure if username is registered at system '], 401);
         }
         $validator = $this->validate($request, [
@@ -38,7 +38,7 @@ class BranchController extends Controller
             'leader_name'    => 'required',
             'contact'        => 'required|max:15',
             'address'        => 'required',
-            'user_id' =>'required',
+            'user_id'        => 'required',
         ]);
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
@@ -47,12 +47,12 @@ class BranchController extends Controller
         $user_id = $request->input('user_id');
     
         $branch = Branch::create([
-            'branch_id' => Str::uuid()->toString(),
-            'branch_name'    => $branch_name,
-            'leader_name'    => $leader_name,
-            'contact'    => $contact,
-            'address'    => $address,
-            'user_id'    => $user_id,
+            'branch_id'   => Str::uuid()->toString(),
+            'branch_name' => $branch_name,
+            'leader_name' => $leader_name,
+            'contact'     => $contact,
+            'address'     => $address,
+            'user_id'     => $user_id,
         ]);
         $uh = new UserHelper;
          if ($branch) {
@@ -70,33 +70,54 @@ class BranchController extends Controller
     
     public function show(Request $request , $id)
     {
-        $branch = Branch::find($id);
         if ($request->user()->cannot('view', Branch::class)||$request->user()->cannot('viewAny', Branch::class)) {
             return response('Unauthorized', 401);
+        }
+        $branch = Branch::find($id);
+        if (!$branch) {
+            return response()->json(['message' => 'Data not found'], 404);
         }
         return response()->json($branch);
     }
 
     public function update(Request $request, $id)
     {
-        if ($request->user()->cannot('update', Branch::class)) {
+        if ($request->user()->can('update', Branch::class)) {
+            $validator = $this->validate($request, [
+                'branch_name'    => 'required',
+                'leader_name'    => 'required',
+                'contact'        => 'required|max:15',
+                'address'        => 'required',
+                'user_id'        => 'required',
+            ]);
+            $branch_name = $request->input('branch_name');
+            $leader_name = $request->input('leader_name');
+            
+            $branch = Branch::where('branch_id',$id)->update([
+                'branch_name'    => $request->input('branch_name'),
+                'leader_name'    => $request->input('leader_name'),
+                'contact'        => $request->input('contact'),
+                'address'        => $request->input('address'),
+            ]);
+        }elseif ($request->user()->can('updateb', Branch::class)) {
+            $validator = $this->validate($request, [
+                'branch_name'    => 'required',
+                'leader_name'    => 'required',
+                'contact'        => 'required|max:15',
+                'address'        => 'required',
+            ]);
+            $branch_name = $request->input('branch_name');
+            $leader_name = $request->input('leader_name');
+            
+            $branch = Branch::where('branch_id',$id)->update([
+                'branch_name'    => $request->input('branch_name'),
+                'leader_name'    => $request->input('leader_name'),
+                'contact'        => $request->input('contact'),
+                'address'        => $request->input('address'),
+            ]);
+        }else {
             return response('Unauthorized', 401);
         }
-        $validator = $this->validate($request, [
-            'branch_name'    => 'required',
-            'leader_name'    => 'required',
-            'contact'        => 'required|max:15',
-            'address'        => 'required',
-        ]);
-        $branch_name = $request->input('branch_name');
-        $leader_name = $request->input('leader_name');
-        
-        $branch = Branch::where('branch_id',$id)->update([
-            'branch_name'    => $request->input('branch_name'),
-            'leader_name'    => $request->input('leader_name'),
-            'contact'        => $request->input('contact'),
-            'address'        => $request->input('address'),
-        ]);
         $uh = new UserHelper;
         if ($branch) {
             Log::create([

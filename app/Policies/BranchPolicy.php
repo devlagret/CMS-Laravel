@@ -22,7 +22,7 @@ class BranchPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-branch']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -49,7 +49,7 @@ class BranchPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'add-branch']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -68,6 +68,13 @@ class BranchPolicy
             : Response::deny('Unauthorized', 401);
     }
 
+    public function updateb(User $user)
+    {
+        //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['edit-branch']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
+    }
     /**
      * Determine whether the user can delete the branch.
      *
@@ -79,7 +86,7 @@ class BranchPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'delete-branch']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 }
