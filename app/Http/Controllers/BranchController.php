@@ -20,7 +20,7 @@ class BranchController extends Controller
         if ($request->user()->cannot('viewAny', Branch::class)) {
             return response('Unauthorized', 401);
         }
-        $branches = DB::table('branches')->paginate(10);
+        $branches = DB::table('branches')->paginate(9);
   
         return response()->json($branches);
     }

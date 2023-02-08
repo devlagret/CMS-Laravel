@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.6.3.5
+//  API Version beta 2.6.4..0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -63,6 +63,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     //product supplier api endpoint
     $router->get('product/supplier', 'SupplierController@index');
     $router->get('product/supplier/{id}', 'SupplierController@show');
+    $router->get('product/supplier/name/{name}', 'SupplierController@showByName');
     $router->post('product/supplier', 'SupplierController@store');
     $router->put('product/supplier/{id}', 'SupplierController@update');
     $router->delete('product/supplier/{id}', 'SupplierController@destroy');
