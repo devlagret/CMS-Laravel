@@ -53,21 +53,6 @@
 				{
 					"name": "Register",
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "$2y$10$BIAV0lcSOFvA2n8A9T5uh.DZCj91BaJmuYc90QW0EYnC/VSdk8zZ2",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -90,7 +75,7 @@
 								},
 								{
 									"key": "role_id",
-									"value": "1374bfe7-a17c-4d85-9886-821e430fb3c5",
+									"value": "506b4a6a-0bd3-400d-b7e4-f87d2b707a9b",
 									"type": "text"
 								},
 								{
@@ -482,7 +467,7 @@
 								},
 								{
 									"key": "permision",
-									"value": "",
+									"value": "61a72511-217d-4b9c-be33-e46b15121946, e731013b-e6d8-4955-b66e-09bd1eaedf1d,9f468cd6-63d8-424d-9ab1-df435b09d590",
 									"type": "text"
 								}
 							]
@@ -896,21 +881,6 @@
 						}
 					},
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "$2y$10$cAFPnG1RbOETrZJaOwJc5.lGtTfFBkP7OeaOqIKiCWyQtkPPp09XO",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -1084,6 +1054,113 @@
 					"response": []
 				},
 				{
+					"name": "Get Deleted Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/api/product/trash",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"trash"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Deleted Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{url}}/api/product/trash/{id}",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"trash",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Deleted Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/product/trash/restore",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"trash",
+								"restore"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restore All Deleted Product",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id",
+									"value": "",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{url}}/api/product/trash/restore/all",
+							"protocol": "http",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"trash",
+								"restore",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Add Product",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -1204,7 +1281,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete Produk Copy",
+					"name": "Delete Produk",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"host": true,
@@ -1214,21 +1291,6 @@
 						}
 					},
 					"request": {
-						"auth": {
-							"type": "apikey",
-							"apikey": [
-								{
-									"key": "value",
-									"value": "$2y$10$bm2JktPMBCEtSvVb7bjQlOJORnbyNGV712GPhLSvWiUVelPOva94K",
-									"type": "string"
-								},
-								{
-									"key": "key",
-									"value": "token",
-									"type": "string"
-								}
-							]
-						},
 						"method": "DELETE",
 						"header": [
 							{
@@ -1245,7 +1307,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://{{url}}/api/product/{id}",
+							"raw": "http://{{url}}/api/product/282ad0a7-ba19-3198-a132-640039f26f6c",
 							"protocol": "http",
 							"host": [
 								"{{url}}"
@@ -1253,7 +1315,7 @@
 							"path": [
 								"api",
 								"product",
-								"{id}"
+								"282ad0a7-ba19-3198-a132-640039f26f6c"
 							]
 						}
 					},
@@ -1612,12 +1674,12 @@
 		},
 		{
 			"key": "token",
-			"value": "$2y$10$HCUVEQPxJLn3sDrahIUHcuNZnA3MktrdA6HP6mAVISBpxywQ7w4I6",
+			"value": "$2y$10$7qPSYj9J4uGQdX7KrRxxI.5Sr334TSffad.W.PY1cpNoWqF.DttVe",
 			"type": "default"
 		},
 		{
 			"key": "role id",
-			"value": "$2y$10$XyGMzhvmJbtGsVUh1dTQSe.qJGHBBuhzC42GB24Rwf7UZMqT85V5u"
+			"value": "f9e390f5-28db-402e-b177-4d038511438b"
 		}
 	]
 }
