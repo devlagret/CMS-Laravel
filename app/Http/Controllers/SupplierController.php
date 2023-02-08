@@ -19,7 +19,7 @@ class SupplierController extends Controller
         if ($request->user()->cannot('viewAny', Supplier::class)) {
             return response('Unauthorized', 401);
         }
-        $suppliers = Supplier::simplePaginate(10);
+        $suppliers = Supplier::get();
   
         return response()->json($suppliers);
     }
