@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.6.4.1
+//  API Version beta 2.6.4.2
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -98,6 +98,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->get('branch/user', 'BranchController@user');
     $router->get('branch/user/{id}', 'BranchController@index');
     $router->get('branch/{id}', 'BranchController@show');
+    $router->post('branch/search', 'BranchController@showByName');
     $router->post('branch', 'BranchController@store');
     $router->put('branch/{id}', 'BranchController@update');
     $router->delete('branch/{id}', 'BranchController@destroy');

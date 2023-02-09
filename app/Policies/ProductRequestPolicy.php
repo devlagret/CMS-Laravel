@@ -21,7 +21,7 @@ class ProductRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -46,7 +46,7 @@ class ProductRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'add-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -60,7 +60,7 @@ class ProductRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'edit-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -74,7 +74,7 @@ class ProductRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'delete-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 }

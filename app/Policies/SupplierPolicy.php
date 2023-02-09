@@ -22,7 +22,7 @@ class SupplierPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'view-supplier']) ? Response::allow()
         : Response::deny('Unauthorized', 401);
     }
 
@@ -48,7 +48,7 @@ class SupplierPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'add-supplier']) ? Response::allow()
         : Response::deny('Unauthorized', 401);
     }
 
@@ -63,7 +63,7 @@ class SupplierPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'edit-supplier']) ? Response::allow()
         : Response::deny('Unauthorized', 401);
     }
 
@@ -78,7 +78,7 @@ class SupplierPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'view-role']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin', 'delete-supplier']) ? Response::allow()
         : Response::deny('Unauthorized', 401);
     }
 }

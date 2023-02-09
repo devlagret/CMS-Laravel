@@ -36,13 +36,13 @@ class CategoryController extends Controller
         $category_type = $request->input('category_type');
         $t = str_replace(['-', ' '], '', $category_type);
         $n = str_replace(' ', '', $category_name);
-        
+
         $num = 1;
         do {
             $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
             $a = Category::where('category_id', 'like', $cid . '%')->count();
             $num++;
-        } while ($a > 1);
+        } while ($a > 0);
         
         $category = Category::create([
             'category_id'      => $cid,
@@ -98,7 +98,7 @@ class CategoryController extends Controller
 
         $category = Category::find($id);
         if (!$category) {
-            return response()->json('Supplier Not Found', 404);
+            return response()->json('Category Not Found', 404);
         }else {
             Category::destroy($id);
             Category::create([

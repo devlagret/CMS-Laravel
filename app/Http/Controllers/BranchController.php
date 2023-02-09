@@ -80,6 +80,21 @@ class BranchController extends Controller
         return response()->json($branch);
     }
 
+    public function showByName(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Branch::class)&&$request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
+        $validator = $this->validate($request, [
+            'leader_name' => 'required',
+        ]);
+
+        $name = $request->input('leader_name');
+        $supplier = Branch::where('leader_name', 'LIKE', '%'.$name.'%')->paginate(9);
+
+        return response()->json($supplier);
+    }
+
     public function update(Request $request, $id)
     {
         if ($request->user()->can('update', Branch::class)) {
@@ -141,7 +156,8 @@ class BranchController extends Controller
         return response()->json(['message' => 'Deleted']);
     }
 
-    public function user(Request $request){
+    public function user(Request $request)
+    {
         if ($request->user()->cannot('viewAny', Branch::class)) {
             return response('Unauthorized', 401);
         }
