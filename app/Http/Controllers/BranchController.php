@@ -20,7 +20,7 @@ class BranchController extends Controller
         if ($request->user()->cannot('viewAny', Branch::class)) {
             return response('Unauthorized', 401);
         }
-        $branches = DB::table('branches')->paginate(9);
+        $branches = Branch::paginate(9);
   
         return response()->json($branches);
     }
@@ -133,18 +133,19 @@ class BranchController extends Controller
         }else {
             return response('Unauthorized', 401);
         }
-        $uh = new UserHelper;
-        if ($branch) {
-            Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Update Branch(s)',
-                'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
-            ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
-        }else {
-            return response()->json("Failure",500);
-        }
+        // $uh = new UserHelper;
+        // if ($branch) {
+        //     Log::create([
+        //         'user_id' => $uh->getUserData($request->header('token'))->user_id,
+        //         'datetime' => Carbon::now('Asia/Jakarta'),
+        //         'activity' => 'Update Branch(s)',
+        //         'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
+        //     ]);
+        //     return response()->json(['message' => 'Data added successfully'], 201);
+        // }else {
+        //     return response()->json("Failure",500);
+        // }
+        return response()->json($branch,200);
     }
     
     public function destroy(Request $request,$id)

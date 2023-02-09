@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Log;
 use App\Models\ProductOrder;
 use App\Models\RequestOrder;
-use App\Models\User;
 use App\Models\ProductOrderRequest;
-use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +18,7 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = DB::table('product_order')->paginate(10);
+        $stockups = DB::table('product_order')->paginate(9);
         
         return response()->json($stockups);
     }
@@ -52,6 +49,8 @@ class ProductOrderController extends Controller
             'total_amount'   => $total_amount,
             'quantity'       => $quantity,
         ]);
+
+        return response()->json(['message' => 'Data Added Succesfully','data' => $order], 201);
     }
 
     public function distribute(Request $request)
