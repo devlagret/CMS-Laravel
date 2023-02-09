@@ -31,8 +31,7 @@ class CategorySeeder extends Seeder
                 }
                 $c = str_replace(['-', ' '], '', $arr1[$category_type]);
                 $n = str_replace(' ', '', $category_name);
-                $num = 0;
-                $id = preg_replace('/([a-z])/', '', $c).'-'.preg_replace('/([a-z])/', '', $n.'-'.$num);
+                $id = preg_replace('/([a-z])/', '', $c).'-'.preg_replace('/([a-z])/', '', $n);
                 
                 Category::firstOrCreate([
                     'category_id' => $id,
