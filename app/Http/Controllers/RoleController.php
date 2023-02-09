@@ -66,7 +66,7 @@ class RoleController extends Controller
         $role = Role::find($id);
         if (!$role) {return response('Not Found', 404);}
         $privilege = Privilege::where('role_id', $id);
-        $this->validate($request, ['permision' => 'required|min:36']);
+        $this->validate($request, ['name' => 'min:1|max:255|unique:Roles', 'permision' => 'required|min:36']);
         $permision = explode(",", str_replace(" ", "", $request['permision']));
         foreach ($permision as $p) {
             $d = Permision::where('permision_id', $p)->exists();
@@ -75,6 +75,7 @@ class RoleController extends Controller
             }
         }
          $privilege->delete();
+        $role->update(['name'=>trim($request['name'])]);
         foreach ($permision as $p) {
             Privilege::create(['role_id' => $id, 'permision_id' => $p]);
         }
