@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RequestOrder extends Model
 {
     
-    protected $table = 'requestorders';
+    protected $table = 'request_orders';
 
     protected $keyType = 'string';
     protected $fillable = [

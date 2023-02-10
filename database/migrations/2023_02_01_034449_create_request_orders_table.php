@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('requestOrders', function (Blueprint $table) {
+        Schema::create('request_orders', function (Blueprint $table) {
             $table->uuid('product_order_id');
             $table->foreign('product_order_id')->references('product_order_id')->on('product_order')->onDelete('cascade');
             $table->uuid('product_order_requests_id')->nullable()->default(null);
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requestorders');
+        Schema::dropIfExists('request_orders');
     }
 };
