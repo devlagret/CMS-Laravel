@@ -18,7 +18,7 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = DB::table('product_order')->paginate(9);
+        $stockups = ProductOrder::paginate(9);
         
         return response()->json($stockups);
     }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\WhsDetail;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,7 +18,11 @@ class WhsDetailSeeder extends Seeder
      */
     public function run()
     {
-        $uids = User::all()->pluck('user_id')->toArray();
+        $role = Role::where('name', 'admingudang')->first('role_id');
+        $role1 = Role::where('name', 'admin')->first('role_id');
+        $uids = User::where('role_id', $role->role_id)
+        ->orWhere('role_id', $role1->role_id)
+        ->pluck('user_id')->toArray();
         foreach ($uids as  $uid) {
             $arr1 = '?????!!!!';
     

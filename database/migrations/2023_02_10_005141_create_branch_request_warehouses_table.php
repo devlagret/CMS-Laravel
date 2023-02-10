@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('request_orders', function (Blueprint $table) {
-            $table->uuid('product_order_id');
-            $table->foreign('product_order_id')->references('product_order_id')->on('product_order')->onDelete('cascade');
-            $table->uuid('product_order_requests_id')->nullable()->default(null);
-            $table->foreign('product_order_requests_id')->references('product_order_requests_id')->on('product_order_requests')->onDelete('cascade');
+        Schema::create('branch_request_warehouses', function (Blueprint $table) {
             $table->uuid('warehouse_id');
             $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('cascade');
-            $table->integer('quantity')->unsigned();
+            $table->uuid('request_id');
+            $table->foreign('request_id')->references('request_id')->on('product_requests')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_orders');
+        Schema::dropIfExists('branch_request_warehouses');
     }
 };

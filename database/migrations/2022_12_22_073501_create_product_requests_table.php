@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->dateTime('order_date');
             $table->dateTime('out_date')->nullable();
-            $table->string('status',10);
+            $table->enum('status', ['sent', 'accepted', 'transferred']);
             $table->timestamps();
             $table->softDeletes();
         });

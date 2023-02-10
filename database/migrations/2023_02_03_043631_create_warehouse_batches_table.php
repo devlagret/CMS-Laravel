@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('warehousebatches', function (Blueprint $table) {
+        Schema::create('warehouse_batches', function (Blueprint $table) {
             $table->unsignedBigInteger('warehouse_id');
             $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
             $table->uuid('batch_id');
