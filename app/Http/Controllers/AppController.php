@@ -43,13 +43,13 @@ class AppController extends Controller
         return response('Forbiden Method', 403);
 
     }
-    public function test(Request $request, $id){
+    public function test(Request $request, ){
         //$id = explode(' ', $request['prs']);
         //$ids = explode(',', $request['per']);
         //$b = array();
         //foreach ($ids as $a) {
         //     array_push($b,trim($a));}
         //var_dump($id);
-        return response()->json(explode(",",$id));
+        return response()->json([$request['prs'],$request->isMethod('DELETE')]);
     }
 }

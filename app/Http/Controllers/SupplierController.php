@@ -121,4 +121,72 @@ class SupplierController extends Controller
 
         return response()->json(['message' => 'Deleted']);
     }
+    public function trash(Request $request, $id = null)
+    {
+        if ($request->user()->cannot('viewAny', User::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($id != null) {
+            $trash = Supplier::onlyTrashed()->find($id);
+            if (!$trash) {
+                return response('Id Not Found', 404);
+            }
+            if ($trash->isEmpty()) {
+                return response('No Supplier Trased', 404);
+            }
+            return response()->json($trash);
+        }
+        $trash = Supplier::onlyTrashed()->get();
+        if ($trash->isEmpty()) {
+            return response('No Supplier Trased', 404);
+        }
+        return response()->json($trash);
+    }
+    public function restore(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
+        $this->validate($request, ['supplier_id' => 'required|min:36']);
+        $id = explode(",", str_replace(" ", "", $request['supplier_id']));
+        $restore = Supplier::whereIn('supplier_id', $id)->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function restoreAll(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
+        $restore = Supplier::onlyTrashed()->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function delete(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($request->isMethod('DELETE')) {
+            $delete = Supplier::onlyTrashed()->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        if ($request->isMethod('POST')) {
+            $this->validate($request, ['supplier_id' => 'required|min:36']);
+            $id = explode(",", str_replace(" ", "", $request['supplier_id']));
+            $delete = Supplier::whereIn('supplier_id', $id)->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        return response('Forbiden Method', 403);
+    }
 }

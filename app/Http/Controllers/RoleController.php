@@ -106,4 +106,72 @@ class RoleController extends Controller
         return response('Failure', 500);
        
     }
+    public function trash(Request $request, $id = null)
+    {
+        if ($request->user()->cannot('viewAny', User::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($id != null) {
+            $trash = Role::onlyTrashed()->find($id);
+            if (!$trash) {
+                return response('Id Not Found', 404);
+            }
+            if ($trash->isEmpty()) {
+                return response('No Role Trased', 404);
+            }
+            return response()->json($trash);
+        }
+        $trash = Role::onlyTrashed()->get();
+        if ($trash->isEmpty()) {
+            return response('No Role Trased', 404);
+        }
+        return response()->json($trash);
+    }
+    public function restore(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Role::class)) {
+            return response('Unauthorized', 401);
+        }
+        $this->validate($request, ['role_id' => 'required|min:36']);
+        $id = explode(",", str_replace(" ", "", $request['role_id']));
+        $restore = Role::whereIn('role_id', $id)->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function restoreAll(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Role::class)) {
+            return response('Unauthorized', 401);
+        }
+        $restore = Role::onlyTrashed()->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function delete(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Role::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($request->isMethod('DELETE')) {
+            $delete = Role::onlyTrashed()->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        if ($request->isMethod('POST')) {
+            $this->validate($request, ['role_id' => 'required|min:36']);
+            $id = explode(",", str_replace(" ", "", $request['role_id']));
+            $delete = Role::whereIn('role_id', $id)->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        return response('Forbiden Method', 403);
+    }
 }

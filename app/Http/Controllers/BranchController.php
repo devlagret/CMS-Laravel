@@ -166,4 +166,72 @@ class BranchController extends Controller
         return response()->json($usr);
         
     }
+    public function trash(Request $request, $id = null)
+    {
+        if ($request->user()->cannot('viewAny', User::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($id != null) {
+            $trash = Branch::onlyTrashed()->find($id);
+            if (!$trash) {
+                return response('Id Not Found', 404);
+            }
+            if ($trash->isEmpty()) {
+                return response('No Branch Trased', 404);
+            }
+            return response()->json($trash);
+        }
+        $trash = Branch::onlyTrashed()->get();
+        if ($trash->isEmpty()) {
+            return response('No Branch Trased', 404);
+        }
+        return response()->json($trash);
+    }
+    public function restore(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
+        $this->validate($request, ['branch_id' => 'required|min:36']);
+        $id = explode(",", str_replace(" ", "", $request['branch_id']));
+        $restore = Branch::whereIn('branch_id', $id)->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function restoreAll(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
+        $restore = Branch::onlyTrashed()->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function delete(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Branch::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($request->isMethod('DELETE')) {
+            $delete = Branch::onlyTrashed()->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        if ($request->isMethod('POST')) {
+            $this->validate($request, ['branch_id' => 'required|min:36']);
+            $id = explode(",", str_replace(" ", "", $request['branch_id']));
+            $delete = Branch::whereIn('branch_id', $id)->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        return response('Forbiden Method', 403);
+    }
 }

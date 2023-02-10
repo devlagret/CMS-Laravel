@@ -131,4 +131,72 @@ class CategoryController extends Controller
 
         return response()->json(['message' => 'Deleted']);
     }
+    public function trash(Request $request, $id = null)
+    {
+        if ($request->user()->cannot('viewAny', User::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($id != null) {
+            $trash = Category::onlyTrashed()->find($id);
+            if (!$trash) {
+                return response('Id Not Found', 404);
+            }
+            if ($trash->isEmpty()) {
+                return response('No Category Trased', 404);
+            }
+            return response()->json($trash);
+        }
+        $trash = Category::onlyTrashed()->get();
+        if ($trash->isEmpty()) {
+            return response('No Category Trased', 404);
+        }
+        return response()->json($trash);
+    }
+    public function restore(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Category::class)) {
+            return response('Unauthorized', 401);
+        }
+        $this->validate($request, ['category_id' => 'required|min:36']);
+        $id = explode(",", str_replace(" ", "", $request['category_id']));
+        $restore = Category::whereIn('category_id', $id)->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function restoreAll(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Category::class)) {
+            return response('Unauthorized', 401);
+        }
+        $restore = Category::onlyTrashed()->restore();
+        if (!$restore) {
+            return response('Failure', 500);
+        }
+        return response('Restore Sucess');
+    }
+    public function delete(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Category::class)) {
+            return response('Unauthorized', 401);
+        }
+        if ($request->isMethod('DELETE')) {
+            $delete = Category::onlyTrashed()->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        if ($request->isMethod('POST')) {
+            $this->validate($request, ['category_id' => 'required|min:36']);
+            $id = explode(",", str_replace(" ", "", $request['category_id']));
+            $delete = Category::whereIn('category_id', $id)->forceDelete();
+            if (!$delete) {
+                return response('Failure', 500);
+            }
+            return response('Restore Sucess');
+        }
+        return response('Forbiden Method', 403);
+    }
 }
