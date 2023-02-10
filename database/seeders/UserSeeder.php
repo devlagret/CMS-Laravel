@@ -18,10 +18,10 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $role1 = Role::whereIn('name', ['branch', 'user'])->get();
+        $role1 = Role::whereIn('name', ['branch', 'user', 'admingudang'])->get();
         foreach ($role1 as $role) {
             if ($role->name == 'branch') {
-                User::updateOrCreate([
+                User::firstOrCreate([
                     'user_id' => Str::uuid()->toString(),
                     'username' => 'branch',
                     'name' => 'Branch',
@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
                     'email' => 'branch@exmple.com',
                 ]);
             } elseif ($role->name == 'user') {
-                User::updateOrCreate([
+                User::firstOrCreate([
                     'user_id' => Str::uuid()->toString(),
                     'username' => 'user',
                     'name' => 'User',
@@ -39,6 +39,16 @@ class UserSeeder extends Seeder
                     'contact' => '081222333444555',
                     'role_id' => $role->role_id,
                     'email' => 'user@exmple.com',
+                ]);
+            } elseif ($role->name == 'admingudang') {
+                User::firstOrCreate([
+                    'user_id' => Str::uuid()->toString(),
+                    'username' => 'admingudang2',
+                    'name' => 'Admingudang2',
+                    'password' => Hash::make('admingudang2'),
+                    'contact' => '081222333444555',
+                    'role_id' => $role->role_id,
+                    'email' => 'admingudang2@exmple.com',
                 ]);
             }
         }
