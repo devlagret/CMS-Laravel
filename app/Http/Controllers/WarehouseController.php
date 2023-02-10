@@ -32,7 +32,7 @@ class WarehouseController extends Controller
         if ($request->user()->cannot('viewAny', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
-        $warehouses = DB::table('warehouses')->paginate(10);
+        $warehouses = Warehouse::paginate(10);
         
         return response()->json($warehouses);
     }
@@ -53,11 +53,17 @@ class WarehouseController extends Controller
         $amount       = $request->input('stock');
         $entry_date   = $request->input('entry_date');
         $wid          = WhsDetail::where('user_id', Auth::id())->first();
+        $check = Warehouse::where('warehouse_id', $wid->warehouse_id)
+            ->where('product_code', $product_code)
+            ->exists();
 
+        if ($check) {
+            return response()->json(['message' => 'Product is Exist'], 400);
+        }
         $warehouse = Warehouse::create([
             'warehouse_id'  => $wid->warehouse_id,
             'product_code'  => $request->input('product_code'),
-            'stock'        => $request->input('stock'),
+            'stock'         => $request->input('stock'),
             'entry_date'    => is_null($entry_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $entry_date,
             'location'      => $request->input('location'),
         ]);

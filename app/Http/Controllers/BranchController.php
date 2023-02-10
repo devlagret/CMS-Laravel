@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Branch;
-use App\Models\Token;
 use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Helpers\UserHelper;
-use Illuminate\Support\Facades\DB;
 
 class BranchController extends Controller
 {

@@ -7,7 +7,6 @@ use App\Models\WhsDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProductOrderRequestController extends Controller
@@ -35,7 +34,6 @@ class ProductOrderRequestController extends Controller
         }else {
             return response('Unauthorized', 401);
         }
-        
     }
 
     public function store(Request $request)
@@ -48,10 +46,17 @@ class ProductOrderRequestController extends Controller
             'quantity'     => 'required',
         ]);
         
-        $token = Str::uuid()->toString();
         $product_code  = $request->input('product_code');
         $quantity      = $request->input('quantity');
         $wid           = WhsDetail::where('user_id', Auth::id())->first();
+        $check = ProductOrderRequest::where('product_code', $product_code)
+            ->where('status', 'sent')
+            ->where('warehouse_id', $wid->warehouse_id)
+            ->first();
+
+        if ($check) {
+            return response()->json(['message' => 'Request has been exist', 'data' => ['product_code' => $product_code, 'quantity' => $quantity]], 400);
+        }
         $Orequest = ProductOrderRequest::create([
             'product_order_requests_id' => Str::uuid()->toString(),
             'warehouse_id'   => $wid->warehouse_id,
