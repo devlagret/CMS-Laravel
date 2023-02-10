@@ -21,47 +21,64 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.6.4.6
+//  API Version beta 2.6.4.7
 
 $prefix = 'api/';
 //user relatet api endpoint
-$router->group(['prefix' => $prefix], function () use ($router) {
-    $router->post('login', 'UserController@login');
-    $router->post('register', ['middleware' => 'auth', 'uses' =>  'UserController@register']);
-    $router->get('user/all', ['middleware' => 'auth', 'uses' => 'UserController@getAllUser']);
-    $router->get('user/trash', ['middleware' => 'auth', 'uses' => 'UserController@trash']);
-    $router->delete('user/trash/delete', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
-    $router->post('user/trash/delete', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
-    $router->get('user/trash/restore/all', ['middleware' => 'auth', 'uses' => 'UserController@restoreAll']);
-    $router->post('user/trash/restore', ['middleware' => 'auth', 'uses' => 'UserController@restore']);
-    $router->get('user/trash/{id}', ['middleware' => 'auth', 'uses' => 'UserController@trash']);
-    $router->get('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
-    $router->get('user/', ['middleware' => 'auth', 'uses' => 'UserController@getUser']);
+$router->group(['prefix' => $prefix], function () use ($router) {$router->post('login', 'UserController@login');});
+$router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
+    $router->get('user/', 'UserController@getUser');
+    $router->get('user/all', 'UserController@getAllUser');
+    $router->post('register',  'UserController@register');
+    $router->get('user/trash', 'UserController@trash');
+    $router->post('user/trash/delete', 'UserController@delete');
+    $router->delete('user/trash/delete', 'UserController@delete');
+    $router->get('user/trash/restore/all', 'UserController@restoreAll');
+    $router->post('user/trash/restore', 'UserController@restore');
+    $router->get('user/trash/{id}', 'UserController@trash');
+    $router->delete('user/{id}', 'UserController@destroy');
+    $router->get('user/{id}', 'UserController@getUser');
+    $router->put('user/{id}', 'UserController@update');
+    $router->put('user/', 'UserController@update');
     //role related
-    $router->get('role/', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
-    $router->get('role/deleted', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
-    $router->get('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@index']);
-    $router->put('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@update']);
-    $router->get('role/{id}/permision', ['middleware' => 'auth', 'uses' => 'PermisionController@viewrole']);
-    $router->delete('role/{id}', ['middleware' => 'auth', 'uses' => 'RoleController@destroy']);
-    $router->get('permision/', ['middleware' => 'auth', 'uses' => 'PermisionController@index']);
-    $router->get('permision/{id}', ['middleware' => 'auth', 'uses' => 'PermisionController@view']);
-    $router->post('role/', ['middleware' => 'auth', 'uses' => 'RoleController@store']);
-    //
-    $router->delete('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@destroy']);
-    $router->put('user/', ['middleware' => 'auth', 'uses' => 'UserController@update']);
-    $router->put('user/{id}', ['middleware' => 'auth', 'uses' => 'UserController@update']);
+    $router->get('role/', 'RoleController@index');
+    $router->get('role/trash', 'RoleController@trash');
+    $router->get('role/deleted', 'RoleController@index');
+    $router->post('role/trash/delete', 'RoleController@delete');
+    $router->delete('role/trash/delete', 'RoleController@delete');
+    $router->get('role/trash/restore/all', 'RoleController@restoreAll');
+    $router->get('role/{id}/permision', 'PermisionController@viewrole');
+    $router->post('role/trash/restore', 'RoleController@restore');
+    $router->get('role/trash/{id}', 'RoleController@trash');
+    $router->get('permision/{id}', 'PermisionController@view');
+    $router->delete('role/{id}', 'RoleController@destroy');
+    $router->get('permision/', 'PermisionController@index');
+    $router->get('role/{id}', 'RoleController@index');
+    $router->put('role/{id}', 'RoleController@update');
+    $router->post('role/', 'RoleController@store');
 });
 //product related api endpoint
 $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($router) {
     //product request api endpoint
     $router->get('product/request', 'ProductRequestController@index');
+    $router->get('product/request/trash', 'ProductRequestController@trash');
+    $router->post('product/request/trash/delete','ProductRequestController@delete');
+    $router->delete('product/request/trash/delete', 'ProductRequestController@delete');
+    $router->get('product/request/trash/restore/all', 'ProductRequestController@restoreAll');
+    $router->post('product/request/trash/restore', 'ProductRequestController@restore');
+    $router->get('product/request/trash/{id}', 'ProductRequestController@trash');
     $router->get('product/request/{id}', 'ProductRequestController@show');
     $router->post('product/request', 'ProductRequestController@store');
     $router->put('product/request/{id}', 'ProductRequestController@update');
     $router->delete('product/request/{id}', 'ProductRequestController@destroy');
     //product supplier api endpoint
     $router->get('product/supplier', 'SupplierController@index');
+    $router->get('product/supplier/trash', 'SupplierController@trash');
+    $router->post('product/supplier/trash/delete','SupplierController@delete');
+    $router->delete('product/supplier/trash/delete', 'SupplierController@delete');
+    $router->get('product/supplier/trash/restore/all', 'SupplierController@restoreAll');
+    $router->post('product/supplier/trash/restore', 'SupplierController@restore');
+    $router->get('product/supplier/trash/{id}', 'SupplierController@trash');
     $router->get('product/supplier/{id}', 'SupplierController@show');
     $router->post('product/supplier/name', 'SupplierController@showByName');
     $router->post('product/supplier', 'SupplierController@store');
@@ -69,6 +86,12 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->delete('product/supplier/{id}', 'SupplierController@destroy');
     //produxt category api endpoint
     $router->get('product/category', 'CategoryController@index');
+    $router->get('product/category/trash', 'CategoryController@trash');
+    $router->post('product/category/trash/delete','CategoryController@delete');
+    $router->delete('product/category/trash/delete', 'CategoryController@delete');
+    $router->get('product/category/trash/restore/all', 'CategoryController@restoreAll');
+    $router->post('product/category/trash/restore', 'CategoryController@restore');
+    $router->get('product/category/trash/{id}', 'CategoryController@trash');
     $router->get('product/category/{id}', 'CategoryController@show');
     $router->post('product/category', 'CategoryController@store');
     $router->put('product/category/{id}', 'CategoryController@update');
@@ -80,6 +103,12 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');
+    $router->get('product/trash', 'ProductController@trash');
+    $router->post('product/trash/delete','ProductController@delete');
+    $router->delete('product/trash/delete', 'ProductController@delete');
+    $router->get('product/trash/restore/all', 'ProductController@restoreAll');
+    $router->post('product/trash/restore', 'ProductController@restore');
+    $router->get('product/trash/{id}', 'ProductController@trash');
     $router->get('product/trash', 'ProductController@trash');
     $router->post('product/trash/delete', 'ProductController@delete');
     $router->delete('product/trash/delete', 'ProductController@delete');
@@ -96,7 +125,13 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     $router->get('branch', 'BranchController@index');
     $router->get('branch/user', 'BranchController@user');
+    $router->get('branch/trash', 'BranchController@trash');
     $router->get('branch/user/{id}', 'BranchController@index');
+    $router->post('branch/trash/delete', 'BranchController@delete');
+    $router->delete('branch/trash/delete', 'BranchController@delete');
+    $router->get('branch/trash/restore/all', 'BranchController@restoreAll');
+    $router->post('branch/trash/restore', 'BranchController@restore');
+    $router->get('branch/trash/{id}', 'BranchController@trash');
     $router->get('branch/{id}', 'BranchController@show');
     $router->post('branch/search', 'BranchController@showByName');
     $router->post('branch', 'BranchController@store');
@@ -113,6 +148,12 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 //warehouse related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     //warehouse order api endpoint
+    $router->get('warehouse/trash', 'ProductOrderRequestController@trash');
+    $router->post('warehouse/trash/delete','ProductOrderRequestController@delete');
+    $router->delete('warehouse/trash/delete', 'ProductOrderRequestController@delete');
+    $router->get('warehouse/trash/restore/all', 'ProductOrderRequestController@restoreAll');
+    $router->post('warehouse/trash/restore', 'ProductOrderRequestController@restore');
+    $router->get('warehouse/trash/{id}', 'ProductOrderRequestController@trash');
     $router->get('warehouse/request', 'ProductOrderRequestController@view');
     $router->get('warehouse/request/{productCode}', 'ProductOrderRequestController@showProduct');
     $router->post('warehouse/request', 'ProductOrderRequestController@store');
@@ -120,18 +161,18 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse detail api endpoint
     $router->post('warehouse/detail', 'WhsDetailController@store');
     //warehouse api endpoint
-    $router->get('warehouse', 'WarehouseController@index');
-    $router->get('warehouse/all/{productCode}', 'WarehouseController@showProduct');
-    $router->get('warehouse/{id}', 'WarehouseController@show');
-    $router->post('warehouse', 'WarehouseController@store');
     $router->put('warehouse/request/{product_code}', 'WarehouseController@stockup');
-    $router->put('warehouse/{id}', 'WarehouseController@update');
+    $router->get('warehouse/all/{productCode}', 'WarehouseController@showProduct');
     $router->delete('warehouse/{id}', 'WarehouseController@destroy');
+    $router->get('warehouse/{id}', 'WarehouseController@show');
+    $router->put('warehouse/{id}', 'WarehouseController@update');
+    $router->post('warehouse', 'WarehouseController@store');
+    $router->get('warehouse', 'WarehouseController@index');
 });
 //test
 $router->group(['prefix' => $prefix], function () use ($router){
     $router->post('test','AppController@test');
-    $router->get('test/{id}','AppController@test');
+    $router->get('test','AppController@test');
     $router->put('test','AppController@test');
-    
+    $router->delete('test','AppController@test');
 });

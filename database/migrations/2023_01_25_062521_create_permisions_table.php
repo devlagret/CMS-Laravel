@@ -102,11 +102,35 @@ return new class extends Migration
                 'group' => 'User',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
-            ], [
+            ],[
                 'permision_id' => Str::uuid()->toString(),
                 'name' => 'delete-user',
                 'alter' => 'hapus-data-user',
                 'label' => 'Menghapus Data User',
+                'group' => 'User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],[
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-user',
+                'alter' => 'lihat-data-user-terhapus',
+                'label' => 'Melihat Data User yang Sudah Dihapus',
+                'group' => 'User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],[
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-user',
+                'alter' => 'memulikan-data-user-terhapus',
+                'label' => 'Memulihkan Data User yang Sudah Dihapus',
+                'group' => 'User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],[
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-user-forever',
+                'alter' => 'hapus-data-user-selamanya',
+                'label' => 'Menghapus Data User Selamanya',
                 'group' => 'User',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -141,6 +165,30 @@ return new class extends Migration
                 'name' => 'delete-user-role',
                 'alter' => 'hapus-role',
                 'label' => 'Menghapus Data Role',
+                'group' => 'Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-role',
+                'alter' => 'lihat-data-role-terhapus',
+                'label' => 'Melihat Data Role yang Sudah Dihapus',
+                'group' => 'Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-role',
+                'alter' => 'memulikan-data-role-terhapus',
+                'label' => 'Memulihkan Data Role yang Sudah Dihapus',
+                'group' => 'Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-role-forever',
+                'alter' => 'hapus-data-role-selamanya',
+                'label' => 'Menghapus Data Role Selamanya',
                 'group' => 'Role',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -180,7 +228,7 @@ return new class extends Migration
                 'updated_at' => Carbon::now()
             ],
             //permision
-            [
+            /*[
                 'permision_id' => Str::uuid()->toString(),
                 'name' => 'view-user-permision',
                 'alter' => 'lihat-perizinan-user',
@@ -220,7 +268,7 @@ return new class extends Migration
                 'group' => 'Perizinan',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
-            ],
+            ],*/
             //product
             [
                 'permision_id' => Str::uuid()->toString(),
@@ -251,6 +299,30 @@ return new class extends Migration
                 'name' => 'delete-product',
                 'alter' => 'hapus-produk',
                 'label' => 'Menghapus Data Produk',
+                'group' => 'Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-product',
+                'alter' => 'lihat-data-produk-terhapus',
+                'label' => 'Melihat Data Produk yang Sudah Dihapus',
+                'group' => 'Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-product',
+                'alter' => 'memulikan-data-produk-terhapus',
+                'label' => 'Memulihkan Data Produk yang Sudah Dihapus',
+                'group' => 'Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-product-forever',
+                'alter' => 'hapus-data-produk-selamanya',
+                'label' => 'Menghapus Data Produk Selamanya',
                 'group' => 'Produk',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -288,6 +360,30 @@ return new class extends Migration
                 'group' => 'Kategori',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-category',
+                'alter' => 'lihat-data-kategori-terhapus',
+                'label' => 'Melihat Data Kategori yang Sudah Dihapus',
+                'group' => 'Kategori',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-category',
+                'alter' => 'memulikan-data-kategori-terhapus',
+                'label' => 'Memulihkan Data Kategori yang Sudah Dihapus',
+                'group' => 'Kategori',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-category-forever',
+                'alter' => 'hapus-data-kategori-selamanya',
+                'label' => 'Menghapus Data Kategori Selamanya',
+                'group' => 'Kategori',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             //supplier
             [
@@ -319,6 +415,30 @@ return new class extends Migration
                 'name' => 'delete-supplier',
                 'alter' => 'hapus-supplier',
                 'label' => 'Menghapus Data Supplier',
+                'group' => 'Supplier',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-supplier',
+                'alter' => 'lihat-data-supplier-terhapus',
+                'label' => 'Melihat Data Supplier yang Sudah Dihapus',
+                'group' => 'Supplier',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-supplier',
+                'alter' => 'memulikan-data-supplier-terhapus',
+                'label' => 'Memulihkan Data Supplier yang Sudah Dihapus',
+                'group' => 'Supplier',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-supplier-forever',
+                'alter' => 'hapus-data-supplier-selamanya',
+                'label' => 'Menghapus Data Supplier Selamanya',
                 'group' => 'Supplier',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -356,6 +476,30 @@ return new class extends Migration
                 'group' => 'Cabang',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-branch',
+                'alter' => 'lihat-data-cabang-terhapus',
+                'label' => 'Melihat Data Cabang yang Sudah Dihapus',
+                'group' => 'Cabang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-branch',
+                'alter' => 'memulikan-data-cabang-terhapus',
+                'label' => 'Memulihkan Data Cabang yang Sudah Dihapus',
+                'group' => 'Cabang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-branch-forever',
+                'alter' => 'hapus-data-cabang-selamanya',
+                'label' => 'Menghapus Data Cabang Selamanya',
+                'group' => 'Cabang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             //warehouse
             [
@@ -390,6 +534,30 @@ return new class extends Migration
                 'group' => 'Gudang',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-warehouse',
+                'alter' => 'lihat-data-gudang-terhapus',
+                'label' => 'Melihat Data Gudang yang Sudah Dihapus',
+                'group' => 'Gudang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-warehouse',
+                'alter' => 'memulikan-data-gudang-terhapus',
+                'label' => 'Memulihkan Data Gudang yang Sudah Dihapus',
+                'group' => 'Gudang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-warehouse-forever',
+                'alter' => 'hapus-data-gudang-selamanya',
+                'label' => 'Menghapus Data Gudang Selamanya',
+                'group' => 'Gudang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             //warehouse detail
             [
@@ -402,25 +570,9 @@ return new class extends Migration
                 'updated_at' => Carbon::now()
             ], [
                 'permision_id' => Str::uuid()->toString(),
-                'name' => 'add-detail-warehouse',
-                'alter' => 'tambah-detail-gudang',
-                'label' => 'Menambahkan Profil Gudang Baru',
-                'group' => 'Gudang',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ], [
-                'permision_id' => Str::uuid()->toString(),
                 'name' => 'edit-detail-warehouse',
                 'alter' => 'edit-detail-gudang',
                 'label' => 'Mengubah Profil Gudang',
-                'group' => 'Gudang',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ], [
-                'permision_id' => Str::uuid()->toString(),
-                'name' => 'delete-detail-warehouse',
-                'alter' => 'hapus-detail-gudang',
-                'label' => 'Menghapus Profil Gudang',
                 'group' => 'Gudang',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -458,6 +610,30 @@ return new class extends Migration
                 'group' => 'Order',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-product-order',
+                'alter' => 'lihat-pesanan-terhapus',
+                'label' => 'Melihat Data Order yang Sudah Dihapus',
+                'group' => 'Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-product-order',
+                'alter' => 'memulikan-pesanan-terhapus',
+                'label' => 'Memulihkan Data Order yang Sudah Dihapus',
+                'group' => 'Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-product-order-forever',
+                'alter' => 'hapus-pesanan-selamanya',
+                'label' => 'Menghapus Data Order Selamanya',
+                'group' => 'Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
              //request order produk
             [
@@ -489,6 +665,30 @@ return new class extends Migration
                 'name' => 'delete-product-order-request',
                 'alter' => 'hapus-request-pesanan',
                 'label' => 'Menghapus Data Request Order',
+                'group' => 'Request Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-product-order-request',
+                'alter' => 'lihat-request-pesanan',
+                'label' => 'Melihat Data Request Order yang Sudah Dihapus',
+                'group' => 'Request Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-product-order-request',
+                'alter' => 'memulikan-request-pesanan',
+                'label' => 'Memulihkan Data Request Order yang Sudah Dihapus',
+                'group' => 'Request Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-product-order-request-forever',
+                'alter' => 'hapus-request-pesanana',
+                'label' => 'Menghapus Data Request Order Selamanya',
                 'group' => 'Request Order',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -526,6 +726,30 @@ return new class extends Migration
                 'group' => 'Request Produk',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-product-request',
+                'alter' => 'lihat-request-produk-terhapus',
+                'label' => 'Melihat Data Request Produk yang Sudah Dihapus',
+                'group' => 'Request Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-product-request',
+                'alter' => 'memulikan-request-produk-terhapus',
+                'label' => 'Memulihkan Data Request Produk yang Sudah Dihapus',
+                'group' => 'Request Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-product-request-forever',
+                'alter' => 'hapus-request-produk-selamanya',
+                'label' => 'Menghapus Data Request Produk Selamanya',
+                'group' => 'Request Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ],
             //respons request produk
             [
@@ -557,6 +781,30 @@ return new class extends Migration
                 'name' => 'delete-product-request-response',
                 'alter' => 'hapus-respon-request-produk',
                 'label' => 'Menghapus Data Request Produk',
+                'group' => 'Request Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-product-request-response',
+                'alter' => 'lihat-respon-request-produk-terhapus',
+                'label' => 'Melihat Data Request Produk yang Sudah Dihapus',
+                'group' => 'Request Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-product-request-response',
+                'alter' => 'memulikan-respon-request-produk-terhapus',
+                'label' => 'Memulihkan Data Request Produk yang Sudah Dihapus',
+                'group' => 'Request Produk',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-product-request-response-forever',
+                'alter' => 'hapus-respon-request-produk-selamanya',
+                'label' => 'Menghapus Data Request Produk Selamanya',
                 'group' => 'Request Produk',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
