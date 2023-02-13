@@ -86,6 +86,20 @@ class ProductController extends Controller
             return response('Product Not Found',404);}
         return response()->json($product);
     }
+    public function showByName(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Supplier::class)&&$request->user()->cannot('viewAny', Supplier::class)) {
+            return response('Unauthorized', 401);
+        }
+        $validator = $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        $name = $request->input('name');
+        $product = Product::where('name', 'LIKE', '%'.$name.'%')->paginate(9);
+
+        return response()->json($product);
+    }
     public function update(Request $request, $id)
     {
         if ($request->user()->cannot('update', Product::class)) {
