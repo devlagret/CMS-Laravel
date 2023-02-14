@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.7.0.0
+//  API Version beta 2.7.0.1
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -32,7 +32,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('register',  'UserController@register');
     $router->get('user/trash', 'UserController@trash');
     $router->post('user/trash/delete', 'UserController@delete');
-    $router->delete('user/trash/delete', 'UserController@delete');
+    $router->delete('user/trash', 'UserController@delete');
     $router->get('user/trash/restore/all', 'UserController@restoreAll');
     $router->post('user/trash/restore', 'UserController@restore');
     $router->get('user/trash/{id}', 'UserController@trash');
@@ -45,7 +45,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->get('role/trash', 'RoleController@trash');
     $router->get('role/deleted', 'RoleController@index');
     $router->post('role/trash/delete', 'RoleController@delete');
-    $router->delete('role/trash/delete', 'RoleController@delete');
+    $router->delete('role/trash', 'RoleController@delete');
     $router->get('role/trash/restore/all', 'RoleController@restoreAll');
     $router->get('role/{id}/permision', 'PermisionController@viewrole');
     $router->post('role/trash/restore', 'RoleController@restore');
@@ -63,7 +63,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->get('product/request', 'ProductRequestController@index');
     $router->get('product/request/trash', 'ProductRequestController@trash');
     $router->post('product/request/trash/delete','ProductRequestController@delete');
-    $router->delete('product/request/trash/delete', 'ProductRequestController@delete');
+    $router->delete('product/request/trash', 'ProductRequestController@delete');
     $router->get('product/request/trash/restore/all', 'ProductRequestController@restoreAll');
     $router->post('product/request/trash/restore', 'ProductRequestController@restore');
     $router->get('product/request/trash/{id}', 'ProductRequestController@trash');
@@ -75,7 +75,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->get('product/supplier', 'SupplierController@index');
     $router->get('product/supplier/trash', 'SupplierController@trash');
     $router->post('product/supplier/trash/delete','SupplierController@delete');
-    $router->delete('product/supplier/trash/delete', 'SupplierController@delete');
+    $router->delete('product/supplier/trash', 'SupplierController@delete');
     $router->get('product/supplier/trash/restore/all', 'SupplierController@restoreAll');
     $router->post('product/supplier/trash/restore', 'SupplierController@restore');
     $router->get('product/supplier/trash/{id}', 'SupplierController@trash');
@@ -88,7 +88,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->get('product/category', 'CategoryController@index');
     $router->get('product/category/trash', 'CategoryController@trash');
     $router->post('product/category/trash/delete','CategoryController@delete');
-    $router->delete('product/category/trash/delete', 'CategoryController@delete');
+    $router->delete('product/category/trash', 'CategoryController@delete');
     $router->get('product/category/trash/restore/all', 'CategoryController@restoreAll');
     $router->post('product/category/trash/restore', 'CategoryController@restore');
     $router->get('product/category/trash/{id}', 'CategoryController@trash');
@@ -104,14 +104,8 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');
     $router->get('product/trash', 'ProductController@trash');
-    $router->post('product/trash/delete','ProductController@delete');
-    $router->delete('product/trash/delete', 'ProductController@delete');
-    $router->get('product/trash/restore/all', 'ProductController@restoreAll');
-    $router->post('product/trash/restore', 'ProductController@restore');
-    $router->get('product/trash/{id}', 'ProductController@trash');
-    $router->get('product/trash', 'ProductController@trash');
     $router->post('product/trash/delete', 'ProductController@delete');
-    $router->delete('product/trash/delete', 'ProductController@delete');
+    $router->delete('product/trash', 'ProductController@delete');
     $router->get('product/trash/restore/all', 'ProductController@restoreAll');
     $router->post('product/trash/restore', 'ProductController@restore');
     $router->get('product/trash/{id}', 'ProductController@trash');
@@ -128,7 +122,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->get('branch/trash', 'BranchController@trash');
     $router->get('branch/user/{id}', 'BranchController@index');
     $router->post('branch/trash/delete', 'BranchController@delete');
-    $router->delete('branch/trash/delete', 'BranchController@delete');
+    $router->delete('branch/trash', 'BranchController@delete');
     $router->get('branch/trash/restore/all', 'BranchController@restoreAll');
     $router->post('branch/trash/restore', 'BranchController@restore');
     $router->get('branch/trash/{id}', 'BranchController@trash');
@@ -150,7 +144,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse order api endpoint
     $router->get('warehouse/trash', 'ProductOrderRequestController@trash');
     $router->post('warehouse/trash/delete','ProductOrderRequestController@delete');
-    $router->delete('warehouse/trash/delete', 'ProductOrderRequestController@delete');
+    $router->delete('warehouse/trash', 'ProductOrderRequestController@delete');
     $router->get('warehouse/trash/restore/all', 'ProductOrderRequestController@restoreAll');
     $router->post('warehouse/trash/restore', 'ProductOrderRequestController@restore');
     $router->get('warehouse/trash/{id}', 'ProductOrderRequestController@trash');

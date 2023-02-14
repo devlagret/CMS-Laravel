@@ -213,9 +213,9 @@ class ProductController extends Controller
             return response('Restore Sucess');
         }
         if ($request->isMethod('POST')) {
-            $this->validate($request, ['user_id' => 'required|min:36']);
-            $id = explode(",", str_replace(" ", "", $request['user_id']));
-            $delete = product::whereIn('user_id', $id)->forceDelete();
+            $this->validate($request, ['id' => 'required|min:36']);
+            $id = explode(",", str_replace(" ", "", $request['id']));
+            $delete = product::whereIn('id', $id)->forceDelete();
             if (!$delete) {
                 return response('Failure', 500);
             }
