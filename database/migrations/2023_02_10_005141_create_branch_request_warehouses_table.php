@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('branch_request_warehouses', function (Blueprint $table) {
-            $table->uuid('warehouse_id');
-            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('cascade');
-            $table->uuid('request_id');
-            $table->foreign('request_id')->references('request_id')->on('product_requests')->onDelete('cascade');
+            $table->uuid('warehouse_id')->nullable()->default('0');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('set null');
+            $table->uuid('request_id')->nullable()->default('0');
+            $table->foreign('request_id')->references('request_id')->on('product_requests')->onDelete('set null');
             $table->timestamps();
         });
     }

@@ -26,10 +26,8 @@ class WarehouseSeeder extends Seeder
             $pid = array_rand($pids);
             $arr1 = ['Surakarta', 'Karanganyar'];
             $l = array_rand($arr1);
-            $id = Warehouse::orderBy('id', 'DESC')->first();
 
             Warehouse::firstOrCreate([
-                'id' => $id->id+1,
                 'warehouse_id' => $whsids[$wid],
                 'product_code' => $pids[$pid],
                 'stock' => rand(10,100),

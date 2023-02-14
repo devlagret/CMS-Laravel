@@ -17,8 +17,8 @@ return new class extends Migration
             $table->uuid('product_order_requests_id')->primary();
             $table->uuid('warehouse_id')->nullable()->default(null);
             $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('set null')->onUpdate('cascade');
-            $table->string('product_code', 50);
-            $table->foreign('product_code')->references('product_code')->on('products')->onDelete('restrict')->onUpdate('cascade');
+            $table->string('product_code', 50)->nullable()->default('0');
+            $table->foreign('product_code')->references('product_code')->on('products')->onDelete('set null')->onUpdate('cascade');
             $table->date('request_date');
             $table->integer('quantity');
             $table->enum('status', ['sent', 'accepted', 'transferred']);

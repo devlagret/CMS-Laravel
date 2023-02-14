@@ -19,7 +19,7 @@ class ProductOrderRequestController extends Controller
                                             ->paginate(10);
             return response()->json($Orequests);
         }elseif ($request->user()->can('viewAny', ProductOrderRequest::class)) {
-            $wid       = WhsDetail::where('user_id', Auth::id())->firsimplest();
+            $wid       = WhsDetail::where('user_id', Auth::id())->first();
             $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->orderByRaw("CASE status
                                                 WHEN 'accepted' THEN 1

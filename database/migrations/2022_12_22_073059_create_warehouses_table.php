@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('warehouses', function (Blueprint $table) {
             $table->id('id');
-            $table->uuid('warehouse_id');
-            $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('restrict')->onUpdate('cascade');
-            $table->string('product_code', 50);
-            $table->foreign('product_code')->references('product_code')->on('products')->onDelete('restrict')->onUpdate('cascade');
+            $table->uuid('warehouse_id')->nullable()->default('0');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('set null')->onUpdate('cascade');
+            $table->string('product_code', 50)->nullable()->default('0');
+            $table->foreign('product_code')->references('product_code')->on('products')->onDelete('set null')->onUpdate('cascade');
             $table->integer('stock');
             $table->string('location', 50)->nullable();
             $table->date('entry_date');

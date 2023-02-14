@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 2.7.0.1
+//  API Version beta 2.7.2.2
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -108,6 +108,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->delete('product/trash', 'ProductController@delete');
     $router->get('product/trash/restore/all', 'ProductController@restoreAll');
     $router->post('product/trash/restore', 'ProductController@restore');
+    $router->post('product/search', 'ProductController@showByName');
     $router->get('product/trash/{id}', 'ProductController@trash');
     $router->get('product/{id}', 'ProductController@show');
     $router->put('product/{id}', 'ProductController@update');
@@ -157,6 +158,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse api endpoint
     $router->put('warehouse/request/{product_code}', 'WarehouseController@stockup');
     $router->get('warehouse/all/{productCode}', 'WarehouseController@showProduct');
+    $router->get('warehouse/all/{productCode}/{stock}', 'WarehouseController@showStock');
     $router->delete('warehouse/{id}', 'WarehouseController@destroy');
     $router->get('warehouse/{id}', 'WarehouseController@show');
     $router->put('warehouse/{id}', 'WarehouseController@update');

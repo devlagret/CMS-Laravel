@@ -21,7 +21,7 @@ class WhsDetailSeeder extends Seeder
         $role = Role::where('name', 'admingudang')->first('role_id');
         $role1 = Role::where('name', 'admin')->first('role_id');
         $uids = User::where('role_id', $role->role_id)
-        ->orWhere('role_id', $role1->role_id)
+        // ->orWhere('role_id', $role1->role_id)
         ->pluck('user_id')->toArray();
         foreach ($uids as  $uid) {
             $arr1 = '?????!!!!';
