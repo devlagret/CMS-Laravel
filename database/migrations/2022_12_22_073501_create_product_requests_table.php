@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('product_requests', function (Blueprint $table) {
             $table->uuid('request_id')->primary();
-            $table->uuid('branch_id')->nullable();
+            $table->uuid('branch_id')->nullable()->default('0');
             $table->foreign('branch_id')->references('branch_id')->on('branches')->onDelete('set null')->onUpdate('cascade');
-            $table->string('product_code', 50)->nullable();
+            $table->string('product_code', 50)->nullable()->default('0');
             $table->foreign('product_code')->references('product_code')->on('products')->onDelete('set null')->onUpdate('cascade');
+            $table->uuid('warehouse_id')->nullable()->default('0');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('set null')->onUpdate('cascade');
             $table->integer('amount');
             $table->dateTime('order_date');
             $table->dateTime('out_date')->nullable();

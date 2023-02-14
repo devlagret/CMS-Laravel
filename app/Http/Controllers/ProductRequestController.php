@@ -38,6 +38,7 @@ class ProductRequestController extends Controller
         }
         $validator = $this->validate($request, [
             'product_code'  => 'required',
+            'warehouse_id'  => 'required',
             'amount'        => 'required|max:15',
             'order_date'    => 'required',
         ]);
@@ -52,6 +53,7 @@ class ProductRequestController extends Controller
             'branch_id'     => $bid->branch_id,
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
+            'warehouse_id'  => $request->input('warehouse_id'),
             'order_date'    => isEmpty($order_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $order_date,
             'out_date'      => $request->input('out_date'),
         ]);

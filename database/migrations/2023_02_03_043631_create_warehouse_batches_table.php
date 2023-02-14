@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('warehouse_batches', function (Blueprint $table) {
-            $table->unsignedBigInteger('warehouse_id');
-            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
-            $table->uuid('batch_id');
-            $table->foreign('batch_id')->references('batch_id')->on('batches')->onDelete('cascade');
-            $table->uuid('product_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('warehouse_id')->nullable()->default('0');
+            $table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('set null');
+            $table->uuid('batch_id')->nullable()->default('0');
+            $table->foreign('batch_id')->references('batch_id')->on('batches')->onDelete('set null');
+            $table->uuid('product_id')->nullable()->default('0');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
             $table->integer('quantity');
             $table->date('expired_date');
             $table->timestamps();
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warehousebatches');
+        Schema::dropIfExists('warehouse_batches');
     }
 };

@@ -32,7 +32,7 @@ class WarehouseController extends Controller
         if ($request->user()->cannot('viewAny', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
-        $warehouses = Warehouse::paginate(10);
+        $warehouses = Warehouse::paginate(9);
         
         return response()->json($warehouses);
     }
@@ -99,6 +99,17 @@ class WarehouseController extends Controller
             return response('Unauthorized', 401);
         }
         $warehouse = Warehouse::where('product_code', $productCode)->get(['warehouse_id', 'stock']);
+        return response()->json($warehouse);
+    }
+
+    public function showStock(Request $request, $productCode, $stock)
+    {
+        if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        $warehouse = Warehouse::where('product_code', $productCode)
+                              ->where('stock', '>=', $stock+10)
+                              ->get(['warehouse_id', 'stock']);
         return response()->json($warehouse);
     }
 
