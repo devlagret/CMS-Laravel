@@ -25,12 +25,11 @@ class ProductRequestController extends Controller
         if ($request->user()->cannot('viewAny', ProductRequest::class)) {
             return response('Unauthorized', 401);
         }
-        $product_reqs = ProductRequest::paginate(10);
+        $product_reqs = ProductRequest::paginate(9);
         
         return response()->json($product_reqs);
     }
 
-    
     public function store(Request $request)
     {
         if ($request->user()->cannot('create', ProductRequest::class)) {
@@ -70,7 +69,6 @@ class ProductRequestController extends Controller
             return response()->json("Failure");
         }
     }
-
     
     public function show(Request $request, $id)
     {
@@ -87,22 +85,18 @@ class ProductRequestController extends Controller
             return response('Unauthorized', 401);
         }
         $validator = $this->validate($request, [
-            'branch_id'     => 'required',
             'product_code'  => 'required',
             'amount'        => 'required',
-            'order_date'    => 'required',
-            'out_date'      => 'required',
-            'status'        => 'required',
+            'warehouse_id'  => 'required',
         ]);
         $bid = Branch::where('user_id', Auth::Id())->first();
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
 
         $product_req = ProductRequest::where('request_id',$id)->update([
-            'branch_id'     => $bid->branch_id,
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
-            'out_date'      => $request->input('out_date'),
+            'warehouse_id'  => $request->input('warehouse_id'),
         ]);
         $uh = new UserHelper;
         if ($product_req) {

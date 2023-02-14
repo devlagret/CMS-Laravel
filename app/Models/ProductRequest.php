@@ -17,6 +17,7 @@ class ProductRequest extends Model
         'request_id',
         'branch_id',
         'product_code',
+        'warehouse_id',
         'amount',
         'order_date',
         'out_date',

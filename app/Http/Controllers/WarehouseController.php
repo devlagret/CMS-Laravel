@@ -29,14 +29,17 @@ class WarehouseController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Warehouse::class)) {
+        if ($request->user()->can('view', Warehouse::class)) {
+            $warehouses = Warehouse::paginate(9);
+        }elseif ($request->user()->can('viewAny', Warehouse::class)) {
+            $wid       = WhsDetail::where('user_id', Auth::id())->first();
+            $warehouses = Warehouse::where('warehouse_id', $wid->warehouse_id)
+                                   ->paginate(9);
+        }else {
             return response('Unauthorized', 401);
         }
-        $warehouses = Warehouse::paginate(9);
-        
         return response()->json($warehouses);
     }
-
     
     public function store(Request $request)
     {
