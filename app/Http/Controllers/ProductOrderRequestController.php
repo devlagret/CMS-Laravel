@@ -16,7 +16,7 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
             $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
-                                            ->paginate(10);
+                                            ->paginate(9);
             return response()->json($Orequests);
         }elseif ($request->user()->can('viewAny', ProductOrderRequest::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
@@ -29,7 +29,7 @@ class ProductOrderRequestController extends Controller
                                                 END")
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
-                                            ->paginate(10);
+                                            ->paginate(9);
             return response()->json($Orequests);
         }else {
             return response('Unauthorized', 401);
@@ -85,11 +85,11 @@ class ProductOrderRequestController extends Controller
             return response()->json($Orequest);
         }elseif ($request->user()->can('updatew', ProductOrderRequest::class)) {
             $validator = $this->validate($request, [
-                'request_id'    => 'required',
+                'product_order_requests_id'    => 'required',
                 'product_code'  => 'required',
                 'quantity'      => 'required'
             ]);
-            $id = $request->request_id;
+            $id = $request->input('product_order_requests_id');
             $pcode = $request->input('product_code');
             $qu = $request->input('quantity');
     

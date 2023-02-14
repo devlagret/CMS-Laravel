@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Helpers\UserHelper;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
@@ -31,9 +32,12 @@ class ProductRequestPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function view(User $user)
+    public function vieww(User $user)
     {
-        //
+        $rid = Role::where('name', 'admingudang')->first('role_id');
+        $uh = new UserHelper();
+        return $user->role_id == $rid->role_id ? Response::allow()
+            : Response::deny('Unauthorized', 401);
     }
 
     /**

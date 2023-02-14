@@ -21,8 +21,8 @@ class PrivilegeSeeder extends Seeder
         $role = Role::whereIn('name', ['admingudang', 'branch', 'user'])->get();
         foreach ($role as $role) {
             if ($role->name == 'branch'){
-                $permision = Permision::whereIn('label',[
-                    'Melihat Data Cabang', 'Mengubah Data Cabang', 'Menghapus Data Cabang', 'Menambahkan Cabang Baru','Melihat Data Gudang', 'Melihat Profil Gudang', 'Melihat Data Produk', 'Mengubah Data Request Produk', 'Menghapus Data Request Produk', 'Mengubah Data Request Produk', 'Menambahkan Request Produk Baru'])->get();
+                $permision = Permision::whereIn('name',[
+                    'view-branch', 'edit-branch', 'delete-branch', 'add-branch','view-warehouse', 'view-detail-warehouse', 'view-product','view-product-request', 'edit-product-request', 'delete-product-request', 'add-product-request'])->get();
                 foreach ($permision as $p) {
                     Privilege::create([
                         //'previlige_id' => Str::uuid(),

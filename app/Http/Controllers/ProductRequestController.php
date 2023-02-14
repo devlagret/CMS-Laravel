@@ -21,13 +21,27 @@ class ProductRequestController extends Controller
     
     public function index(Request $request)
     {
-        $uh = new UserHelper();
-        if ($request->user()->cannot('viewAny', ProductRequest::class)) {
+        if ($request->user()->can('vieww', ProductRequest::class)) {
+            $product_reqs = ProductRequest::orderBy('order_date', 'asc')
+                                            ->orderBy('product_code', 'asc')
+                                            ->paginate(9);
+            return response()->json($product_reqs);
+        }elseif ($request->user()->can('viewAny', ProductRequest::class)) {
+            $bid       = Branch::where('user_id', Auth::id())->first();
+            $product_reqs = ProductRequest::where('branch_id', $bid->branch_id)
+                                            ->orderByRaw("CASE status
+                                                WHEN 'accepted' THEN 1
+                                                WHEN 'sent' THEN 2
+                                                WHEN 'transferred' THEN 3
+                                                ELSE 4
+                                                END")
+                                            ->orderBy('order_date', 'desc')
+                                            ->orderBy('product_code', 'asc')   
+                                            ->paginate(10);
+            return response()->json($product_reqs);
+        }else {
             return response('Unauthorized', 401);
         }
-        $product_reqs = ProductRequest::paginate(9);
-        
-        return response()->json($product_reqs);
     }
 
     public function store(Request $request)
@@ -39,7 +53,7 @@ class ProductRequestController extends Controller
             'product_code'  => 'required',
             'warehouse_id'  => 'required',
             'amount'        => 'required|max:15',
-            'order_date'    => 'required',
+            
         ]);
 
         $bid = Branch::where('user_id', Auth::Id())->first();
@@ -54,7 +68,7 @@ class ProductRequestController extends Controller
             'amount'        => $request->input('amount'),
             'warehouse_id'  => $request->input('warehouse_id'),
             'order_date'    => isEmpty($order_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $order_date,
-            'out_date'      => $request->input('out_date'),
+            
         ]);
         $uh = new UserHelper;
         if ($product_req) {
@@ -72,7 +86,7 @@ class ProductRequestController extends Controller
     
     public function show(Request $request, $id)
     {
-        if ($request->user()->cannot('view', ProductRequest::class)||$request->user()->cannot('viewAny', ProductRequest::class)) {
+        if ($request->user()->cannot('viewAny', ProductRequest::class)) {
             return response('Unauthorized', 401);
         }
         $product_req = ProductRequest::find($id);
@@ -118,7 +132,11 @@ class ProductRequestController extends Controller
         if ($request->user()->cannot('delete', ProductRequest::class)) {
             return response('Unauthorized', 401);
         }
-        ProductRequest::destroy($id);
+        $product_req = ProductRequest::destroy($id);
+
+        if(!$product_req){
+            return response()->json(['message' => 'Request Not Deleted']);
+        }
 
         return response()->json(['message' => 'Deleted']);
     }

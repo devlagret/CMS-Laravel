@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WarehousehResponseBranch extends Model
+class WarehouseResponseBranch extends Model
 {
-    protected $table = 'warehouseh_response_branches';
+    protected $table = 'warehouse_response_branches';
 
     protected $primaryKey = 'warehouse_response_id';
     public $incrementing = false;

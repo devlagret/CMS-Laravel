@@ -21,7 +21,7 @@ class WarehousePolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['view-warehouse']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['view-warehouse', 'view-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 

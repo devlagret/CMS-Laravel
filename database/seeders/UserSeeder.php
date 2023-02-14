@@ -21,15 +21,17 @@ class UserSeeder extends Seeder
         $role1 = Role::whereIn('name', ['branch', 'user', 'admingudang'])->get();
         foreach ($role1 as $role) {
             if ($role->name == 'branch') {
-                User::firstOrCreate([
-                    'user_id' => Str::uuid()->toString(),
-                    'username' => 'branch',
-                    'name' => 'Branch',
-                    'password' => Hash::make('branch'),
-                    'contact' => '081222333444555',
-                    'role_id' => $role->role_id,
-                    'email' => 'branch@exmple.com',
-                ]);
+                for ($i=0; $i < 4; $i++) { 
+                    User::firstOrCreate([
+                        'user_id' => Str::uuid()->toString(),
+                        'username' => 'branch'.$i+1,
+                        'name' => 'Branch',
+                        'password' => Hash::make('branch'.$i+1),
+                        'contact' => '081222333444555',
+                        'role_id' => $role->role_id,
+                        'email' => 'branch@exmple.com',
+                    ]);
+                }
             } elseif ($role->name == 'user') {
                 User::firstOrCreate([
                     'user_id' => Str::uuid()->toString(),
