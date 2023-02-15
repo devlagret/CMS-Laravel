@@ -12,7 +12,7 @@ class WarehouseResponseBranch extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'warehouse_response_id', 'warehouse_id', 'branch_id', 'product_code', 'send_date', 'quantity',
+        'warehouse_response_id', 'warehouse_id', 'branch_id', 'request_id', 'product_code', 'send_date', 'quantity',
     ];
     
 }

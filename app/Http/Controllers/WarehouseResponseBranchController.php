@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductRequest;
 use App\Models\Warehouse;
 use App\Models\WarehouseResponseBranch;
 use App\Models\WhsDetail;
@@ -16,7 +17,7 @@ class WarehouseResponseBranchController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', ProductOrder::class)) {
+        if ($request->user()->cannot('viewAny', WarehouseResponseBranch::class)) {
             return response('Unauthorized', 401);
         }
         $wrespons = WarehouseResponseBranch::paginate(9);
@@ -26,35 +27,62 @@ class WarehouseResponseBranchController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->user()->cannot('create', ProductOrder::class)) {
+        if ($request->user()->cannot('create', WarehouseResponseBranch::class)) {
             return response('Unauthorized', 401);
         }
         $validator = $this->validate($request, [ 
-            'warehouse_id'  => 'required',
-            'branch_id'     => 'required',
-            'product_code'  => 'required',
-            'send_date'     => 'required',
-            'quantity'      => 'required',
-            
+            'request_id'    => 'required',
         ]);
         
-        $branch_id   = $request->input('branch_id');
-        $product_code  = $request->input('product_code');
         $send_date = $request->input('send_date');
-        $total_amount  = $request->input('total_amount');
-        $quantity      = $request->input('quantity');
+        $rid  = $request->input('request_id');
+        $detail   = ProductRequest::where('request_id', $rid)->first();
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
 
-        $order = WarehouseResponseBranch::create([
+        $wrespon = WarehouseResponseBranch::create([
             'warehouse_response_id' => Str::uuid()->toString(),
             'warehouse_id'          => $wid->warehouse_id,
-            'branch_id'             => $branch_id,
-            'product_code'          => $product_code,
+            'branch_id'             => $detail->branch_id,
+            'request_id'            => $rid,
+            'product_code'          => $detail->product_code,
             'send_date'             => isEmpty($send_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $send_date,
-            'quantity'              => $quantity,
+            'quantity'              => $detail->amount,
         ]);
-
-        return response()->json(['message' => 'Product Sent','data' => $order], 201);
+        if (!$wrespon) {
+            return response()->json(['message' => 'Failed to Proccess','data' => $wrespon], 400);
+        }else {
+            $accept = Warehouse::where('warehouse_id', $wid->warehouse_id)
+                     ->where('product_code', $detail->product_code)
+                     ->decrement('stock', $detail->amount);
+            if ($accept) {
+                ProductRequest::where('request_id', $rid)
+                ->update(['status' => 3]);
+            }
+            return response()->json(['message' => 'Product Sent','data' => $wrespon], 201);
+        }
     }
 
+    public function viewResponse(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', WarehouseResponseBranch::class)) {
+            return response('Unauthorized', 401);
+        }
+        $wrespons = WarehouseResponseBranch::paginate(9);
+        
+        return response()->json($wrespons);
     }
+
+    public function getResponse(Request $request, $request_id)
+    {
+        if ($request->user()->cannot('checkRoleB', WarehouseResponseBranch::class)) {
+            return response('Unauthorized', 401);
+        }
+        // $request_id = $request->input('request_id');
+
+        $wrespons = WarehouseResponseBranch::where('request_id', $request_id)->first();
+        
+        return response()->json($wrespons->warehouse_response_id);
+    }
+}
+
+

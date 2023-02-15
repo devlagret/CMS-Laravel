@@ -11,6 +11,8 @@ use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
 use App\Models\Branch;
+use App\Models\Warehouse;
+use App\Models\WhsDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -22,22 +24,30 @@ class ProductRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('vieww', ProductRequest::class)) {
-            $product_reqs = ProductRequest::orderBy('order_date', 'asc')
+            $wid = WhsDetail::where('user_id', Auth::id())->first();
+            $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                                            ->orderBy('order_date', 'asc')
                                             ->orderBy('product_code', 'asc')
+                                            ->whereNot('status', 'transferred')
                                             ->paginate(9);
+            if (!$product_reqs) {
+                return response()->json('Tidak Ada Request Produk', 204);
+            }
+            ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                          ->update(['status' => 2]);
             return response()->json($product_reqs);
         }elseif ($request->user()->can('viewAny', ProductRequest::class)) {
             $bid       = Branch::where('user_id', Auth::id())->first();
             $product_reqs = ProductRequest::where('branch_id', $bid->branch_id)
                                             ->orderByRaw("CASE status
-                                                WHEN 'accepted' THEN 1
-                                                WHEN 'sent' THEN 2
-                                                WHEN 'transferred' THEN 3
+                                                WHEN 'transferred' THEN 1
+                                                WHEN 'accepted' THEN 2
+                                                WHEN 'sent' THEN 3
                                                 ELSE 4
                                                 END")
                                             ->orderBy('order_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
-                                            ->paginate(10);
+                                            ->paginate(9);
             return response()->json($product_reqs);
         }else {
             return response('Unauthorized', 401);
