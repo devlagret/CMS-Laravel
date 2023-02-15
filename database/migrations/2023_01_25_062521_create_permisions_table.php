@@ -671,7 +671,7 @@ return new class extends Migration
             ], [
                 'permision_id' => Str::uuid()->toString(),
                 'name' => 'view-deleted-product-order-request',
-                'alter' => 'lihat-request-pesanan',
+                'alter' => 'lihat-request-pesanan-terhapus',
                 'label' => 'Melihat Data Request Order yang Sudah Dihapus',
                 'group' => 'Request Order',
                 'created_at' => Carbon::now(),
