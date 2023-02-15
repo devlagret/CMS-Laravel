@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class ProductRequestController extends Controller
 {
@@ -26,14 +27,20 @@ class ProductRequestController extends Controller
         if ($request->user()->can('vieww', ProductRequest::class)) {
             $wid = WhsDetail::where('user_id', Auth::id())->first();
             $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                                            ->whereNot('status', 'transferred')
                                             ->orderBy('order_date', 'asc')
                                             ->orderBy('product_code', 'asc')
-                                            ->whereNot('status', 'transferred')
-                                            ->paginate(9);
+                                            ->exists();
             if (!$product_reqs) {
-                return response()->json('Tidak Ada Request Produk', 204);
+                return response()->json('Tidak Ada Request Produk', 200);
             }
+            $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                                            ->whereNot('status', 'transferred')
+                                            ->orderBy('order_date', 'asc')
+                                            ->orderBy('product_code', 'asc')
+                                            ->paginate(9);
             ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                          ->whereNot('status', 'transferred')
                           ->update(['status' => 2]);
             return response()->json($product_reqs);
         }elseif ($request->user()->can('viewAny', ProductRequest::class)) {
