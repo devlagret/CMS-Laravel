@@ -61,6 +61,7 @@ $app->singleton(
 
 $app->configure('app');
 $app->configure('database');
+$app->configure('cors');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -75,13 +76,17 @@ $app->configure('database');
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
-
+$app->middleware([
+    // ...
+    Fruitcake\Cors\HandleCors::class,
+]);
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
  ]);
-$app->middleware([
-    App\Http\Middleware\Cors::class
-]);
+//$app->middleware([
+//    App\Http\Middleware\Cors::class
+//]);
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
