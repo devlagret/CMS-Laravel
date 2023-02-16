@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Models\DailyReport;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -17,26 +16,28 @@ class DailyReportController extends Controller
                 'file'  => 'required|mimes:doc,docx,pdf,txt,json|max:2048',
         ]);
         if ($file = $request->file('file')) {
-            $name = 'Daily Report'.Carbon::now();
-            $path = $request->file('file')->move('public', $name.'.'.$file->extension());
+            $path = $file->store('public');
+            $name = $file->getClientOriginalName();
+ 
+            $save = new DailyReport();
+            $save->name = $file;
+            $save->path= $path;
+            $save->save();
 
-            $bid = Branch::where('user_id', Auth::id())->first('branch_id');
-            
-            // if ($path) {
-            //     DailyReport::create([
-            //         'file_id' => Str::uuid()->toString(),
-            //         'path'    => $path,
-            //         'name'    => $name,
-            //         'branch_id'=> $bid->branch_id
-            //     ]);
-            // }
+            if ($save) {
+                DailyReport::create([
+                    'file_id' => Str::uuid()->toString(),
+                    'path'    => $path,
+                    'name'    => $name,
+                    'batch_id'=> Branch::where('user_id', Auth::id())->first('batch_id')
+                ]);
+            }
               
-            // return response()->json([
-            //     "success" => true,
-            //     "message" => "File successfully uploaded",
-            //     "file" => $path
-            // ]);
-            return response()->json($path, 200);
+            return response()->json([
+                "success" => true,
+                "message" => "File successfully uploaded",
+                "file" => $file
+            ]);
         }
     }
 }
