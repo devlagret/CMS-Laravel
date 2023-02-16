@@ -12,7 +12,15 @@ use Laravel\Lumen\Auth\Authorizable;
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable, HasFactory;
-protected $table = 'user';
+/**
+ * Get User Role
+ */
+public function role()
+{
+   return $this->belongsTo(Role::class,'role_id');
+}
+
+    protected $table = 'user';
     /**
      * The attributes that are mass assignable.
      *

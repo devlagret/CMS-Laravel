@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\Config;
 
@@ -50,6 +51,7 @@ class AppController extends Controller
         //foreach ($ids as $a) {
         //     array_push($b,trim($a));}
         //var_dump($id);
-        return response()->json([$request['prs'],$request->isMethod('DELETE')]);
+        //return response()->json([$request['prs'],$request->isMethod('DELETE')]);
+        return response()->json(Role::find('5aef4cce-f0c9-4896-b9a7-a82991299d45'));
     }
 }
