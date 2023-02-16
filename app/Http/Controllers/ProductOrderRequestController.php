@@ -14,6 +14,8 @@ class ProductOrderRequestController extends Controller
     public function view(Request $request)
     {
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
+            ProductOrderRequest::where('status', 'sent')
+                                ->update(['status' => 2]);
             $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->paginate(9);
@@ -76,7 +78,7 @@ class ProductOrderRequestController extends Controller
                 'status'        => 'required',
             ]);
             $status = intval($request->input('status'));
-            $id = $request->request_id;
+            $id = $request->input('request_id');
     
             $Orequest = ProductOrderRequest::where('product_order_requests_id', $id)
                                            ->update([

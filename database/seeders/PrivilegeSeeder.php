@@ -22,7 +22,7 @@ class PrivilegeSeeder extends Seeder
         foreach ($role as $role) {
             if ($role->name == 'branch'){
                 $permision = Permision::whereIn('name',[
-                    'view-branch', 'edit-branch', 'delete-branch', 'add-branch','view-warehouse', 'view-detail-warehouse', 'view-product','view-product-request', 'edit-product-request', 'delete-product-request', 'add-product-request'])->get();
+                    'view-branch', 'edit-branch', 'delete-branch', 'add-branch','view-warehouse', 'view-detail-warehouse', 'view-product','view-product-request', 'edit-product-request', 'delete-product-request', 'add-product-request', 'view-product-request-response'])->get();
                 foreach ($permision as $p) {
                     Privilege::create([
                         //'previlige_id' => Str::uuid(),
@@ -46,7 +46,7 @@ class PrivilegeSeeder extends Seeder
                 }
             }elseif ($role->name == 'admingudang'){
                 $permision = Permision::whereIn('group',['gudang', 'Request Order'])
-                                      ->orWhereIn('name',['view-product', 'edit-product', 'add-product', 'view-product-category', 'view-supplier', 'view-product-request'])
+                                      ->orWhereIn('name',['view-product', 'add-product', 'edit-product',  'view-product-category', 'view-supplier', 'view-product-request', 'view-product-request-response', 'add-product-request-response', 'edit-product-request-response', 'delete-product-request-response', 'delete-product-request-response-forever', 'view-deleted-product-request-response', 'restore-deleted-product-request-response'])
                                       ->get();
                 foreach ($permision as $p) {
                     Privilege::create([

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('set null')->onUpdate('cascade');
             $table->uuid('branch_id')->nullable()->default('0');
             $table->foreign('branch_id')->references('branch_id')->on('branches')->onDelete('set null')->onUpdate('cascade');
+            $table->uuid('request_id')->nullable()->default('0');
+            $table->foreign('request_id')->references('request_id')->on('product_requests')->onDelete('set null')->onUpdate('cascade');
             $table->string('product_code')->nullable()->default('0');
             $table->foreign('product_code')->references('product_code')->on('products')->onDelete('set null')->onUpdate('cascade');
             $table->date('send_date');

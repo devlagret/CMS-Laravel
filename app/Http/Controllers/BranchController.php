@@ -84,11 +84,11 @@ class BranchController extends Controller
             return response('Unauthorized', 401);
         }
         $validator = $this->validate($request, [
-            'branch' => 'required',
+            'branch_name' => 'required',
         ]);
 
-        $name = $request->input('branch');
-        $supplier = Branch::where('branch', 'LIKE', '%'.$name.'%')->paginate(9);
+        $name = $request->input('branch_name');
+        $supplier = Branch::where('branch_name', 'LIKE', '%'.$name.'%')->paginate(9);
 
         return response()->json($supplier);
     }

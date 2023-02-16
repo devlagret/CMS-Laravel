@@ -155,6 +155,9 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->put('warehouse/request', 'ProductOrderRequestController@edit');
     //warehouse detail api endpoint
     $router->post('warehouse/detail', 'WhsDetailController@store');
+    //warehouse response api endpoint
+    $router->post('warehouse/response', 'WarehouseResponseBranchController@store');
+    $router->get('warehouse/response/{request_id}', 'WarehouseResponseBranchController@getResponse');
     //warehouse api endpoint
     $router->put('warehouse/request/{product_code}', 'WarehouseController@stockup');
     $router->get('warehouse/all/{productCode}', 'WarehouseController@showProduct');
@@ -164,6 +167,9 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->put('warehouse/{id}', 'WarehouseController@update');
     $router->post('warehouse', 'WarehouseController@store');
     $router->get('warehouse', 'WarehouseController@index');
+});
+$router->group(['prefix' => $prefix], function () use ($router){
+    $router->post('upload','DailyReportController@store');
 });
 //test
 $router->group(['prefix' => $prefix], function () use ($router){

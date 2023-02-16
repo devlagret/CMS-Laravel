@@ -11,10 +11,13 @@ use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
 use App\Models\Branch;
+use App\Models\Warehouse;
+use App\Models\WhsDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class ProductRequestController extends Controller
 {
@@ -22,22 +25,36 @@ class ProductRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('vieww', ProductRequest::class)) {
-            $product_reqs = ProductRequest::orderBy('order_date', 'asc')
+            $wid = WhsDetail::where('user_id', Auth::id())->first();
+            $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                                            ->whereNot('status', 'transferred')
+                                            ->orderBy('order_date', 'asc')
+                                            ->orderBy('product_code', 'asc')
+                                            ->exists();
+            if (!$product_reqs) {
+                return response()->json('Tidak Ada Request Produk', 200);
+            }
+            $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                                            ->whereNot('status', 'transferred')
+                                            ->orderBy('order_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->paginate(9);
+            ProductRequest::where('warehouse_id', $wid->warehouse_id)
+                          ->whereNot('status', 'transferred')
+                          ->update(['status' => 2]);
             return response()->json($product_reqs);
         }elseif ($request->user()->can('viewAny', ProductRequest::class)) {
             $bid       = Branch::where('user_id', Auth::id())->first();
             $product_reqs = ProductRequest::where('branch_id', $bid->branch_id)
                                             ->orderByRaw("CASE status
-                                                WHEN 'accepted' THEN 1
-                                                WHEN 'sent' THEN 2
-                                                WHEN 'transferred' THEN 3
+                                                WHEN 'transferred' THEN 1
+                                                WHEN 'accepted' THEN 2
+                                                WHEN 'sent' THEN 3
                                                 ELSE 4
                                                 END")
                                             ->orderBy('order_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
-                                            ->paginate(10);
+                                            ->paginate(9);
             return response()->json($product_reqs);
         }else {
             return response('Unauthorized', 401);
