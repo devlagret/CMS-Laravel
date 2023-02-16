@@ -168,8 +168,9 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('warehouse', 'WarehouseController@store');
     $router->get('warehouse', 'WarehouseController@index');
 });
-$router->group(['prefix' => $prefix], function () use ($router){
+$router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router){
     $router->post('upload','DailyReportController@store');
+    $router->get('upload','DailyReportController@getDownload');
 });
 //test
 $router->group(['prefix' => $prefix], function () use ($router){
