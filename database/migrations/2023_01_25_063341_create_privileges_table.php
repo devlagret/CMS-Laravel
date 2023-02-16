@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('permision_id')->references('permision_id')->on('permisions')->onDelete('restrict')->onUpdate('restrict');
             $table->uuid('role_id');
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('restrict')->onUpdate('restrict');
+            $table->unique(['permision_id', 'role_id']);
             $table->timestamps();
         });
         // Insert Default Previleges
