@@ -19,6 +19,10 @@ public function role()
 {
    return $this->belongsTo(Role::class,'role_id');
 }
+public function logs()
+{
+    return $this->hasMany(Log::class,'user_id');
+}
 
     protected $table = 'user';
     /**
