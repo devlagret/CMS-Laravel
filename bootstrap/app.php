@@ -120,7 +120,8 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
-return $app;
-
 $app->singleton('filesystem', function ($app) { return 
     $app->loadComponent('filesystems', 'Illuminate\Filesystem\FilesystemServiceProvider', 'filesystem'); });
+    
+return $app;
+
