@@ -33,7 +33,7 @@ class UserController extends Controller
             $this->validate($request, [
                 'name' => 'required|min:3',
                 'username' => 'required|unique:User|min:3',
-                'password' => 'required|min:6|',
+                'password' => 'required|min:6|confirmed',
                 'contact' => 'required|min:10|max:15',
                 'email' => 'required|min:5|email',
                 'role_id' => 'required|min:36|max:36'
@@ -72,7 +72,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'username' => 'required|max:50',
-            'password' => 'required'
+            'password' => 'required|min:6|confirmed'
         ]);
         $username = trim($request->input('username'));
         $password = $request->input('password');
@@ -98,11 +98,10 @@ class UserController extends Controller
             return response('Unauthorized', 401);
         }
         $this->validate($request, [
-            'name' => 'min:3|max:50',
-            'username' => '|min:3|max:50',
-            'old_password' => 'min:6',
-            'new_password' => 'min:6',
-            'role_id' => 'min:3|max:25'
+            'name' => 'required|min:3|max:255',
+            'username' => 'required|min:3|max:255',
+            'contact' => 'required|min:12|max:15',
+            'email'=>'required|email|min:3|max:255'
         ]);
         $token = $request->header('token');
         $name = $request->input('name');
@@ -112,15 +111,22 @@ class UserController extends Controller
         $uh = new UserHelper;
         try {
             if ($id == null) {
-                $user = User::where('user_id', $uh->getUserData($token, 'user_id'))->first();
-                if (!Hash::check($request, $user->password)) 
+                $user = User::where('user_id',Auth::id())->first();
+                if (!Hash::check($request->input('password'), $user->password)) 
                 {
                     return response()->json(['message' => 'wrong password'], 401);
                 };
                 $user->update([
-                    'name' => $name,
                     'username' => $username,
-                    'password' => $newPassword,
+                    'name' => $name,
+                    'contact' =>$request->input('contact'),
+                    'email'=>$request->input('email'),
+                ]);
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'datetime' => Carbon::now('Asia/Jakarta'),
+                    'activity' => 'Update User Profile',
+                    'detail' => "User Update Profile"
                 ]);
             } elseif ($uh->getRole($token) == 'admin') {
                 $user = User::where('user_id', $id)->first();
@@ -130,10 +136,17 @@ class UserController extends Controller
                 $user->update([
                     'name' => $name,
                     'username' => $username,
+                    'contact' =>$request->input('contact'),
+                    'email'=>$request->input('email'),
                     'password' => $newPassword,
                     'role_id' => $role
                 ]);
-                
+                Log::create([
+                    'user_id' => Auth::id(),
+                    'datetime' => Carbon::now('Asia/Jakarta'),
+                    'activity' => 'Update User(s)',
+                    'detail' => 'Update User With id : ' . $id
+                ]);
             }
         } catch (\Illuminate\Database\QueryException $e) {
             $errorCode = $e->errorInfo[1];
@@ -152,6 +165,47 @@ class UserController extends Controller
             'detail' => 'Update user to : name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
         ]);
         return response()->json(['message' => 'Data updated successfully'], 200);
+    }
+    public function updatePassword(Request $request,$id = null)
+    {
+        if($id==null){
+            $this->validate($request,['password'=>'required|min:6']);
+            $password = $request->input('password');
+            $user = User::find(Auth::id());
+            if(Hash::check($password, $user->password)){
+            return response()->json(['message' => 'New Password Can Not the Same with Old Password'], 400);}
+            $up = $user->update([
+                'password' => $password,
+            ]);
+            Log::create([
+                'user_id' => Auth::id(),
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Update Password',
+                'detail' => "Update User Password"
+            ]);
+            if($up){
+                return response()->json(['message' => 'Updated']);
+            }
+        }elseif($request->user()->can('updateAnyPassword')){
+            $this->validate($request, ['password' => 'required|min:6']);
+            $password = $request->input('password');
+            $user = User::find($id);
+            if (Hash::check($password, $user->password)) {
+                return response()->json(['message' => 'New Password Can Not the Same with Old Password'], 400);
+            }
+            $up = $user->update([
+                'password' => $password,
+            ]);
+            Log::create([
+                'user_id' => Auth::id(),
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Update User Password',
+                'detail' => "Update User With id : '".$id."' Password "
+            ]);
+            if ($up) {
+                return response()->json(['message' => 'Updated']);
+            }
+        }return response()->json('Unauthorized',401);
     }
     public function destroy(Request $request, $id)
     {

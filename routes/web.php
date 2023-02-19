@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.4.1.0
+//  API Version beta 3.4.1.1
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -31,11 +31,15 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->get('user/all', 'UserController@getAllUser');
     $router->post('register',  'UserController@register');
     $router->get('user/trash', 'UserController@trash');
-    $router->post('user/trash/delete', 'UserController@delete');
     $router->delete('user/trash', 'UserController@delete');
+    $router->post('user/trash/delete', 'UserController@delete');
     $router->get('user/trash/restore/all', 'UserController@restoreAll');
+    $router->put('user/{id}/password/reset', 'UserController@resetPassword');
     $router->post('user/trash/restore', 'UserController@restore');
+    $router->put('user/password/reset', 'UserController@resetPassword');
+    $router->put('user/{id}/password', 'UserController@updatePassword');
     $router->get('user/trash/{id}', 'UserController@trash');
+    $router->put('user/password', 'UserController@updatePassword');
     $router->delete('user/{id}', 'UserController@destroy');
     $router->get('user/{id}', 'UserController@getUser');
     $router->put('user/{id}', 'UserController@update');

@@ -122,6 +122,5 @@ $app->router->group([
 
 $app->singleton('filesystem', function ($app) { return 
     $app->loadComponent('filesystems', 'Illuminate\Filesystem\FilesystemServiceProvider', 'filesystem'); });
-    
-return $app;
 
+return $app;
