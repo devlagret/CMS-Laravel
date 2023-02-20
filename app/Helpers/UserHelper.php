@@ -94,4 +94,23 @@ class UserHelper
 		$permision = Permision::whereIn('permision_id', $privilege)->whereIn('name', $permision)->exists();
 		return $permision;
 	}
+	/**
+	 * Get where user assigned
+	 * @return string ('branch','warehouse','company')
+*/
+	public function getPosition($id = null)
+	{
+		if($id==null){
+		$usr = User::find(Auth::id());
+	}else{
+		$usr = User::find($id);
+	}
+		if($usr->branch != null){
+			return "branch";
+		} elseif ($usr->warehouse != null) {
+			return "warehouse";
+		} elseif ($this->checkPermision($usr->user_id,['super-admin'])){
+			return "admin";
+		}return "company";
+	}
 }

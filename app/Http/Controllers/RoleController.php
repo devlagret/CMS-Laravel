@@ -64,17 +64,26 @@ class RoleController extends Controller
             return response('Unauthorizesd', 401);
         }
         $role = Role::find($id);
+        $adm = Permision::where('name', 'super-admin')->value('permision_id');
+        $priv =  Privilege::where([['permision_id','=',$adm],['role_id','=',$role->role_id]])->first();
+        $r = Role::whereIn('role_id',Privilege::where('permision_id',  $adm)->count());
         if (!$role) {return response('Not Found', 404);}
-        $privilege = Privilege::where('role_id', $id);
-        $this->validate($request, ['name' => 'min:1|max:255|unique:Roles', 'permision' => 'required|min:36']);
+        $privilege = Privilege::where('role_id', $id);$check=false;
+        $this->validate($request, ['name' => 'min:1|max:255|unique:Roles,name,' . $role->role_id.',role_id', 'permision' => 'required|min:36']);
         $permision = explode(",", str_replace(" ", "", $request['permision']));
         foreach ($permision as $p) {
             $d = Permision::where('permision_id', $p)->exists();
             if (!$d) {
                     return response('Permision id "' . $p . '" Not Found', 404);
             }
+            if($p == $adm){
+                $check = true;
+            }
         }
-         $privilege->delete();
+        if($priv && !$check && $r <= 1){
+            return response()->json('There must be at least one role with admin permision',422);
+        }
+        $privilege->delete();
         $role->update(['name'=>trim($request['name'])]);
         foreach ($permision as $p) {
             Privilege::create(['role_id' => $id, 'permision_id' => $p]);
@@ -92,6 +101,11 @@ class RoleController extends Controller
             return response('Unauthorized', 401);
         }
         $role = Role::find($id);
+        $adm = Permision::where('name', 'super-admin')->value('permision_id');
+        $priv =  Privilege::where([['permision_id', '=', $adm], ['role_id', '=', $role->role_id]])->first();
+        if($priv){
+            return response()->json("Can't delete role with 'admin' permision",403);
+        }
         $name = $role->name;
         $privilege = Privilege::where('role_id', $id)->delete();
         $role->delete();

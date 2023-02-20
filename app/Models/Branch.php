@@ -10,7 +10,10 @@ class Branch extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
+public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
     protected $table = 'branches';
 
     protected $primaryKey = 'branch_id';

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\Config;
+use App\Models\User;
 
 class AppController extends Controller
 {
@@ -51,7 +53,6 @@ class AppController extends Controller
         //foreach ($ids as $a) {
         //     array_push($b,trim($a));}
         //var_dump($id);
-        //return response()->json([$request['prs'],$request->isMethod('DELETE')]);
-        return response()->json(Role::find('5aef4cce-f0c9-4896-b9a7-a82991299d45'));
+        return response()->json(Branch::find('eec66aa2-7f2d-3f32-a83f-3890461074da')->user);
     }
 }

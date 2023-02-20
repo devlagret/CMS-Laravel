@@ -72,7 +72,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'username' => 'required|max:50',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required'
         ]);
         $username = trim($request->input('username'));
         $password = $request->input('password');
@@ -89,8 +89,9 @@ class UserController extends Controller
         $permision = array();
         foreach ( $per as $v){array_push($permision,$v->name);}
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
-        Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace("\\", random_bytes(1), $ftoken)]);
-        return response()->json(['token' => $ftoken,'permision'=>$permision,]);
+        $uh =new UserHelper;
+        //Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace("\\", random_bytes(1), $ftoken)]);
+        return response()->json(['token' => $ftoken,'pos'=>$uh->getPosition($user->user_id),'permision'=>$permision,]);
     }
     public function update(Request $request, $id = null)
     {
@@ -169,7 +170,7 @@ class UserController extends Controller
     public function updatePassword(Request $request,$id = null)
     {
         if($id==null){
-            $this->validate($request,['password'=>'required|min:6']);
+            $this->validate($request,['password'=> 'required|min:6|confirmed']);
             $password = $request->input('password');
             $user = User::find(Auth::id());
             if(Hash::check($password, $user->password)){
@@ -185,9 +186,11 @@ class UserController extends Controller
             ]);
             if($up){
                 return response()->json(['message' => 'Updated']);
+            } else {
+                return response()->json('error', 500);
             }
         }elseif($request->user()->can('updateAnyPassword')){
-            $this->validate($request, ['password' => 'required|min:6']);
+            $this->validate($request, ['password' => 'required|min:6|confirmed']);
             $password = $request->input('password');
             $user = User::find($id);
             if (Hash::check($password, $user->password)) {
@@ -204,8 +207,43 @@ class UserController extends Controller
             ]);
             if ($up) {
                 return response()->json(['message' => 'Updated']);
-            }
+            }else{return response()->json('error',500);}
         }return response()->json('Unauthorized',401);
+    }
+    public function resetPassword(Request $request, $id = null)
+    {
+        if($id==null){
+            $request->validate(['password' => 'required|min:6|confirmed']);
+       $usr = User::find($id);
+            $up = $usr->update([
+                'password' => $request->input('password'),
+            ]);
+            Log::create([
+                'user_id' => Auth::id(),
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Update User Password',
+                'detail' => "User Update Password "
+            ]);
+            if ($up) {
+                return response()->json(['message' => 'Updated']);
+            } else {
+                return response()->json('error', 500);
+            }
+        }
+       $usr = User::find(Auth::id());
+        $request->validate(['password' => 'required|min:6|confirmed']);
+        $up = $usr->update([
+            'password' => $request->input('password'),
+        ]);
+        Log::create([
+            'user_id' => Auth::id(),
+            'datetime' => Carbon::now('Asia/Jakarta'),
+            'activity' => 'Update User Password',
+            'detail' => "Update User With id : '" . $id . "' Password "
+        ]);
+        if ($up) {
+            return response()->json(['message' => 'Updated']);
+        }else{return response()->json('error',500);}
     }
     public function destroy(Request $request, $id)
     {

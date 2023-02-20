@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('leader_name', 50);
             $table->string('contact', 20);
             $table->string('address', 100);
-            $table->uuid('user_id')->nullable()->default('0');
+            $table->uuid('user_id')->nullable()->default('0')->unique();
             $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
             $table->softDeletes();

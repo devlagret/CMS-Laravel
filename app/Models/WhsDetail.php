@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class WhsDetail extends Model
 {
     use SoftDeletes;
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     protected $table = 'whs_detail';
 
     protected $primaryKey = 'warehouse_id';

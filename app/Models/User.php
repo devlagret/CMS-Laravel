@@ -23,7 +23,13 @@ public function logs()
 {
     return $this->hasMany(Log::class,'user_id');
 }
-
+public function branch(){
+    return $this->hasOne(Branch::class,'user_id');
+}
+public function warehouse()
+{
+    return $this->hasOne(WhsDetail::class,'user_id');
+}
     protected $table = 'user';
     /**
      * The attributes that are mass assignable.
