@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\UserHelper;
+use App\Models\Batch as ModelsBatch;
 use App\Models\Category;
 use App\Models\Log;
 use App\Models\Product;
@@ -11,6 +12,7 @@ use App\Models\ProductOrderRequest;
 use App\Models\RequestOrder;
 use App\Models\Token;
 use App\Models\User;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\WhsDetail;
@@ -19,6 +21,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use stdClass;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -56,6 +59,7 @@ class WarehouseController extends Controller
         $amount       = $request->input('stock');
         $entry_date   = $request->input('entry_date');
         $wid          = WhsDetail::where('user_id', Auth::id())->first();
+        $exp_date     = $request->input('exp_date');
         $check = Warehouse::where('warehouse_id', $wid->warehouse_id)
             ->where('product_code', $product_code)
             ->exists();
@@ -72,6 +76,14 @@ class WarehouseController extends Controller
         ]);
 
         if ($warehouse) {
+            // Batch::create([
+            //     'batch_id'     => Str::uuid()->toString(),
+            //     'warehouse_id' => $wid->warehouse_id,
+            //     'product_code' => $product_code,
+            //     'stock'        => $amount,
+            //     'exp_date'     => $exp_date,
+            //     'entry_date'   => Carbon::today('Asia/Jakarta')->toDateString(),
+            // ]);
             Log::create([
                 'user_id'   => Auth::id(),
                 'datetime'  => Carbon::now('Asia/Jakarta'),
@@ -116,6 +128,20 @@ class WarehouseController extends Controller
         return response()->json($warehouse);
     }
 
+    public function showWarehouse(Request $request)
+    {
+        if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        $validator = $this->validate($request, [
+            'warehouse_id' => 'required',
+        ]);
+        $w = $request->input('warehouse_id');
+
+        $warehouse = Warehouse::where('warehouse_id', $w)->get();
+        return response()->json($warehouse);
+    }
+
     public function update(Request $request, $id)
     {
         if ($request->user()->cannot('update', Warehouse::class)) {
@@ -150,6 +176,38 @@ class WarehouseController extends Controller
             return response()->json("Failure");
         }
     }
+    public function updateStock(Request $request)
+    {
+        if ($request->user()->cannot('update', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        // $validator = $this->validate($request, [
+        //     'product_code'  => 'required',
+        //     'stock'         => 'required|max:15',
+        //     'location'      => 'required',
+        // ]);
+    
+        $wid   = WhsDetail::where('user_id', Auth::id())->first();
+        $batch = ModelsBatch::where('warehouse_id', $wid->warehouse_id)->get();
+        foreach ($batch as $item) {
+            $warehouse = Warehouse::where('warehouse_id', $item['warehouse_id'])
+                                ->where('product_code', $item['product_code'])
+                                ->update(['stock' => $item['stock']]);
+        }
+
+        // if ($warehouse) {
+        //     // Log::create([
+        //     //     'user_id'   => Auth::id(),
+        //     //     'datetime'  => Carbon::now('Asia/Jakarta'),
+        //     //     'activity'  => 'Warehouse(s)',
+        //     //     'detail'    => 'User "'.Auth::id().'" update Product "'.$product_code.'" in Warehouse "'.$wid->warehouse_id
+        //     // ]);
+        //     return response()->json(['message' => 'Data updated successfully'], 201);
+        // }else {
+        //     return response()->json("Failure");
+        // }
+    }
+
 
     public function destroy(Request $request, $id)
     {

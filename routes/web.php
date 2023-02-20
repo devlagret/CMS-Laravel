@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.4.1.2
+//  API Version beta 3.4.2.0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -158,6 +158,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('warehouse/request', 'ProductOrderRequestController@store');
     $router->put('warehouse/request', 'ProductOrderRequestController@edit');
     //warehouse detail api endpoint
+    $router->get('warehouse/detail', 'WhsDetailController@index');
     $router->post('warehouse/detail', 'WhsDetailController@store');
     //warehouse response api endpoint
     $router->post('warehouse/response', 'WarehouseResponseBranchController@store');
@@ -170,7 +171,9 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->get('warehouse/{id}', 'WarehouseController@show');
     $router->put('warehouse/{id}', 'WarehouseController@update');
     $router->post('warehouse', 'WarehouseController@store');
+    $router->post('warehouse/data', 'WarehouseController@showWarehouse');
     $router->get('warehouse', 'WarehouseController@index');
+    $router->get('warehousestock', 'WarehouseController@updateStock');
 });
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router){
     $router->post('upload','DailyReportController@store');
@@ -178,7 +181,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 });
 //test
 $router->group(['prefix' => $prefix], function () use ($router){
-    $router->post('test','AppController@test');
+    $router->post('test','BatchController@store');
     $router->get('test','AppController@test');
     $router->put('test','AppController@test');
     $router->delete('test','AppController@test');

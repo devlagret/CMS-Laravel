@@ -19,46 +19,49 @@ class BatchController extends Controller
             return response('Unauthorized', 401);
         }
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
-        $wrespons = Batch::where('warehouse_id', $wid->warehouse_id)->paginate(9);
+        $batches = Batch::where('warehouse_id', $wid->warehouse_id)->paginate(9);
         
-        return response()->json($wrespons);
+        return response()->json($batches);
     }
 
     public function store(Request $request)
     {
-        if ($request->user()->cannot('create', Batch::class)) {
-            return response('Unauthorized', 401);
-        }
+        // if ($request->user()->cannot('create', Batch::class)) {
+        //     return response('Unauthorized', 401);
+        // }
         $validator = $this->validate($request, [ 
-            'request_id'    => 'required',
+            'product_code' => 'required',
+            'stock'        => 'required',
+            'exp_date'     => 'required',
         ]);
         
-        $send_date = $request->input('send_date');
-        $rid  = $request->input('request_id');
-        $detail   = ProductRequest::where('request_id', $rid)->first();
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
+        $pc = $request->input('product_code');
+        $stock = intval($request->input('stock'));
+        $exp_date = $request->input('exp_date');
+        $check = Batch::where('warehouse_id', $wid->warehouse_id)
+                      ->where('product_code', $pc)
+                      ->where('exp_date', $exp_date)
+                      ->exists();
 
-        $wrespon = Batch::create([
-            'warehouse_response_id' => Str::uuid()->toString(),
-            'warehouse_id'          => $wid->warehouse_id,
-            'branch_id'             => $detail->branch_id,
-            'request_id'            => $rid,
-            'product_code'          => $detail->product_code,
-            'send_date'             => isEmpty($send_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $send_date,
-            'quantity'              => $detail->amount,
-        ]);
-        if (!$wrespon) {
-            return response()->json(['message' => 'Failed to Proccess','data' => $wrespon], 400);
+        if ($check) {
+            Batch::where('warehouse_id', $wid->warehouse_id)
+                ->where('product_code', $pc)
+                ->where('exp_date', $exp_date)
+                ->increment('stock', $stock);
+            return response()->json(['message' => 'Stock Increase cause product is exist'], 200);
         }else {
-            $accept = Warehouse::where('warehouse_id', $wid->warehouse_id)
-                     ->where('product_code', $detail->product_code)
-                     ->decrement('stock', $detail->amount);
-            if ($accept) {
-                ProductRequest::where('request_id', $rid)
-                ->update(['status' => 3]);
-            }
-            return response()->json(['message' => 'Product Sent','data' => $wrespon], 201);
+            $batch = Batch::create([
+                'batch_id'     => Str::uuid()->toString(),
+                'warehouse_id' => $wid->warehouse_id,
+                'product_code' => $pc,
+                'stock'        => $stock,
+                'exp_date'     => $exp_date,
+                'entry_date'   => Carbon::today('Asia/Jakarta')->toDateString(),
+            ]);
+            return response()->json(['message' => 'Product Saved','data' => $batch], 201);
         }
+        // return response()->json(intval($stock), 201);
     }
 
     public function viewResponse(Request $request)
