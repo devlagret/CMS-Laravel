@@ -12,7 +12,6 @@ use App\Helpers\UserHelper;
 
 class BranchController extends Controller
 {
-    
     public function index(Request $request)
     {
         if ($request->user()->cannot('viewAny', Branch::class)) {

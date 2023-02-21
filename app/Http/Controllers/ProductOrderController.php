@@ -53,7 +53,7 @@ class ProductOrderController extends Controller
         return response()->json(['message' => 'Data Added Succesfully','data' => $order], 201);
     }
 
-    public function distribute(Request $request)
+    public function distribute(Request $request, $orderid)
     {
         if ($request->user()->cannot('create', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
@@ -63,7 +63,8 @@ class ProductOrderController extends Controller
             'warehouse_id' => 'required',
         ]);
 
-        $poid = ProductOrder::latest()->first();
+        $poid = ProductOrder::where('product_order_id', $orderid)->first();
+
         $quantity = explode(',', $request['quantity']);
         $wid = explode(',', $request['warehouse_id']);
         $porid = explode(',', $request['product_order_requests_id']);
@@ -89,7 +90,7 @@ class ProductOrderController extends Controller
                     ]);
                     if ($in) {
                         ProductOrderRequest::where('product_order_requests_id', $porid[$i])
-                                            ->update(['status' => 'accepted']);
+                                            ->update(['status' => 'transferred']);
                     }
                 }
             }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('stock');
             $table->date('exp_date');
             $table->date('entry_date');
+            $table->enum('status', ['sent', 'accepted', 'transferred']);
             $table->timestamps();
             $table->softDeletes();
         });
