@@ -89,7 +89,7 @@ class ProductOrderController extends Controller
                     ]);
                     if ($in) {
                         ProductOrderRequest::where('product_order_requests_id', $porid[$i])
-                                            ->update(['status' => 'accepted']);
+                                            ->update(['status' => 'transferred']);
                     }
                 }
             }

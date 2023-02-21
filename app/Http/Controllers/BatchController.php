@@ -15,9 +15,9 @@ class BatchController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Batch::class)) {
-            return response('Unauthorized', 401);
-        }
+        // if ($request->user()->cannot('viewAny', Batch::class)) {
+        //     return response('Unauthorized', 401);
+        // }
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
         $batches = Batch::where('warehouse_id', $wid->warehouse_id)->paginate(9);
         
@@ -64,13 +64,14 @@ class BatchController extends Controller
         // return response()->json(intval($stock), 201);
     }
 
-    public function viewResponse(Request $request)
+    public function checkExpired(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Batch::class)) {
-            return response('Unauthorized', 401);
-        }
-        $wrespons = Batch::paginate(9);
+        // if ($request->user()->cannot('viewAny', Batch::class)) {
+        //     return response('Unauthorized', 401);
+        // }
+        $today_date = Carbon::today()->addDays(2)->toDateTimeString();
+        $batch = Batch::where('exp_date', '<=', $today_date)->get();
         
-        return response()->json($wrespons);
+        return response()->json($batch);
     }
 }
