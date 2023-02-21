@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProductOrder;
 use App\Models\RequestOrder;
 use App\Models\ProductOrderRequest;
+use App\Models\SendedProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,15 +73,27 @@ class ProductOrderController extends Controller
             return response()->json([
                 'distribute quantity' => array_sum($quantity),
                 'quantity ordered' => $poid->quantity,
-                'message' => 'Please decrease the distribute quantity']);
-        } else {
+                'message' => 'Please decrease the distribute quantity'], 400);
+        } elseif (array_sum($quantity) < $poid->quantity) {
+            return response()->json([
+                'distribute quantity' => array_sum($quantity),
+                'quantity ordered' => $poid->quantity,
+                'message' => 'Some Stock Still Left'], 400);
+        }else {
             for ($i=0; $i < count($porid); $i++) {
                 if ($porid[$i] == ' ') {
-                    RequestOrder::firstOrCreate([
+                    $in = RequestOrder::firstOrCreate([
                         'product_order_id' => $poid->product_order_id,
                         'warehouse_id' => $wid[$i],
                         'quantity' => $quantity[$i],
                     ]);
+                    if ($in) {
+                        SendedProduct::create([
+                            'product_order_id' => $poid->product_order_id,
+                            'warehouse_id' => $wid[$i],
+                            'quantity' => $quantity[$i],
+                        ]);
+                    }
                 }else {
                     $in = RequestOrder::firstOrCreate([
                         'product_order_id' => $poid->product_order_id,
