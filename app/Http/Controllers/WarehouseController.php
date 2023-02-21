@@ -208,6 +208,33 @@ class WarehouseController extends Controller
         // }
     }
 
+    public function productInWarehouse(Request $request)
+    {
+        // if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+        //     return response('Unauthorized', 401);
+        // }
+        
+        $w = $request->input('warehouse_id');
+
+        $warehouse = Warehouse::get('product_code');
+        $product = Product::whereIn('product_code', $warehouse)->get(['product_code', 'name']);
+        return response()->json($product);
+    }
+
+    public function productNameInWarehouse(Request $request)
+    {
+        // if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+        //     return response('Unauthorized', 401);
+        // }
+        
+        $name = $request->input('name');
+
+        $warehouse = Warehouse::get('product_code');
+        $product = Product::whereIn('product_code', $warehouse)
+                        ->where('name', 'LIKE', '%'.$name.'%')
+                          ->get(['product_code','name']);
+        return response()->json($product);
+    }
 
     public function destroy(Request $request, $id)
     {
