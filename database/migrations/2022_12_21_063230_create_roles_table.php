@@ -20,6 +20,8 @@ return new class extends Migration
             $table->uuid('role_id')->primary();
             $table->string('name')->unique();
             $table->timestamps();
+            $table->softDeletes();
+
         });
         DB::table('roles')->insert(
             [

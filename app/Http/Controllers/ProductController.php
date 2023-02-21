@@ -193,7 +193,7 @@ class ProductController extends Controller
         return response()->json($trash);
     
     }
-    public function restore(Request $request, $id)
+    public function restore(Request $request)
     {
         if ($request->user()->cannot('viewAny', Product::class)) {
             return response('Unauthorized', 401);
