@@ -69,6 +69,22 @@ class UserPolicy
     {
         //
         $uh = new UserHelper();
+        $r = $uh->checkPermision($user->user_id, ['super-admin', 'edit-user']);
+
+        return $r|$user->user_id==Auth::id() ? Response::allow()
+        : Response::deny('Unauthorized', 401);
+    }
+    /**
+     * Determine whether the user can update any of the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function updateAny(User $user)
+    {
+        //
+        $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'edit-user']) ? Response::allow()
         : Response::deny('Unauthorized', 401);
     }

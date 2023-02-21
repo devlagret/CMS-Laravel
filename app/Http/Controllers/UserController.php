@@ -90,20 +90,11 @@ class UserController extends Controller
         foreach ( $per as $v){array_push($permision,$v->name);}
         $ftoken = Hash::make(bin2hex(random_bytes(50)) . $username);
         $uh =new UserHelper;
-        //Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace("\\", random_bytes(1), $ftoken)]);
+        Token::updateOrCreate(['user_id' => $user->user_id], ['token' => str_replace("\\", random_bytes(1), $ftoken)]);
         return response()->json(['token' => $ftoken,'pos'=>$uh->getPosition($user->user_id),'permision'=>$permision,]);
     }
     public function update(Request $request, $id = null)
     {
-        if ($request->user()->cannot('update', User::class)) {
-            return response('Unauthorized', 401);
-        }
-        $this->validate($request, [
-            'name' => 'required|min:3|max:255',
-            'username' => 'required|min:3|max:255',
-            'contact' => 'required|min:12|max:15',
-            'email'=>'required|email|min:3|max:255'
-        ]);
         $token = $request->header('token');
         $name = $request->input('name');
         $username = $request->input('username');
@@ -112,6 +103,15 @@ class UserController extends Controller
         $uh = new UserHelper;
         try {
             if ($id == null) {
+                if ($request->user()->cannot('update', User::class)) {
+                    return response('Unauthorized', 401);
+                }
+                $this->validate($request, [
+                    'name' => 'required|min:3|max:255',
+                    'username' => 'required|min:3|max:255|unique:Roles,name,' . $role->role_id . ',role_id',
+                    'contact' => 'required|min:12|max:15',
+                    'email' => 'required|email|min:3|max:255'
+                ]);
                 $user = User::where('user_id',Auth::id())->first();
                 if (!Hash::check($request->input('password'), $user->password)) 
                 {
@@ -129,7 +129,13 @@ class UserController extends Controller
                     'activity' => 'Update User Profile',
                     'detail' => "User Update Profile"
                 ]);
-            } elseif ($uh->getRole($token) == 'admin') {
+            } elseif ($request->user()->can('updateAny',User::class)) {
+                $this->validate($request, [
+                    'name' => 'required|min:3|max:255',
+                    'username' => 'required|min:3|max:255|unique:Roles,name,' . $role->role_id . ',role_id',
+                    'contact' => 'required|min:12|max:15',
+                    'email' => 'required|email|min:3|max:255'
+                ]);
                 $user = User::where('user_id', $id)->first();
                 if (!$user) {
                     return response()->json(['message' => 'Update failed, UID not found'], 404);
