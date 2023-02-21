@@ -27,6 +27,7 @@ return new class extends Migration
             $table->uuid('role_id')->nullable()->default('user');
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
         //get admin role
        $role = DB::table('roles')->where('name', 'admin')->first();

@@ -23,7 +23,7 @@ class UserHelper
 		switch ($option) {
 			case null:
 				$user_id = Token::where('token', '=', $token)->first();
-				$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from user where user_id = "' . $user_id->user_id . '" limit 1'));
+				$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id,contact,email, created_at, updated_at from user where user_id = "' . $user_id->user_id . '" limit 1'));
 				if (mysqli_connect_errno()) {
 					echo "Failed to connect to MySQL: " . mysqli_connect_error();
 					exit();
@@ -48,7 +48,7 @@ class UserHelper
 	public function getAllUser()
 	{
 		$r = array();
-		$d = mysqli_fetch_all(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from user'), MYSQLI_ASSOC);
+		$d = mysqli_fetch_all(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id,contact,email, created_at, updated_at from user'), MYSQLI_ASSOC);
 		if (mysqli_connect_errno()) {
 			echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			exit();
@@ -62,7 +62,7 @@ class UserHelper
 	 */
 	public function getUserByid($id)
 	{
-		$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id, created_at, updated_at from user where user_id = "' . $id . '" limit 1'));
+		$r = mysqli_fetch_object(mysqli_query(mysqli_connect("localhost", env('DB_USERNAME', 'forge'), env('DB_PASSWORD', ''), env('DB_DATABASE', 'forge')), 'select user_id, username, name, role_id,contact,email, created_at, updated_at from user where user_id = "' . $id . '" limit 1'));
 		if (mysqli_connect_errno()) {
 			echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			exit();

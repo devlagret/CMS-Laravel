@@ -98,21 +98,19 @@ class UserController extends Controller
         $token = $request->header('token');
         $name = $request->input('name');
         $username = $request->input('username');
-        $newPassword = Hash::make($request->input('new_password'));
-        $role = $request->input('role_id');
         $uh = new UserHelper;
         try {
             if ($id == null) {
                 if ($request->user()->cannot('update', User::class)) {
                     return response('Unauthorized', 401);
                 }
+                $user = User::where('user_id',Auth::id())->first();
                 $this->validate($request, [
                     'name' => 'required|min:3|max:255',
-                    'username' => 'required|min:3|max:255|unique:Roles,name,' . $role->role_id . ',role_id',
+                    'username' => 'required|min:3|max:255|unique:User,username,' . $user->user_id . ',user_id',
                     'contact' => 'required|min:12|max:15',
                     'email' => 'required|email|min:3|max:255'
                 ]);
-                $user = User::where('user_id',Auth::id())->first();
                 if (!Hash::check($request->input('password'), $user->password)) 
                 {
                     return response()->json(['message' => 'wrong password'], 401);
@@ -130,22 +128,23 @@ class UserController extends Controller
                     'detail' => "User Update Profile"
                 ]);
             } elseif ($request->user()->can('updateAny',User::class)) {
+                $user = User::where('user_id', $id)->first();
                 $this->validate($request, [
                     'name' => 'required|min:3|max:255',
-                    'username' => 'required|min:3|max:255|unique:Roles,name,' . $role->role_id . ',role_id',
+                    'username' => 'required|min:3|max:255|unique:User,username,' . $user->user_id . ',user_id',
                     'contact' => 'required|min:12|max:15',
-                    'email' => 'required|email|min:3|max:255'
+                    'email' => 'required|email|min:3|max:255',
+                    'role_id'=>'required|min:36|max:36'
                 ]);
-                $user = User::where('user_id', $id)->first();
+        $role = $request->input('role_id');
                 if (!$user) {
                     return response()->json(['message' => 'Update failed, UID not found'], 404);
                 }
-                $user->update([
+              $c =   $user->update([
                     'name' => $name,
                     'username' => $username,
                     'contact' =>$request->input('contact'),
                     'email'=>$request->input('email'),
-                    'password' => $newPassword,
                     'role_id' => $role
                 ]);
                 Log::create([
@@ -154,6 +153,11 @@ class UserController extends Controller
                     'activity' => 'Update User(s)',
                     'detail' => 'Update User With id : ' . $id
                 ]);
+                if($c){
+        return response()->json(['message' => 'Data updated successfully'], 200);
+                }else{
+        return response()->json(['message' => 'Error'], 500);
+                }
             }
         } catch (\Illuminate\Database\QueryException $e) {
             $errorCode = $e->errorInfo[1];
@@ -255,11 +259,10 @@ class UserController extends Controller
     {
         $uh = new UserHelper;
         $token = $request->header('token');
-        $user = $uh->getUserByid($id);
+        $user = User::find($id);
         if ($request->user()->can('delete', User::class)) {
-                return response(
-            'Failed', 404);
             if (!User::destroy($id)) {
+                return response()->json('Failed', 404);
             }
             if ($user) {
                 Log::create([
