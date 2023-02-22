@@ -66,9 +66,12 @@ class ProductOrderController extends Controller
 
         $poid = ProductOrder::where('product_order_id', $orderid)->first();
 
-        $quantity = explode(',', $request['quantity']);
-        $wid = explode(',', $request['warehouse_id']);
-        $porid = explode(',', $request['product_order_requests_id']);
+        // $quantity = explode(',', $request['quantity']);
+        // $wid = explode(',', $request['warehouse_id']);
+        // $porid = explode(',', $request['product_order_requests_id']);
+        $quantity = $request['quantity'];
+        $wid = $request['warehouse_id'];
+        $porid = $request['product_order_requests_id'];
         if (array_sum($quantity) > $poid->quantity) {
             return response()->json([
                 'distribute quantity' => array_sum($quantity),
@@ -81,20 +84,13 @@ class ProductOrderController extends Controller
                 'message' => 'Some Stock Still Left'], 400);
         }elseif (array_sum($quantity) == $poid->quantity) {
             for ($i=0; $i < count($porid); $i++) {
-                if ($porid[$i] == 'null') {
+                if ($porid[$i] == '') {
                     $in = ResponseOrder::firstOrCreate([
                         'response_id' => Str::uuid()->toString(),
                         'product_order_id' => $poid->product_order_id,
                         'warehouse_id' => $wid[$i],
                         'quantity' => $quantity[$i],
                     ]);
-                    // if ($in) {
-                    //     SendedProduct::create([
-                    //         'product_order_id' => $poid->product_order_id,
-                    //         'warehouse_id' => $wid[$i],
-                    //         'quantity' => $quantity[$i],
-                    //     ]);
-                    // }
                 }else {
                     $in = ResponseOrder::firstOrCreate([
                         'response_id' => Str::uuid()->toString(),
@@ -107,9 +103,9 @@ class ProductOrderController extends Controller
                         ProductOrderRequest::where('product_order_requests_id', $porid[$i])
                                             ->update(['status' => 'transferred']);
                     }
-                    // echo 'aaa';
                 }
             }
         }
+        // return response()->json($quantity);
     }
 }
