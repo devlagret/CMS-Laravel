@@ -29,7 +29,7 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('create', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $validator = $this->validate($request, [ 
+        $validator = $this->validate($request, [
             'supplier_id'    => 'required',
             'product_code'   => 'required',
             'total_amount'   => 'required',

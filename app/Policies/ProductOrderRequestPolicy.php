@@ -68,6 +68,20 @@ class ProductOrderRequestPolicy
     }
 
     /**
+     * Determine whether the user can update the productOrderRequest.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    // public function decline(User $user)
+    // {
+    //     //
+    //     $uh = new UserHelper();
+    //     return $uh->checkPermision($user->user_id, ['super-admin']) ? Response::allow()
+    //         : Response::deny('Unauthorized', 401);
+    // }
+
+    /**
      * Determine whether the user can delete the productOrderRequest.
      *
      * @param  \App\Models\User  $user

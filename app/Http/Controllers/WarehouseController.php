@@ -138,17 +138,13 @@ class WarehouseController extends Controller
         return response()->json($warehouse);
     }
 
-    public function showEachWarehouse(Request $request)
+    public function showEachWarehouse(Request $request, $id)
     {
         if ($request->user()->cannot('view', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
-        $validator = $this->validate($request, [
-            'warehouse_id' => 'required',
-        ]);
-        $w = $request->input('warehouse_id');
 
-        $warehouse = Warehouse::where('warehouse_id', $w)->get();
+        $warehouse = Warehouse::where('warehouse_id', $id)->get();
         return response()->json($warehouse);
     }
 

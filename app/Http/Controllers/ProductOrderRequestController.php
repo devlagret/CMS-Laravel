@@ -14,8 +14,6 @@ class ProductOrderRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
-            ProductOrderRequest::where('status', 'sent')
-                                ->update(['status' => 2]);
             $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->paginate(9);
@@ -109,7 +107,7 @@ class ProductOrderRequestController extends Controller
 
     public function showProduct(Request $request, $productCode)
     {
-        if ($request->user()->cannot('view', Warehouse::class)) {
+        if ($request->user()->cannot('view', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
         }
         $Orequest = ProductOrderRequest::where('product_code', $productCode)
@@ -119,5 +117,25 @@ class ProductOrderRequestController extends Controller
                                        ->get(['product_order_requests_id','product_order_requests.warehouse_id','request_date','quantity', 'status', 'name']);
         
         return response()->json($Orequest);
+    }
+
+    public function decline(Request $request)
+    {
+        if ($request->user()->cannot('update', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
+        $id = $request->input('Product_order_request_id');
+        ProductOrderRequest::where('product_order_requests_id', $id)
+                           ->update(['status' => 4]);
+    }
+
+    public function accept(Request $request)
+    {
+        if ($request->user()->cannot('update', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }
+        $id = $request->input('product_order_request_id');
+        ProductOrderRequest::where('product_order_requests_id', $id)
+                           ->update(['status' => 2]);
     }
 }
