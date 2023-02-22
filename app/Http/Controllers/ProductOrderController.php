@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductOrder;
-use App\Models\RequestOrder;
+use App\Models\ResponseOrder;
 use App\Models\ProductOrderRequest;
 use App\Models\SendedProduct;
 use Carbon\Carbon;
@@ -79,23 +79,25 @@ class ProductOrderController extends Controller
                 'distribute quantity' => array_sum($quantity),
                 'quantity ordered' => $poid->quantity,
                 'message' => 'Some Stock Still Left'], 400);
-        }else {
+        }elseif (array_sum($quantity) == $poid->quantity) {
             for ($i=0; $i < count($porid); $i++) {
                 if ($porid[$i] == ' ') {
-                    $in = RequestOrder::firstOrCreate([
+                    $in = ResponseOrder::firstOrCreate([
+                        'response_id' => Str::uuid()->toString(),
                         'product_order_id' => $poid->product_order_id,
                         'warehouse_id' => $wid[$i],
                         'quantity' => $quantity[$i],
                     ]);
-                    if ($in) {
-                        SendedProduct::create([
-                            'product_order_id' => $poid->product_order_id,
-                            'warehouse_id' => $wid[$i],
-                            'quantity' => $quantity[$i],
-                        ]);
-                    }
+                    // if ($in) {
+                    //     SendedProduct::create([
+                    //         'product_order_id' => $poid->product_order_id,
+                    //         'warehouse_id' => $wid[$i],
+                    //         'quantity' => $quantity[$i],
+                    //     ]);
+                    // }
                 }else {
-                    $in = RequestOrder::firstOrCreate([
+                    $in = ResponseOrder::firstOrCreate([
+                        'response_id' => Str::uuid()->toString(),
                         'product_order_id' => $poid->product_order_id,
                         'product_order_requests_id' => $porid[$i],
                         'warehouse_id' => $wid[$i],

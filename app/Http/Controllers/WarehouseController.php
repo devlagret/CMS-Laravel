@@ -10,6 +10,8 @@ use App\Models\Product;
 use App\Models\ProductOrder;
 use App\Models\ProductOrderRequest;
 use App\Models\RequestOrder;
+use App\Models\ResponseOrder;
+use App\Models\SendedProduct;
 use App\Models\Token;
 use App\Models\User;
 use Illuminate\Bus\Batch;
@@ -185,6 +187,20 @@ class WarehouseController extends Controller
         }
     }
 
+    public function getSendedProduct(Request $request)
+    {
+        if ($request->user()->cannot('viewAny', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        $validator = $this->validate($request, [
+            'warehouse_id' => 'required',
+        ]);
+        $w = $request->input('warehouse_id');
+
+        $warehouse = SendedProduct::where('warehouse_id', $w)->get();
+        return response()->json($warehouse);
+    }
+
     public function update(Request $request, $id)
     {
         if ($request->user()->cannot('update', Warehouse::class)) {
@@ -260,7 +276,7 @@ class WarehouseController extends Controller
         $pid = $request->input('product_order_requests_id');
         
         $wid = WhsDetail::where('user_id', Auth::id())->first();
-        $stock = RequestOrder::where('product_order_requests_id', $pid)
+        $stock = ResponseOrder::where('product_order_requests_id', $pid)
                             ->first();
         
         if (!$request->filled('product_order_requests_id')) {
