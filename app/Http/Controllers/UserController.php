@@ -98,13 +98,15 @@ class UserController extends Controller
         $token = $request->header('token');
         $name = $request->input('name');
         $username = $request->input('username');
-        $uh = new UserHelper;
         try {
             if ($id == null) {
                 if ($request->user()->cannot('update', User::class)) {
                     return response('Unauthorized', 401);
                 }
                 $user = User::where('user_id',Auth::id())->first();
+                if (!$user) {
+                    return response()->json(['message' => 'Update failed, UID not found'], 404);
+                }
                 $this->validate($request, [
                     'name' => 'required|min:3|max:255',
                     'username' => 'required|min:3|max:255|unique:User,username,' . $user->user_id . ',user_id',
@@ -129,6 +131,9 @@ class UserController extends Controller
                 ]);
             } elseif ($request->user()->can('updateAny',User::class)) {
                 $user = User::where('user_id', $id)->first();
+                if (!$user) {
+                    return response()->json(['message' => 'Update failed, UID not found'], 404);
+                }
                 $this->validate($request, [
                     'name' => 'required|min:3|max:255',
                     'username' => 'required|min:3|max:255|unique:User,username,' . $user->user_id . ',user_id',
@@ -137,9 +142,7 @@ class UserController extends Controller
                     'role_id'=>'required|min:36|max:36'
                 ]);
         $role = $request->input('role_id');
-                if (!$user) {
-                    return response()->json(['message' => 'Update failed, UID not found'], 404);
-                }
+                
               $c =   $user->update([
                     'name' => $name,
                     'username' => $username,
@@ -151,7 +154,7 @@ class UserController extends Controller
                     'user_id' => Auth::id(),
                     'datetime' => Carbon::now('Asia/Jakarta'),
                     'activity' => 'Update User(s)',
-                    'detail' => 'Update User With id : ' . $id
+                    'detail' => 'Update user to : name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
                 ]);
                 if($c){
         return response()->json(['message' => 'Data updated successfully'], 200);
@@ -166,16 +169,8 @@ class UserController extends Controller
             }
           
         }
-        if (!$user) {
-            return response()->json(['message' => 'Update failed, UID not found'], 404);
-        }
-        Log::create([
-            'user_id' => $uh->getUserData($token)->user_id,
-            'datetime' => Carbon::now('Asia/Jakarta'),
-            'activity' => 'Update User(s)',
-            'detail' => 'Update user to : name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
-        ]);
-        return response()->json(['message' => 'Data updated successfully'], 200);
+       
+        return response()->json(['message' => 'why are you here?'], 400);
     }
     public function updatePassword(Request $request,$id = null)
     {
@@ -266,7 +261,7 @@ class UserController extends Controller
             }
             if ($user) {
                 Log::create([
-                    'user_id' => $uh->getUserData($token)->user_id,
+                    'user_id' =>Auth::id(),
                     'datetime' => Carbon::now('Asia/Jakarta'),
                     'activity' => 'Delete User(s)',
                     'detail' => 'Deleted user with name "' . $user->name . '", username "' . $user->username . '" and with "' . $user->role . '" role'
@@ -279,8 +274,7 @@ class UserController extends Controller
     public function getUser(Request $request, $id = null)
     {
         if ($id != null) {
-            $uh = new UserHelper;
-            $d = $uh->getUserById($id);
+           $d = User::find($id);
             if ($request->user()->cannot('viewAny', User::class)) {
                 return response('Unauthorized', 401);
             }
@@ -292,7 +286,7 @@ class UserController extends Controller
             return response()->json(Auth::user());
         }
     }
-    public function getAllUser(Request $request, $id = null)
+    public function getAllUser(Request $request)
     {
         $uh = new UserHelper;
         if ($request->user()->cannot('viewAny', User::class)) {
