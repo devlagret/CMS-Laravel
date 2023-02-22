@@ -24,7 +24,6 @@ class WarehousePolicy
         return $uh->checkPermision($user->user_id, ['view-warehouse', 'view-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
-
     /**
      * Determine whether the user can view the warehouse.
      *
@@ -36,6 +35,19 @@ class WarehousePolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
+    }
+    /**
+     * Determine whether the user can view the warehouse.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function viewStock(User $user)
+    {
+        //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['view-warehouse']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 

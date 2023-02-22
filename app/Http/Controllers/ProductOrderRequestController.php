@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class ProductOrderRequestController extends Controller
 {
-    public function view(Request $request)
+    public function index(Request $request)
     {
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
             ProductOrderRequest::where('status', 'sent')
@@ -109,7 +109,7 @@ class ProductOrderRequestController extends Controller
 
     public function showProduct(Request $request, $productCode)
     {
-        if ($request->user()->cannot('vieww', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
+        if ($request->user()->cannot('view', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
         $Orequest = ProductOrderRequest::where('product_code', $productCode)

@@ -69,7 +69,7 @@ class BatchController extends Controller
         // if ($request->user()->cannot('viewAny', Batch::class)) {
         //     return response('Unauthorized', 401);
         // }
-        $today_date = Carbon::today()->addDays(2)->toDateTimeString();
+        $today_date = Carbon::today()->addDays(10)->toDateTimeString();
         $batch = Batch::where('exp_date', '<=', $today_date)->get();
         
         return response()->json($batch);
