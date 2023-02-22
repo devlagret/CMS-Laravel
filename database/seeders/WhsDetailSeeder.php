@@ -20,19 +20,22 @@ class WhsDetailSeeder extends Seeder
     {
         $role = Role::where('name', 'admingudang')->first('role_id');
         $role1 = Role::where('name', 'admin')->first('role_id');
-        $uids = User::where('role_id', $role->role_id)
+        $uids = User::where('role_id', $role->role_id)->pluck('user_id')->toArray();
         // ->orWhere('role_id', $role1->role_id)
-        ->pluck('user_id')->toArray();
+        $i = 0;
+        $arr1 = ['barat','timur','utara','selatan'];
         foreach ($uids as  $uid) {
-            $arr1 = '?????!!!!';
+            
     
                 WhsDetail::firstOrCreate([
                     'warehouse_id' => Str::uuid()->toString(),
                     'user_id' => $uid,
-                    'manager_name' => $arr1,
+                    'name' => 'warehouse '.$arr1[$i],
+                    'manager_name' => 'Budi '.$i,
                     'contact' => rand(),
-                    'adress' => $arr1,
+                    'adress' => $arr1[$i],
                 ]);
+                $i++;
         }
         // $uid = array_rand($cateids);
             // dd($cateids);

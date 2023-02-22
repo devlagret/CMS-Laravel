@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('warehouse_id')->primary();
             $table->uuid('user_id')->nullable()->default('0')->unique();
             $table->foreign('user_id')->references('user_id')->on('user')->onDelete('set null')->onUpdate('cascade');
+            $table->string('name');
             $table->string('manager_name',50);
             $table->string('contact', 50);
             $table->string('adress', 50);

@@ -115,7 +115,8 @@ class ProductOrderRequestController extends Controller
         $Orequest = ProductOrderRequest::where('product_code', $productCode)
                                        ->whereIn('status', ['sent', 'accepted'])
                                        ->orderBy('request_date', 'desc')
-                                       ->get(['product_order_requests_id','warehouse_id','request_date','quantity', 'status']);
+                                       ->join('whs_detail','product_order_requests.warehouse_id','=','whs_detail.warehouse_id')
+                                       ->get(['product_order_requests_id','product_order_requests.warehouse_id','request_date','quantity', 'status', 'name']);
         
         return response()->json($Orequest);
     }

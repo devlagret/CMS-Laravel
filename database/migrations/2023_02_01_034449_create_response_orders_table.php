@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('response_id')->primary();
             $table->uuid('product_order_id')->nullable()->default('0');
             $table->foreign('product_order_id')->references('product_order_id')->on('product_order')->onDelete('set null');
-            $table->uuid('product_order_requests_id')->nullable()->default('0');
+            $table->uuid('product_order_requests_id')->nullable();
             $table->foreign('product_order_requests_id')->references('product_order_requests_id')->on('product_order_requests')->onDelete('set null');
             $table->uuid('warehouse_id')->nullable()->default('0');
             $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('set null');

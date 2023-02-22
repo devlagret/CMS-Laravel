@@ -81,7 +81,7 @@ class ProductOrderController extends Controller
                 'message' => 'Some Stock Still Left'], 400);
         }elseif (array_sum($quantity) == $poid->quantity) {
             for ($i=0; $i < count($porid); $i++) {
-                if ($porid[$i] == ' ') {
+                if ($porid[$i] == 'null') {
                     $in = ResponseOrder::firstOrCreate([
                         'response_id' => Str::uuid()->toString(),
                         'product_order_id' => $poid->product_order_id,
@@ -107,6 +107,7 @@ class ProductOrderController extends Controller
                         ProductOrderRequest::where('product_order_requests_id', $porid[$i])
                                             ->update(['status' => 'transferred']);
                     }
+                    // echo 'aaa';
                 }
             }
         }

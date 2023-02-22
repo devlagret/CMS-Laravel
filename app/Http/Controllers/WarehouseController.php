@@ -115,7 +115,10 @@ class WarehouseController extends Controller
         if ($request->user()->cannot('view', Warehouse::class)&&$request->user()->cannot('viewAny', Warehouse::class)) {
             return response('Unauthorized', 401);
         }
-        $warehouse = Warehouse::where('product_code', $productCode)->get(['warehouse_id', 'stock']);
+        $a = array();
+        $warehouse = Warehouse::where('product_code', $productCode)
+                            ->join('whs_detail','warehouses.warehouse_id','=','whs_detail.warehouse_id')
+                            ->get(['warehouses.warehouse_id', 'stock','name','adress','contact']);        
         return response()->json($warehouse);
     }
 
