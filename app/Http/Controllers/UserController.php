@@ -27,8 +27,6 @@ class UserController extends Controller
     //
     public function register(Request $request)
     {
-        $uh = new UserHelper;
-        $token = $request->header('token');
         if ($request->user()->can('create', User::class)) {
             $this->validate($request, [
                 'name' => 'required|min:3',
@@ -95,7 +93,6 @@ class UserController extends Controller
     }
     public function update(Request $request, $id = null)
     {
-        $token = $request->header('token');
         $name = $request->input('name');
         $username = $request->input('username');
         try {
@@ -129,7 +126,7 @@ class UserController extends Controller
                     'activity' => 'Update User Profile',
                     'detail' => "User Update Profile"
                 ]);
-            } elseif ($request->user()->can('updateAny',User::class)) {
+            } if ($request->user()->can('updateAny',User::class)) {
                 $user = User::where('user_id', $id)->first();
                 if (!$user) {
                     return response()->json(['message' => 'Update failed, UID not found'], 404);
@@ -162,6 +159,7 @@ class UserController extends Controller
         return response()->json(['message' => 'Error'], 500);
                 }
             }
+            return response()->json(['message' => 'Unauthorized'], 401);
         } catch (\Illuminate\Database\QueryException $e) {
             $errorCode = $e->errorInfo[1];
             if ($errorCode == '1062') {
@@ -252,8 +250,6 @@ class UserController extends Controller
     }
     public function destroy(Request $request, $id)
     {
-        $uh = new UserHelper;
-        $token = $request->header('token');
         $user = User::find($id);
         if ($request->user()->can('delete', User::class)) {
             if (!User::destroy($id)) {
