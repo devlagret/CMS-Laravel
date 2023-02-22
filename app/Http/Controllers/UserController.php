@@ -110,10 +110,6 @@ class UserController extends Controller
                     'contact' => 'required|min:12|max:15',
                     'email' => 'required|email|min:3|max:255'
                 ]);
-                if (!Hash::check($request->input('password'), $user->password)) 
-                {
-                    return response()->json(['message' => 'wrong password'], 401);
-                };
                 $user->update([
                     'username' => $username,
                     'name' => $name,
