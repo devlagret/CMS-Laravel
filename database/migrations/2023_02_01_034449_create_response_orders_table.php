@@ -13,7 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('request_orders', function (Blueprint $table) {
+        Schema::create('response_orders', function (Blueprint $table) {
+            $table->uuid('response_id')->primary();
             $table->uuid('product_order_id')->nullable()->default('0');
             $table->foreign('product_order_id')->references('product_order_id')->on('product_order')->onDelete('set null');
             $table->uuid('product_order_requests_id')->nullable()->default('0');
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_orders');
+        Schema::dropIfExists('response_orders');
     }
 };
