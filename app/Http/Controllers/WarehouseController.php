@@ -38,8 +38,11 @@ class WarehouseController extends Controller
             $warehouses = Warehouse::paginate(9);
         }elseif ($request->user()->can('viewAny', Warehouse::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
-            $warehouses = Warehouse::where('warehouse_id', $wid->warehouse_id)
-                                   ->paginate(9);
+            $warehouses = Warehouse::where('warehouse_id', $wid->warehouse_id)->get();
+            $warehouses = Product::where('warehouse_id', $wid->warehouse_id)
+            ->join('warehouses','products.product_code','=','warehouses.product_code')
+            ->paginate(9,['warehouses.*', 'name']);
+            
         }else {
             return response('Unauthorized', 401);
         }
@@ -202,11 +205,11 @@ class WarehouseController extends Controller
         ->selectRaw('*, SUM(stock) as total')
         ->groupBy('product_code', 'status')
         ->get(['product_code','total']);
-        // foreach ($batch as $item) {
-        //     $warehouse = Warehouse::where('warehouse_id', $item['warehouse_id'])
-        //                         ->where('product_code', $item['product_code'])
-        //                         ->update(['stock' => $item['total']]);
-        // }
+        foreach ($batch as $item) {
+            $warehouse = Warehouse::where('warehouse_id', $item['warehouse_id'])
+                                ->where('product_code', $item['product_code'])
+                                ->update(['stock' => $item['total']]);
+        }
         return response()->json($batch, 200);
     }
 

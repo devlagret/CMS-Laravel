@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.3.0
+//  API Version beta 3.5.3.1
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -164,9 +164,14 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse response api endpoint
     $router->post('warehouse/response', 'WarehouseResponseBranchController@store');
     $router->get('warehouse/response/{request_id}', 'WarehouseResponseBranchController@getResponse');
-    //warehouse detail api endpoint
+    
 });
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router){
+    //warehouse detail api endpoint
+    $router->get('warehouse/batch', 'BatchController@index');
+    $router->post('warehouse/batch', 'BatchController@store');
+    $router->get('warehouse/batch/{id}', 'BatchController@showEachWarehouse');
+    //warehouse detail api endpoint
     $router->get('warehouse/detail', 'WhsDetailController@index');
     $router->post('warehouse/detail', 'WhsDetailController@store');
     $router->get('warehouse/detail/{id}', 'WhsDetailController@showEachWarehouse');
@@ -185,15 +190,12 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('upload','DailyReportController@store');
     $router->get('upload','DailyReportController@getDownload');
 });
-$router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router){
-    $router->post('upload','DailyReportController@store');
-    $router->get('upload','DailyReportController@getDownload');
-});
 //test
 $router->group(['prefix' => $prefix], function () use ($router){
     $router->post('test','BatchController@store');
     // $router->get('test','ResponseOrderController@index');
     $router->get('test','BatchController@checkExpired');
+    $router->get('test','WarehouseController@checkExpired');
     $router->put('test','AppController@test');
     $router->delete('test','AppController@test');
 });

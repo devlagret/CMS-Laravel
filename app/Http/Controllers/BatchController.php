@@ -19,7 +19,10 @@ class BatchController extends Controller
         //     return response('Unauthorized', 401);
         // }
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
-        $batches = Batch::where('warehouse_id', $wid->warehouse_id)->paginate(9);
+        $batches = Batch::where('warehouse_id', $wid->warehouse_id)
+        ->selectRaw('*, SUM(stock) as total')
+        ->groupBy('product_code', 'status')
+        ->get();
         
         return response()->json($batches);
     }
@@ -72,13 +75,13 @@ class BatchController extends Controller
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
         $today_date = Carbon::today()->addDays(10)->toDateString();
         $batch = Batch::get();
-        // foreach ($batch as $item) {
-        //     if ($item['exp_date'] >= Carbon::today()->toDateString()) {
-        //         Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 3]);
-        //     }elseif ($item['exp_date'] >= $today_date) {
-        //         Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 2]);
-        //     }
-        // }
+        foreach ($batch as $item) {
+            if ($item['exp_date'] >= Carbon::today()->toDateString()) {
+                Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 3]);
+            }elseif ($item['exp_date'] >= $today_date) {
+                Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 2]);
+            }
+        }
 
         
         return response()->json($batch);
