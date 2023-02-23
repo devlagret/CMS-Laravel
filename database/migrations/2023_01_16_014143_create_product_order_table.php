@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('purchase_date');
             $table->integer('total_amount');
             $table->integer('quantity');
+            $table->date('product_expired');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -26,7 +26,7 @@ class ProductOrderRequestFactory extends Factory
             'product_code' =>  $pid,
             'request_date' => Carbon::today()->toDateString(),
             'quantity' => $this->faker->numberBetween(10, 99),
-            'status' => $this->faker->lexify('sent')
+            'status' => $this->faker->lexify('pending')
     	];
     }
 }

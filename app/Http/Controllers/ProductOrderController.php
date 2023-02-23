@@ -19,7 +19,7 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = ProductOrder::paginate(9);
+        $stockups = ProductOrder::orderBy('expire_date', 'asc')->paginate(9);
         
         return response()->json($stockups);
     }
@@ -34,24 +34,36 @@ class ProductOrderController extends Controller
             'product_code'   => 'required',
             'total_amount'   => 'required',
             'quantity'       => 'required',
+            'expire_date'    => 'required',
         ]);
-        
         $supllier_id   = $request->input('supplier_id');
-        $product_code  = $request->input('product_code');
+        $pc  = $request->input('product_code');
         $purchase_date = $request->input('purchase_date');
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
+        $exp           = $request->input('expire_date');
+        
+        $check = ProductOrder::where('product_code', $pc)
+                      ->where('expire_date', $exp)
+                      ->exists();
 
-        $order = ProductOrder::create([
-            'product_order_id'=> Str::uuid()->toString(),
-            'supplier_id'    => $supllier_id,
-            'product_code'   => $product_code,
-            'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
-            'total_amount'   => $total_amount,
-            'quantity'       => $quantity,
-        ]);
-
-        return response()->json(['message' => 'Data Added Succesfully','data' => $order], 201);
+        if ($check) {
+            ProductOrder::where('product_code', $pc)
+                ->where('expire_date', $exp)
+                ->increment('quantity', $quantity);
+            return response()->json(['message' => 'Stock Increase cause ordered product still exist'], 200);
+        }else {
+            $order = ProductOrder::create([
+                'product_order_id'=> Str::uuid()->toString(),
+                'supplier_id'    => $supllier_id,
+                'product_code'   => $pc,
+                'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
+                'total_amount'   => $total_amount,
+                'quantity'       => $quantity,
+                'product_expired'=> $exp,
+            ]);
+            return response()->json(['message' => 'Product Saved','data' => $order], 201);
+        }
     }
 
     public function distribute(Request $request, $orderid)
@@ -59,53 +71,31 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('create', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
         }
-        $validator = $this->validate($request, [
-            'quantity'     => 'required',
-            'warehouse_id' => 'required',
-        ]);
-
         $poid = ProductOrder::where('product_order_id', $orderid)->first();
 
-        // $quantity = explode(',', $request['quantity']);
-        // $wid = explode(',', $request['warehouse_id']);
-        // $porid = explode(',', $request['product_order_requests_id']);
-        $quantity = $request['quantity'];
-        $wid = $request['warehouse_id'];
-        $porid = $request['product_order_requests_id'];
-        if (array_sum($quantity) > $poid->quantity) {
-            return response()->json([
-                'distribute quantity' => array_sum($quantity),
-                'quantity ordered' => $poid->quantity,
-                'message' => 'Please decrease the distribute quantity'], 400);
-        } elseif (array_sum($quantity) < $poid->quantity) {
-            return response()->json([
-                'distribute quantity' => array_sum($quantity),
-                'quantity ordered' => $poid->quantity,
-                'message' => 'Some Stock Still Left'], 400);
-        }elseif (array_sum($quantity) == $poid->quantity) {
-            for ($i=0; $i < count($porid); $i++) {
-                if ($porid[$i] == '') {
-                    $in = ResponseOrder::firstOrCreate([
-                        'response_id' => Str::uuid()->toString(),
-                        'product_order_id' => $poid->product_order_id,
-                        'warehouse_id' => $wid[$i],
-                        'quantity' => $quantity[$i],
-                    ]);
-                }else {
-                    $in = ResponseOrder::firstOrCreate([
-                        'response_id' => Str::uuid()->toString(),
-                        'product_order_id' => $poid->product_order_id,
-                        'product_order_requests_id' => $porid[$i],
-                        'warehouse_id' => $wid[$i],
-                        'quantity' => $quantity[$i],
-                    ]);
-                    if ($in) {
-                        ProductOrderRequest::where('product_order_requests_id', $porid[$i])
-                                            ->update(['status' => 'transferred']);
-                    }
-                }
+        $quantity = $request->input('quantity');
+        $wid = $request->input('warehouse_id');
+        $porid = $request->input('product_order_requests_id');
+        
+        if ($poid->quantity > $quantity) {
+            $in = ResponseOrder::Create([
+                'response_id'               => Str::uuid()->toString(),
+                'product_order_id'          => $poid->product_order_id,
+                'product_order_requests_id' => $porid,
+                'warehouse_id'              => $wid,
+                'quantity'                  => $quantity,
+            ]);
+            if ($in) {
+                ProductOrderRequest::where('product_order_requests_id', $porid)
+                                   ->update(['status' => 'transferred']);
+                ProductOrder::where('product_order_id', $orderid)
+                                    ->decrement('quantity', $quantity);
+                return response()->json(['message' => 'Requested Product Ready to Transfer']);
             }
         }
-        // return response()->json($quantity);
+        return response()->json([
+            'ordered quantity' => $poid->quantity,
+            'requested quantity' => $quantity,
+            'message' => 'the product ordered is less than the request'], 400);
     }
 }

@@ -23,7 +23,7 @@ class ProductOrderRequestController extends Controller
             $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->orderByRaw("CASE status
                                                 WHEN 'accepted' THEN 1
-                                                WHEN 'sent' THEN 2
+                                                WHEN 'pending' THEN 2
                                                 WHEN 'transferred' THEN 3
                                                 ELSE 4
                                                 END")
@@ -50,7 +50,7 @@ class ProductOrderRequestController extends Controller
         $quantity      = $request->input('quantity');
         $wid           = WhsDetail::where('user_id', Auth::id())->first();
         $check = ProductOrderRequest::where('product_code', $product_code)
-            ->where('status', 'sent')
+            ->where('status', 'pending')
             ->where('warehouse_id', $wid->warehouse_id)
             ->first();
 
@@ -111,7 +111,7 @@ class ProductOrderRequestController extends Controller
             return response('Unauthorized', 401);
         }
         $Orequest = ProductOrderRequest::where('product_code', $productCode)
-                                       ->whereIn('status', ['sent', 'accepted'])
+                                       ->whereIn('status', ['pending', 'accepted'])
                                        ->orderBy('request_date', 'desc')
                                        ->join('whs_detail','product_order_requests.warehouse_id','=','whs_detail.warehouse_id')
                                        ->get(['product_order_requests_id','product_order_requests.warehouse_id','request_date','quantity', 'status', 'name']);

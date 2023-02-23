@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('product_code')->references('product_code')->on('products')->onDelete('set null')->onUpdate('cascade');
             $table->date('request_date');
             $table->integer('quantity');
-            $table->enum('status', ['sent', 'accepted', 'transferred', 'rejected']);
+            $table->enum('status', ['pending', 'accepted', 'transferred', 'rejected']);
             $table->timestamps();
             $table->softDeletes();
         });
