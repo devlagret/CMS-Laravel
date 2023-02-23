@@ -47,24 +47,24 @@ class ProductOrderController extends Controller
                       ->where('product_expired', $exp)
                       ->exists();
 
-        // if ($check) {
-        //     ProductOrder::where('product_code', $pc)
-        //         ->where('product_expired', $exp)
-        //         ->increment('quantity', $quantity);
-        //     return response()->json(['message' => 'Stock Increase cause ordered product still exist'], 200);
-        // }else {
-        //     $order = ProductOrder::create([
-        //         'product_order_id'=> Str::uuid()->toString(),
-        //         'supplier_id'    => $supllier_id,
-        //         'product_code'   => $pc,
-        //         'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
-        //         'total_amount'   => $total_amount,
-        //         'quantity'       => $quantity,
-        //         'product_expired'=> $exp,
-        //     ]);
-        //     return response()->json(['message' => 'Product Saved','data' => $order], 201);
-        // }
-        return response()->json($exp, 200);
+        if ($check) {
+            ProductOrder::where('product_code', $pc)
+                ->where('product_expired', $exp)
+                ->increment('quantity', $quantity);
+            return response()->json(['message' => 'Stock Increase cause ordered product still exist'], 200);
+        }else {
+            $order = ProductOrder::create([
+                'product_order_id'=> Str::uuid()->toString(),
+                'supplier_id'    => $supllier_id,
+                'product_code'   => $pc,
+                'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
+                'total_amount'   => $total_amount,
+                'quantity'       => $quantity,
+                'product_expired'=> $exp,
+            ]);
+            return response()->json(['message' => 'Product Saved','data' => $order], 201);
+        }
+        // return response()->json($, 200);
     }
 
     public function distribute(Request $request, $orderid)
@@ -78,7 +78,7 @@ class ProductOrderController extends Controller
         $wid = $request->input('warehouse_id');
         $porid = $request->input('product_order_requests_id');
         
-        if ($poid->quantity > $quantity) {
+        if ($poid->quantity >= $quantity) {
             $in = ResponseOrder::Create([
                 'response_id'               => Str::uuid()->toString(),
                 'product_order_id'          => $poid->product_order_id,
@@ -105,7 +105,7 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = ProductOrder::where('product_code', $Code)->orderBy('expire_date', 'asc')->paginate(9);
+        $stockups = ProductOrder::where('product_code', $Code)->orderBy('product_expired', 'asc')->paginate(9);
         
         return response()->json($stockups);
     }

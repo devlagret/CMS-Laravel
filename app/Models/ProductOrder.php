@@ -14,7 +14,7 @@ class ProductOrder extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'product_order_id', 'supplier_id','product_code','purchase_date','total_amount','quantity'
+        'product_order_id', 'supplier_id','product_code','purchase_date','total_amount','quantity','product_expired'
     ];
     
 }
