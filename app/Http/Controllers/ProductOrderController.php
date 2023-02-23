@@ -98,4 +98,14 @@ class ProductOrderController extends Controller
             'requested quantity' => $quantity,
             'message' => 'the product ordered is less than the request'], 400);
     }
+
+    public function getProduct(Request $request, $Code)
+    {
+        if ($request->user()->cannot('viewAny', ProductOrder::class)) {
+            return response('Unauthorized', 401);
+        }
+        $stockups = ProductOrder::where('product_code', $Code)->orderBy('expire_date', 'asc')->paginate(9);
+        
+        return response()->json($stockups);
+    }
 }

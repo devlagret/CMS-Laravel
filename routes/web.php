@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.1.5
+//  API Version beta 3.5.2.0
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -101,9 +101,10 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->put('product/category/{id}', 'CategoryController@update');
     $router->delete('product/category/{id}', 'CategoryController@destroy');
     //product order api endpoint
-    $router->get('product/order', 'ProductOrderController@index');
-    $router->post('product/order', 'ProductOrderController@store');
-    $router->post('product/order/distribute/{orderid}', 'ProductOrderController@distribute');
+    $router->get('order', 'ProductOrderController@index');
+    $router->get('order/product/{Code}', 'ProductOrderController@getProduct');
+    $router->post('order', 'ProductOrderController@store');
+    $router->post('order/distribute/{orderid}', 'ProductOrderController@distribute');
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');

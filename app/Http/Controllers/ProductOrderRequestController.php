@@ -14,7 +14,8 @@ class ProductOrderRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
-            $Orequests = ProductOrderRequest::orderBy('request_date', 'asc')
+            $Orequests = ProductOrderRequest::whereNot('status', 'rejected')
+                                            ->orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->paginate(9);
             return response()->json($Orequests);
@@ -25,7 +26,8 @@ class ProductOrderRequestController extends Controller
                                                 WHEN 'accepted' THEN 1
                                                 WHEN 'pending' THEN 2
                                                 WHEN 'transferred' THEN 3
-                                                ELSE 4
+                                                WHEN 'rejected' THEN 4
+                                                ELSE 5
                                                 END")
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
@@ -125,8 +127,9 @@ class ProductOrderRequestController extends Controller
             return response('Unauthorized', 401);
         }
         $id = $request->input('Product_order_request_id');
-        ProductOrderRequest::where('product_order_requests_id', $id)
+        $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 4]);
+        return response()->json($a);
     }
 
     public function accept(Request $request)
@@ -135,7 +138,8 @@ class ProductOrderRequestController extends Controller
             return response('Unauthorized', 401);
         }
         $id = $request->input('product_order_request_id');
-        ProductOrderRequest::where('product_order_requests_id', $id)
+        $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 2]);
+        return response()->json($a);
     }
 }
