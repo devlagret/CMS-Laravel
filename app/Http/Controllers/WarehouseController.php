@@ -138,15 +138,7 @@ class WarehouseController extends Controller
         return response()->json($warehouse);
     }
 
-    public function showEachWarehouse(Request $request, $id)
-    {
-        if ($request->user()->cannot('view', Warehouse::class)) {
-            return response('Unauthorized', 401);
-        }
 
-        $warehouse = Warehouse::where('warehouse_id', $id)->get();
-        return response()->json($warehouse);
-    }
 
     public function productInWarehouse(Request $request)
     {

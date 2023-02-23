@@ -126,7 +126,7 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->cannot('update', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
         }
-        $id = $request->input('Product_order_request_id');
+        $id = $request->input('product_order_request_id');
         $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 4]);
         return response()->json($a);

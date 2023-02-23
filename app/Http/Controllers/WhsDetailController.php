@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\UserHelper;
 use App\Models\Log;
+use App\Models\Warehouse;
 use App\Models\WhsDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -54,5 +55,14 @@ class WhsDetailController extends Controller
             return response()->json("Failure");
         }
         // return response()->json($whsdetail);
+    }
+    public function showEachWarehouse(Request $request, $id)
+    {
+        if ($request->user()->cannot('view', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+
+        $warehouse = Warehouse::where('warehouse_id', $id)->get();
+        return response()->json($warehouse);
     }
 }

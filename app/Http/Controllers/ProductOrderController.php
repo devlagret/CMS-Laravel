@@ -44,26 +44,27 @@ class ProductOrderController extends Controller
         $exp           = $request->input('expire_date');
         
         $check = ProductOrder::where('product_code', $pc)
-                      ->where('expire_date', $exp)
+                      ->where('product_expired', $exp)
                       ->exists();
 
-        if ($check) {
-            ProductOrder::where('product_code', $pc)
-                ->where('expire_date', $exp)
-                ->increment('quantity', $quantity);
-            return response()->json(['message' => 'Stock Increase cause ordered product still exist'], 200);
-        }else {
-            $order = ProductOrder::create([
-                'product_order_id'=> Str::uuid()->toString(),
-                'supplier_id'    => $supllier_id,
-                'product_code'   => $pc,
-                'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
-                'total_amount'   => $total_amount,
-                'quantity'       => $quantity,
-                'product_expired'=> $exp,
-            ]);
-            return response()->json(['message' => 'Product Saved','data' => $order], 201);
-        }
+        // if ($check) {
+        //     ProductOrder::where('product_code', $pc)
+        //         ->where('product_expired', $exp)
+        //         ->increment('quantity', $quantity);
+        //     return response()->json(['message' => 'Stock Increase cause ordered product still exist'], 200);
+        // }else {
+        //     $order = ProductOrder::create([
+        //         'product_order_id'=> Str::uuid()->toString(),
+        //         'supplier_id'    => $supllier_id,
+        //         'product_code'   => $pc,
+        //         'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
+        //         'total_amount'   => $total_amount,
+        //         'quantity'       => $quantity,
+        //         'product_expired'=> $exp,
+        //     ]);
+        //     return response()->json(['message' => 'Product Saved','data' => $order], 201);
+        // }
+        return response()->json($exp, 200);
     }
 
     public function distribute(Request $request, $orderid)
