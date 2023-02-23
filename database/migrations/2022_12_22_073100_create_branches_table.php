@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('address', 100);
             $table->uuid('user_id')->nullable()->default('0')->unique();
             $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade')->onUpdate('cascade');
+            $table->uuid('warehouse_id')->nullable()->default('0');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

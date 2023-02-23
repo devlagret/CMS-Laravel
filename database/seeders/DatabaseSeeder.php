@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             PrivilegeSeeder::class,
-            BranchSeeder::class,
             WhsDetailSeeder::class,
+            BranchSeeder::class,
             WarehouseSeeder::class,
             ProductOrderRequestSeeder::class,
         ]);

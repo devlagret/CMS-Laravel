@@ -69,8 +69,17 @@ class BatchController extends Controller
         // if ($request->user()->cannot('viewAny', Batch::class)) {
         //     return response('Unauthorized', 401);
         // }
-        $today_date = Carbon::today()->addDays(10)->toDateTimeString();
-        $batch = Batch::where('exp_date', '<=', $today_date)->get();
+        $wid = WhsDetail::where('user_id', Auth::Id())->first();
+        $today_date = Carbon::today()->addDays(10)->toDateString();
+        $batch = Batch::get();
+        // foreach ($batch as $item) {
+        //     if ($item['exp_date'] >= Carbon::today()->toDateString()) {
+        //         Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 3]);
+        //     }elseif ($item['exp_date'] >= $today_date) {
+        //         Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 2]);
+        //     }
+        // }
+
         
         return response()->json($batch);
     }

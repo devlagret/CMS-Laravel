@@ -18,21 +18,14 @@ class ProductOrderRequestController extends Controller
                                             ->orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->paginate(9);
-            return response()->json($Orequests);
+            return response()->json($Orequests, 200);
         }elseif ($request->user()->can('viewAny', ProductOrderRequest::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
             $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
-                                            ->orderByRaw("CASE status
-                                                WHEN 'accepted' THEN 1
-                                                WHEN 'pending' THEN 2
-                                                WHEN 'transferred' THEN 3
-                                                WHEN 'rejected' THEN 4
-                                                ELSE 5
-                                                END")
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
                                             ->paginate(9);
-            return response()->json($Orequests);
+            return response()->json($Orequests, 200);
         }else {
             return response('Unauthorized', 401);
         }
@@ -67,28 +60,16 @@ class ProductOrderRequestController extends Controller
             'quantity'       => $quantity,
         ]);
 
-        return response()->json($Orequest);
+        return response()->json(['message' => 'Request Created', 'data' => $Orequest], 201);
     }
 
     public function edit(Request $request)
     {
-        if ($request->user()->can('update', ProductOrderRequest::class)) {
+        if ($request->user()->cannot('updatew', ProductOrderRequest::class)) {
+            return response('Unauthorized', 401);
+        }else {
             $validator = $this->validate($request, [
-                'request_id'    => 'required',
-                'status'        => 'required',
-            ]);
-            $status = intval($request->input('status'));
-            $id = $request->input('request_id');
-    
-            $Orequest = ProductOrderRequest::where('product_order_requests_id', $id)
-                                           ->update([
-                'status' => $status,
-            ]);
-            return response()->json($Orequest);
-        }elseif ($request->user()->can('updatew', ProductOrderRequest::class)) {
-            $validator = $this->validate($request, [
-                'product_order_requests_id'    => 'required',
-                'product_code'  => 'required',
+                'product_order_requests_id' => 'required',
                 'quantity'      => 'required'
             ]);
             $id = $request->input('product_order_requests_id');
@@ -101,9 +82,7 @@ class ProductOrderRequestController extends Controller
                 'quantity'      => $qu,
             ]);
     
-            return response()->json('successfull');
-        }else {
-            return response('Unauthorized', 401);
+            return response()->json(['message' => 'Request Updated successfully', 'data' => $Orequest], 200);
         }
     }
 
@@ -129,7 +108,7 @@ class ProductOrderRequestController extends Controller
         $id = $request->input('product_order_request_id');
         $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 4]);
-        return response()->json($a);
+        return response()->json(['message' => 'Request Rejected']);
     }
 
     public function accept(Request $request)
@@ -140,6 +119,6 @@ class ProductOrderRequestController extends Controller
         $id = $request->input('product_order_request_id');
         $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 2]);
-        return response()->json($a);
+        return response()->json(['message' => 'Request Accepted']);
     }
 }

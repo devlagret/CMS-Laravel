@@ -19,9 +19,9 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = ProductOrder::orderBy('expire_date', 'asc')->paginate(9);
+        $stockups = ProductOrder::orderBy('product_expired', 'asc')->paginate(9);
         
-        return response()->json($stockups);
+        return response()->json($stockups, 200);
     }
 
     public function store(Request $request)
@@ -64,7 +64,6 @@ class ProductOrderController extends Controller
             ]);
             return response()->json(['message' => 'Product Saved','data' => $order], 201);
         }
-        // return response()->json($, 200);
     }
 
     public function distribute(Request $request, $orderid)

@@ -13,6 +13,6 @@ class Batch extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-      'batch_id', 'warehouse_id', 'product_code', 'stock', 'exp_date', 'entry_date'
+    'batch_id', 'warehouse_id', 'product_code', 'stock', 'exp_date', 'entry_date', 'status'
     ];
 }

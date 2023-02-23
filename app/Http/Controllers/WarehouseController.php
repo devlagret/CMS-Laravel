@@ -122,24 +122,6 @@ class WarehouseController extends Controller
         return response()->json($warehouse);
     }
 
-    public function showStock(Request $request, $productCode, $stock)
-    {
-        if ($request->user()->cannot('viewStock', Warehouse::class)) {
-            return response('Unauthorized', 401);
-        }
-        $warehouse = Warehouse::where('product_code', $productCode)
-                              ->where('stock', '>=', $stock+10)
-                              ->get(['warehouse_id', 'stock']);
-        if (count($warehouse) < 1) {
-            $warehouse = Warehouse::where('product_code', $productCode)
-                              ->get('warehouse_id');
-            return response()->json(['message' => 'Currently the stock in the warehouse is less than your request','data' => $warehouse]);
-        }
-        return response()->json($warehouse);
-    }
-
-
-
     public function productInWarehouse(Request $request)
     {
         if ($request->user()->can('view', Warehouse::class)) {
@@ -158,14 +140,14 @@ class WarehouseController extends Controller
 
     public function productNameInWarehouse(Request $request)
     {
-        if ($request->user()->cannot('view', Warehouse::class)) {
+        if ($request->user()->can('view', Warehouse::class)) {
             $name = $request->input('name');
             $warehouse = Warehouse::get('product_code');
             $product = Product::whereIn('product_code', $warehouse)
                             ->where('name', 'LIKE', '%'.$name.'%')
                             ->get(['product_code','name']);
             return response()->json($product);
-        }elseif ($request->user()->cannot('viewAny', Warehouse::class)) {
+        }elseif ($request->user()->can('viewAny', Warehouse::class)) {
             $name = $request->input('name');
             $wid = WhsDetail::where('user_id', Auth::id())->first();
             $warehouse = Warehouse::where('warehouse_id', $wid->warehouse_id)->get('product_code');
@@ -176,20 +158,6 @@ class WarehouseController extends Controller
         }else {
             return response('Unauthorized', 401);
         }
-    }
-
-    public function getSendedProduct(Request $request)
-    {
-        if ($request->user()->cannot('viewAny', Warehouse::class)) {
-            return response('Unauthorized', 401);
-        }
-        $validator = $this->validate($request, [
-            'warehouse_id' => 'required',
-        ]);
-        $w = $request->input('warehouse_id');
-
-        $warehouse = SendedProduct::where('warehouse_id', $w)->get();
-        return response()->json($warehouse);
     }
 
     public function update(Request $request, $id)
@@ -229,55 +197,17 @@ class WarehouseController extends Controller
 
     public function updateStock(Request $request)
     {
-        if ($request->user()->cannot('update', Warehouse::class)) {
-            return response('Unauthorized', 401);
-        }
-        // $validator = $this->validate($request, [
-        //     'product_code'  => 'required',
-        //     'stock'         => 'required|max:15',
-        //     'location'      => 'required',
-        // ]);
-    
         $wid   = WhsDetail::where('user_id', Auth::id())->first();
-        $batch = ModelsBatch::where('warehouse_id', $wid->warehouse_id)->get();
-        foreach ($batch as $item) {
-            $warehouse = Warehouse::where('warehouse_id', $item['warehouse_id'])
-                                ->where('product_code', $item['product_code'])
-                                ->update(['stock' => $item['stock']]);
-        }
-
-        // if ($warehouse) {
-        //     // Log::create([
-        //     //     'user_id'   => Auth::id(),
-        //     //     'datetime'  => Carbon::now('Asia/Jakarta'),
-        //     //     'activity'  => 'Warehouse(s)',
-        //     //     'detail'    => 'User "'.Auth::id().'" update Product "'.$product_code.'" in Warehouse "'.$wid->warehouse_id
-        //     // ]);
-        //     return response()->json(['message' => 'Data updated successfully'], 201);
-        // }else {
-        //     return response()->json("Failure");
+        $batch = ModelsBatch::where('warehouse_id', $wid->warehouse_id)
+        ->selectRaw('*, SUM(stock) as total')
+        ->groupBy('product_code', 'status')
+        ->get(['product_code','total']);
+        // foreach ($batch as $item) {
+        //     $warehouse = Warehouse::where('warehouse_id', $item['warehouse_id'])
+        //                         ->where('product_code', $item['product_code'])
+        //                         ->update(['stock' => $item['total']]);
         // }
-    }
-    
-    public function stockup(Request $request, $product_code)
-    {
-        if ($request->user()->cannot('update', Warehouse::class)) {
-            return response('Unauthorized', 401);
-        }
-        $pid = $request->input('product_order_requests_id');
-        
-        $wid = WhsDetail::where('user_id', Auth::id())->first();
-        $stock = ResponseOrder::where('product_order_requests_id', $pid)
-                            ->first();
-        
-        if (!$request->filled('product_order_requests_id')) {
-            $warehouse = Warehouse::where('warehouse_id',$wid->warehouse_id)
-                                ->where('product_code',$product_code)
-                                ->increment('stock', $stock->quantity);
-            
-            return response()->json($warehouse);
-        }
-        return response()->json($stock);
+        return response()->json($batch, 200);
     }
 
     public function destroy(Request $request, $id)

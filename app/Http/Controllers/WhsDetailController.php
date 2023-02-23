@@ -62,7 +62,8 @@ class WhsDetailController extends Controller
             return response('Unauthorized', 401);
         }
 
+        $detail = WhsDetail::where('warehouse_id', $id)->first();
         $warehouse = Warehouse::where('warehouse_id', $id)->get();
-        return response()->json($warehouse);
+        return response()->json(['data' => $warehouse, 'detail' => $detail]);
     }
 }

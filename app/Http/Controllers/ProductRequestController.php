@@ -110,6 +110,22 @@ class ProductRequestController extends Controller
         return response()->json($product_req);
     }
 
+    public function showStock(Request $request, $productCode, $stock)
+    {
+        if ($request->user()->cannot('viewStock', Warehouse::class)) {
+            return response('Unauthorized', 401);
+        }
+        $warehouse = Warehouse::where('product_code', $productCode)
+                              ->where('stock', '>=', $stock+10)
+                              ->get(['warehouse_id', 'stock']);
+        if (count($warehouse) < 1) {
+            $warehouse = Warehouse::where('product_code', $productCode)
+                              ->get('warehouse_id');
+            return response()->json(['message' => 'Currently the stock in the warehouse is less than your request','data' => $warehouse]);
+        }
+        return response()->json($warehouse);
+    }
+
     public function update(Request $request, $id)
     {
         if ($request->user()->cannot('update', ProductRequest::class)) {
