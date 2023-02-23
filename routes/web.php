@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.2.0
+//  API Version beta 3.5.2.1
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -101,10 +101,10 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->put('product/category/{id}', 'CategoryController@update');
     $router->delete('product/category/{id}', 'CategoryController@destroy');
     //product order api endpoint
-    $router->get('order', 'ProductOrderController@index');
-    $router->get('order/product/{Code}', 'ProductOrderController@getProduct');
-    $router->post('order', 'ProductOrderController@store');
-    $router->post('order/distribute/{orderid}', 'ProductOrderController@distribute');
+    $router->get('product/order', 'ProductOrderController@index');
+    $router->get('product/order/all/{Code}', 'ProductOrderController@getProduct');
+    $router->post('product/order', 'ProductOrderController@store');
+    $router->post('product/order/distribute/{orderid}', 'ProductOrderController@distribute');
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');
@@ -160,13 +160,6 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->put('warehouse/request', 'ProductOrderRequestController@edit');
     $router->post('warehouse/request/accept', 'ProductOrderRequestController@accept');
     $router->post('warehouse/request/decline', 'ProductOrderRequestController@decline');
-    //warehouse detail api endpoint
-    $router->get('warehouse', 'WhsDetailController@index');
-    $router->get('warehouse/{id}', 'WhsDetailController@showEachWarehouse');
-    $router->post('warehouse', 'WhsDetailController@store');
-    //warehouse response api endpoint
-    $router->post('warehouse/response', 'WarehouseResponseBranchController@store');
-    $router->get('warehouse/response/{request_id}', 'WarehouseResponseBranchController@getResponse');
     //warehouse api endpoint
     $router->put('warehouse/request/{product_code}', 'WarehouseController@stockup');
     $router->get('warehouse/all/{productCode}', 'WarehouseController@showProduct');
@@ -174,11 +167,17 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('warehouse/product', 'WarehouseController@productNameInWarehouse');
     $router->get('warehouse/all/{productCode}/{stock}', 'WarehouseController@showStock');
     $router->delete('warehouse/{id}', 'WarehouseController@destroy');
-    $router->get('warehouse/{id}', 'WarehouseController@show');
+    // $router->get('warehouse/{id}', 'WarehouseController@show');
     $router->put('warehouse/{id}', 'WarehouseController@update');
+    //warehouse detail api endpoint
+    $router->get('warehouse', 'WhsDetailController@index');
+    $router->get('warehouse/{id}', 'WhsDetailController@showEachWarehouse');
+    $router->post('warehouse', 'WhsDetailController@store');
+    //warehouse response api endpoint
+    $router->post('warehouse/response', 'WarehouseResponseBranchController@store');
+    $router->get('warehouse/response/{request_id}', 'WarehouseResponseBranchController@getResponse');
     // $router->post('warehouse', 'WarehouseController@store');
     $router->post('warehouse/data', 'WarehouseController@showEachWarehouse');
-    
     $router->get('warehousestock', 'WarehouseController@updateStock');
 });
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router){
