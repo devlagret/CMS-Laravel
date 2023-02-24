@@ -42,7 +42,6 @@ class WarehouseController extends Controller
             $warehouses = Product::where('warehouse_id', $wid->warehouse_id)
             ->join('warehouses','products.product_code','=','warehouses.product_code')
             ->paginate(9,['warehouses.*', 'name']);
-            
         }else {
             return response('Unauthorized', 401);
         }
@@ -202,11 +201,12 @@ class WarehouseController extends Controller
     {
         $wid   = WhsDetail::where('user_id', Auth::id())->first();
         $batch = ModelsBatch::where('warehouse_id', $wid->warehouse_id)
+        ->whereNot('status', 'Expired')
         ->selectRaw('*, SUM(stock) as total')
         ->groupBy('product_code', 'status')
         ->get(['product_code','total']);
         foreach ($batch as $item) {
-            $warehouse = Warehouse::where('warehouse_id', $item['warehouse_id'])
+            $warehouse = Warehouse::where('warehouse_id', $wid->warehouse_id)
                                 ->where('product_code', $item['product_code'])
                                 ->update(['stock' => $item['total']]);
         }

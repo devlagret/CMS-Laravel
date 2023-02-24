@@ -74,16 +74,30 @@ class BatchController extends Controller
         // }
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
         $today_date = Carbon::today()->addDays(10)->toDateString();
-        $batch = Batch::get();
+        $batch = Batch::where('warehouse_id', $wid->warehouse_id)->get();
         foreach ($batch as $item) {
-            if ($item['exp_date'] >= Carbon::today()->toDateString()) {
-                Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 3]);
-            }elseif ($item['exp_date'] >= $today_date) {
-                Batch::where('warehouse_id', $wid->warehouse_id)->update(['status' => 2]);
+            if ($item['exp_date'] <= Carbon::today()->toDateString()) {
+                Batch::where('warehouse_id', $wid->warehouse_id)
+                ->where('batch_id', $item['batch_id'])
+                ->update(['status' => 3]);
+            }elseif ($item['exp_date'] <= $today_date) {
+                Batch::where('warehouse_id', $wid->warehouse_id)
+                ->where('batch_id', $item['batch_id'])
+                ->update(['status' => 2]);
             }
         }
-
-        
-        return response()->json($batch);
+        // return response()->json($batch);
     }
+
+    public function getProduct(Request $request, $Code)
+    {
+        // if ($request->user()->cannot('viewAny', ProductOrder::class)) {
+        //     return response('Unauthorized', 401);
+        // }
+        $stockups = Batch::where('product_code', $Code)
+                         ->whereNot('status', 'Expired')->paginate(9);
+        
+        return response()->json($stockups);
+    }
+    
 }

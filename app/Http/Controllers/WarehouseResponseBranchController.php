@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Batch;
 use App\Models\ProductRequest;
 use App\Models\Warehouse;
 use App\Models\WarehouseResponseBranch;
@@ -32,11 +33,13 @@ class WarehouseResponseBranchController extends Controller
         }
         $validator = $this->validate($request, [ 
             'request_id'    => 'required',
+            'batch_id'    => 'required',
         ]);
         
         $send_date = $request->input('send_date');
+        $bid = $request->input('batch_id');
         $rid  = $request->input('request_id');
-        $detail   = ProductRequest::where('request_id', $rid)->first();
+        $detail  = ProductRequest::where('request_id', $rid)->first();
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
 
         $wrespon = WarehouseResponseBranch::create([
@@ -51,8 +54,7 @@ class WarehouseResponseBranchController extends Controller
         if (!$wrespon) {
             return response()->json(['message' => 'Failed to Proccess','data' => $wrespon], 400);
         }else {
-            $accept = Warehouse::where('warehouse_id', $wid->warehouse_id)
-                     ->where('product_code', $detail->product_code)
+            $accept = Batch::where('batch_id', $bid)
                      ->decrement('stock', $detail->amount);
             if ($accept) {
                 ProductRequest::where('request_id', $rid)

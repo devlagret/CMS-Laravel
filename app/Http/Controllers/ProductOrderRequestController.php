@@ -67,7 +67,7 @@ class ProductOrderRequestController extends Controller
     {
         if ($request->user()->cannot('updatew', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
-        }else {
+        }
             $validator = $this->validate($request, [
                 'product_order_requests_id' => 'required',
                 'quantity'      => 'required'
@@ -83,7 +83,7 @@ class ProductOrderRequestController extends Controller
             ]);
     
             return response()->json(['message' => 'Request Updated successfully', 'data' => $Orequest], 200);
-        }
+        
     }
 
     public function showProduct(Request $request, $productCode)

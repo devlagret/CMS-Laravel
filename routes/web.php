@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.3.1
+//  API Version beta 3.5.3.2
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -85,7 +85,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->post('product/supplier/trash/restore', 'SupplierController@restore');
     $router->get('product/supplier/trash/{id}', 'SupplierController@trash');
     $router->get('product/supplier/{id}', 'SupplierController@show');
-    $router->post('product/supplier/name', 'SupplierController@showByName');
+    $router->post('product/supplier/name', 'SupplierController@showByName'); //SEARCH NAME
     $router->post('product/supplier', 'SupplierController@store');
     $router->put('product/supplier/{id}', 'SupplierController@update');
     $router->delete('product/supplier/{id}', 'SupplierController@destroy');
@@ -114,7 +114,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->delete('product/trash', 'ProductController@delete');
     $router->get('product/trash/restore/all', 'ProductController@restoreAll');
     $router->post('product/trash/restore', 'ProductController@restore');
-    $router->post('product/search', 'ProductController@showByName');
+    $router->post('product/search', 'ProductController@showByName'); //SEARCH NAME
     $router->get('product/trash/{id}', 'ProductController@trash');
     $router->get('product/{id}', 'ProductController@show');
     $router->put('product/{id}', 'ProductController@update');
@@ -148,7 +148,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 });
 //warehouse related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
-    //warehouse order api endpoint
+    //warehouse order Request api endpoint
     $router->get('warehouse/trash', 'ProductOrderRequestController@trash');
     $router->post('warehouse/trash/delete','ProductOrderRequestController@delete');
     $router->delete('warehouse/trash', 'ProductOrderRequestController@delete');
@@ -170,13 +170,13 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse detail api endpoint
     $router->get('warehouse/batch', 'BatchController@index');
     $router->post('warehouse/batch', 'BatchController@store');
-    $router->get('warehouse/batch/{id}', 'BatchController@showEachWarehouse');
+    $router->get('warehouse/batch/{Code}', 'BatchController@getProduct');
     //warehouse detail api endpoint
     $router->get('warehouse/detail', 'WhsDetailController@index');
     $router->post('warehouse/detail', 'WhsDetailController@store');
     $router->get('warehouse/detail/{id}', 'WhsDetailController@showEachWarehouse');
     //warehouse api endpoint
-    $router->get('warehouse/stock', 'WarehouseController@updateStock');
+    $router->put('warehouse/stock', 'WarehouseController@updateStock');
     $router->get('warehouse/product/{productCode}', 'WarehouseController@showProduct');
     $router->get('warehouse/product', 'WarehouseController@productInWarehouse');
     $router->post('warehouse/product', 'WarehouseController@productNameInWarehouse');
@@ -195,7 +195,7 @@ $router->group(['prefix' => $prefix], function () use ($router){
     $router->post('test','BatchController@store');
     // $router->get('test','ResponseOrderController@index');
     $router->get('test','BatchController@checkExpired');
-    $router->get('test','WarehouseController@checkExpired');
+    // $router->get('test','WarehouseController@checkExpired');
     $router->put('test','AppController@test');
     $router->delete('test','AppController@test');
 });

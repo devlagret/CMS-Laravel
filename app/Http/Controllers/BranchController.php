@@ -9,16 +9,19 @@ use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Helpers\UserHelper;
+use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Branch::class)) {
+        if ($request->user()->can('view', Branch::class)) {
+            $branches = Branch::paginate(9);
+        }elseif ($request->user()->can('viewAny', Branch::class)) {
+            $branches  = Branch::where('user_id', Auth::id())->first();
+        }else {
             return response('Unauthorized', 401);
         }
-        $branches = Branch::paginate(9);
-  
         return response()->json($branches);
     }
 
@@ -79,7 +82,7 @@ class BranchController extends Controller
 
     public function showByName(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Branch::class)&&$request->user()->cannot('viewAny', Branch::class)) {
+        if ($request->user()->cannot('view', Branch::class)) {
             return response('Unauthorized', 401);
         }
         $validator = $this->validate($request, [
@@ -130,19 +133,19 @@ class BranchController extends Controller
         }else {
             return response('Unauthorized', 401);
         }
-        // $uh = new UserHelper;
-        // if ($branch) {
-        //     Log::create([
-        //         'user_id' => $uh->getUserData($request->header('token'))->user_id,
-        //         'datetime' => Carbon::now('Asia/Jakarta'),
-        //         'activity' => 'Update Branch(s)',
-        //         'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
-        //     ]);
-        //     return response()->json(['message' => 'Data added successfully'], 201);
-        // }else {
-        //     return response()->json("Failure",500);
-        // }
-        return response()->json($branch,200);
+        $uh = new UserHelper;
+        if ($branch) {
+            Log::create([
+                'user_id' => Auth::id(),
+                'datetime' => Carbon::now('Asia/Jakarta'),
+                'activity' => 'Update Branch(s)',
+                'detail' => 'Update Branch with name "'.$branch_name.'" Lead by "'.$leader_name
+            ]);
+            return response()->json(['message' => 'Data added successfully', 'data' => $branch], 201);
+        }else {
+            return response()->json("Failure",500);
+        }
+        // return response()->json($branch,200);
     }
     
     public function destroy(Request $request,$id)
