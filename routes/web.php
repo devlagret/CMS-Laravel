@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.3.2
+//  API Version beta 3.5.3.3
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -106,6 +106,11 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->get('product/order/all/{Code}', 'ProductOrderController@getProduct');
     $router->post('product/order', 'ProductOrderController@store');
     $router->post('product/order/distribute/{orderid}', 'ProductOrderController@distribute');
+    //product order api endpoint
+    $router->get('order/response', 'ResponseOrderController@index');
+    $router->get('order/response/all/{Code}', 'ResponseOrderController@getProduct');
+    $router->post('order/response', 'ResponseOrderController@accept');
+    $router->post('order/response/distribute/{orderid}', 'ResponseOrderController@distribute');
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');
@@ -170,12 +175,14 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     //warehouse detail api endpoint
     $router->get('warehouse/batch', 'BatchController@index');
     $router->post('warehouse/batch', 'BatchController@store');
+    $router->put('warehouse/batch', 'BatchController@checkExpired');
     $router->get('warehouse/batch/{Code}', 'BatchController@getProduct');
     //warehouse detail api endpoint
     $router->get('warehouse/detail', 'WhsDetailController@index');
     $router->post('warehouse/detail', 'WhsDetailController@store');
     $router->get('warehouse/detail/{id}', 'WhsDetailController@showEachWarehouse');
     //warehouse api endpoint
+    // $router->put('warehouse/expired', 'BatchController@checkExpired');
     $router->put('warehouse/stock', 'WarehouseController@updateStock');
     $router->get('warehouse/product/{productCode}', 'WarehouseController@showProduct');
     $router->get('warehouse/product', 'WarehouseController@productInWarehouse');

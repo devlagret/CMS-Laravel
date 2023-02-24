@@ -80,14 +80,14 @@ class WarehouseController extends Controller
         ]);
 
         if ($warehouse) {
-            // Batch::create([
-            //     'batch_id'     => Str::uuid()->toString(),
-            //     'warehouse_id' => $wid->warehouse_id,
-            //     'product_code' => $product_code,
-            //     'stock'        => $amount,
-            //     'exp_date'     => $exp_date,
-            //     'entry_date'   => Carbon::today('Asia/Jakarta')->toDateString(),
-            // ]);
+            ModelsBatch::create([
+                'batch_id'     => Str::uuid()->toString(),
+                'warehouse_id' => $wid->warehouse_id,
+                'product_code' => $product_code,
+                'stock'        => $amount,
+                'exp_date'     => $exp_date,
+                'entry_date'   => Carbon::today('Asia/Jakarta')->toDateString(),
+            ]);
             Log::create([
                 'user_id'   => Auth::id(),
                 'datetime'  => Carbon::now('Asia/Jakarta'),
@@ -203,7 +203,7 @@ class WarehouseController extends Controller
         $batch = ModelsBatch::where('warehouse_id', $wid->warehouse_id)
         ->whereNot('status', 'Expired')
         ->selectRaw('*, SUM(stock) as total')
-        ->groupBy('product_code', 'status')
+        ->groupBy('product_code')
         ->get(['product_code','total']);
         foreach ($batch as $item) {
             $warehouse = Warehouse::where('warehouse_id', $wid->warehouse_id)

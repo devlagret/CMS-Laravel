@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Batch;
+use App\Models\Log;
 use App\Models\WhsDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -80,12 +81,27 @@ class BatchController extends Controller
                 Batch::where('warehouse_id', $wid->warehouse_id)
                 ->where('batch_id', $item['batch_id'])
                 ->update(['status' => 3]);
+                $log = Log::create([
+                    'user_id'   => Auth::id(),
+                    'datetime'  => Carbon::now('Asia/Jakarta'),
+                    'activity'  => 'Warehouse Expired(s)',
+                    'detail'    => 'Product "'.$item['product_code'].'" with Stock "'.$item['stock'].'" in Warehouse "'.$wid->warehouse_id.'" Had Expired'
+                
+            ]);
             }elseif ($item['exp_date'] <= $today_date) {
                 Batch::where('warehouse_id', $wid->warehouse_id)
                 ->where('batch_id', $item['batch_id'])
                 ->update(['status' => 2]);
+                $log = Log::create([
+                    'user_id'   => Auth::id(),
+                    'datetime'  => Carbon::now('Asia/Jakarta'),
+                    'activity'  => 'Warehouse Warning(s)',
+                    'detail'    => 'Product "'.$item['product_code'].'" with Stock "'.$item['stock'].'" in Warehouse "'.$wid->warehouse_id.'" Almost Expired'
+                    
+                ]);
             }
         }
+        return response()->json('Batch Updated');
         // return response()->json($batch);
     }
 

@@ -27,7 +27,7 @@ class ResponseOrderController extends Controller
 
     public function accept(Request $request)
     {
-        $scan = $request->input('code');
+        $scan = $request->input('response_id');
         $wid = WhsDetail::where('user_id', Auth::id())->first();
         $response = ResponseOrder::where('response_id', $scan)
                                         ->first();
