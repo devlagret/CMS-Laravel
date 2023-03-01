@@ -106,11 +106,9 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     $router->get('product/order/all/{Code}', 'ProductOrderController@getProduct');
     $router->post('product/order', 'ProductOrderController@store');
     $router->post('product/order/distribute/{orderid}', 'ProductOrderController@distribute');
-    //product order api endpoint
+    //product response order api endpoint
     $router->get('order/response', 'ResponseOrderController@index');
-    $router->get('order/response/all/{Code}', 'ResponseOrderController@getProduct');
     $router->post('order/response', 'ResponseOrderController@accept');
-    $router->post('order/response/distribute/{orderid}', 'ResponseOrderController@distribute');
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');
@@ -167,6 +165,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('warehouse/request/accept', 'ProductOrderRequestController@accept');
     $router->post('warehouse/request/decline', 'ProductOrderRequestController@decline');
     //warehouse response api endpoint
+    $router->get('warehouse/response', 'WarehouseResponseBranchController@index');
     $router->post('warehouse/response', 'WarehouseResponseBranchController@store');
     $router->get('warehouse/response/{request_id}', 'WarehouseResponseBranchController@getResponse');
     

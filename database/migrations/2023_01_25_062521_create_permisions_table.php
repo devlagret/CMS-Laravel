@@ -809,6 +809,64 @@ return new class extends Migration
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
+            //respons order produk
+            [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-order-response',
+                'alter' => 'lihat-respon-order',
+                'label' => 'Melihat Data Response Order',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'add-order-response',
+                'alter' => 'tambah-respon-order',
+                'label' => 'Merespon Response Order',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'edit-order-response',
+                'alter' => 'edit-respon-order',
+                'label' => 'Mengubah Data Response Order',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-order-response',
+                'alter' => 'hapus-respon-order',
+                'label' => 'Menghapus Data Response Order',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'view-deleted-order-response',
+                'alter' => 'lihat-respon-order-terhapus',
+                'label' => 'Melihat Data Response Order yang Sudah Dihapus',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'restore-deleted-order-response',
+                'alter' => 'memulikan-respon-order-terhapus',
+                'label' => 'Memulihkan Data Response Order yang Sudah Dihapus',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ], [
+                'permision_id' => Str::uuid()->toString(),
+                'name' => 'delete-order-response-forever',
+                'alter' => 'hapus-respon-order-selamanya',
+                'label' => 'Menghapus Data Response Order Selamanya',
+                'group' => 'Response Order',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
         ]);
     }
 

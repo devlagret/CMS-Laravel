@@ -21,7 +21,8 @@ class WarehouseResponseBranchController extends Controller
         if ($request->user()->cannot('viewAny', WarehouseResponseBranch::class)) {
             return response('Unauthorized', 401);
         }
-        $wrespons = WarehouseResponseBranch::paginate(9);
+        $wid = WhsDetail::where('user_id', Auth::Id())->first();
+        $wrespons = WarehouseResponseBranch::where('warehouse_id', $wid->warehouse_id)->paginate(9);
         
         return response()->json($wrespons);
     }
