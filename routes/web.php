@@ -64,18 +64,18 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 //product related api endpoint
 $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($router) {
     //product request api endpoint
-    $router->get('product/request', 'ProductRequestController@index');
-    $router->get('product/request/trash', 'ProductRequestController@trash');
-    $router->post('product/request/trash/delete','ProductRequestController@delete');
-    $router->delete('product/request/trash', 'ProductRequestController@delete');
-    $router->get('product/request/trash/restore/all', 'ProductRequestController@restoreAll');
-    $router->post('product/request/trash/restore', 'ProductRequestController@restore');
-    $router->get('product/request/trash/{id}', 'ProductRequestController@trash');
-    $router->get('product/request/{id}', 'ProductRequestController@show');
-    $router->post('product/request', 'ProductRequestController@store');
-    $router->put('product/request/{id}', 'ProductRequestController@update');
-    $router->get('product/request/{productCode}/{stock}', 'ProductRequestController@showStock');
-    $router->delete('product/request/{id}', 'ProductRequestController@destroy');
+    $router->get('branch/request', 'ProductRequestController@index');
+    $router->get('branch/request/trash', 'ProductRequestController@trash');
+    $router->post('branch/request/trash/delete','ProductRequestController@delete');
+    $router->delete('branch/request/trash', 'ProductRequestController@delete');
+    $router->get('branch/request/trash/restore/all', 'ProductRequestController@restoreAll');
+    $router->post('branch/request/trash/restore', 'ProductRequestController@restore');
+    $router->get('branch/request/trash/{id}', 'ProductRequestController@trash');
+    $router->get('branch/request/{id}', 'ProductRequestController@show');
+    $router->post('branch/request', 'ProductRequestController@store');
+    $router->put('branch/request/{id}', 'ProductRequestController@update');
+    $router->get('branch/request/{productCode}/{stock}', 'ProductRequestController@showStock');
+    $router->delete('branch/request/{id}', 'ProductRequestController@destroy');
     //product supplier api endpoint
     $router->get('product/supplier', 'SupplierController@index');
     $router->get('product/supplier/trash', 'SupplierController@trash');
