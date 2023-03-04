@@ -21,15 +21,15 @@ class ResponseOrderController extends Controller
     {
         if ($request->user()->can('view', ResponseOrder::class)) {
             $response = ResponseOrder::paginate(9);
+            return response()->json($response, 201);
         } elseif ($request->user()->can('viewAny', ResponseOrder::class)) {
             $wid = WhsDetail::where('user_id', Auth::id())->first();
             $response = ResponseOrder::where('warehouse_id', $wid->warehouse_id)
                                     ->paginate(9);
+            return response()->json($response, 201);
         } else {
-            
+            return response('Unauthorized', 401);
         }
-        
-        return response()->json($response);
     }
 
     public function accept(Request $request)
@@ -68,13 +68,20 @@ class ResponseOrderController extends Controller
                         'entry_date'   => Carbon::today('Asia/Jakarta')->toDateString(),
                     ]);
                     ResponseOrder::where('response_id',$scan)->delete();
-                    return response()->json(['message' => 'Product Saved','data' => $batch], 201);
+                    return response()->json(['message' => 'Batch Saved','data' => $batch], 201);
                 }
             }
             return response()->json(['message' => 'This Batch is Not the Product You Requested']);
         }
         return response()->json(['message' => 'Code Is Not Valid']);
         // return response()->json($scan);
+    }
 
+    public function test(Request $request)
+    {
+        $uuid = '1968ec4a-2a73-11df-9aca-00012e27a270';
+
+        $binaryUuid = hex2bin(str_replace('-', '', $uuid));
+        return response()->json($binaryUuid);
     }
 }

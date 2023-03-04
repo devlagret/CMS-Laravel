@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\ProductOrder;
 use App\Models\ResponseOrder;
 use App\Models\ProductOrderRequest;
 use App\Models\SendedProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\isEmpty;
@@ -68,7 +70,7 @@ class ProductOrderController extends Controller
 
     public function distribute(Request $request, $orderid)
     {
-        if ($request->user()->cannot('create', ProductOrderRequest::class)) {
+        if ($request->user()->cannot('create', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
         $poid = ProductOrder::where('product_order_id', $orderid)->first();
@@ -90,6 +92,13 @@ class ProductOrderController extends Controller
                                    ->update(['status' => 'transferred']);
                 ProductOrder::where('product_order_id', $orderid)
                                     ->decrement('quantity', $quantity);
+                $log = Log::create([
+                    'user_id'   => Auth::id(),
+                    'datetime'  => Carbon::now('Asia/Jakarta'),
+                    'activity'  => 'Response Warehouse Order Request(s)',
+                    'detail'    => 'Product "'.$poid['product_code'].'" Requested by Warehouse "'.$wid.'" Has Responsed'
+                    
+                ]);
                 return response()->json(['message' => 'Requested Product Ready to Transfer']);
             }
         }

@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.3.3
+//  API Version beta 3.5.3.4
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -199,8 +199,8 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 //test
 $router->group(['prefix' => $prefix], function () use ($router){
     $router->post('test','BatchController@store');
-    // $router->get('test','ResponseOrderController@index');
-    $router->get('test','BatchController@checkExpired');
+    $router->get('test','ResponseOrderController@index');
+    // $router->get('test','BatchController@checkExpired');
     // $router->get('test','WarehouseController@checkExpired');
     $router->put('test','AppController@test');
     $router->delete('test','AppController@test');
