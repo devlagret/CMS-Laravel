@@ -29,7 +29,7 @@ class ProductRequestFactory extends Factory
             'amount' => $this->faker->numberBetween(10, 99),
             'order_date' => Carbon::today()->toDateString(),
             'out_date' => '',
-            'status' => $this->faker->lexify('sent')
+            'status' => $this->faker->lexify('pending')
     	];
     }
 }
