@@ -46,7 +46,7 @@ class PrivilegeSeeder extends Seeder
                 }
             }elseif ($role->name == 'admingudang'){
                 $permision = Permision::whereIn('group',['gudang', 'Request Order'])
-                                      ->orWhereIn('name',['view-product', 'add-product', 'edit-product',  'view-product-category', 'view-supplier', 'view-product-request', 'view-product-request-response', 'add-product-request-response', 'edit-product-request-response', 'delete-product-request-response', 'delete-product-request-response-forever', 'view-deleted-product-request-response', 'restore-deleted-product-request-response'])
+                                      ->orWhereIn('name',['view-product', 'add-product', 'edit-product',  'view-product-category', 'view-supplier', 'view-product-request', 'view-product-request-response','view-order-response','add-product-request-response', 'edit-product-request-response', 'delete-product-request-response', 'delete-product-request-response-forever', 'view-deleted-product-request-response', 'restore-deleted-product-request-response'])
                                       ->get();
                 foreach ($permision as $p) {
                     Privilege::create([
