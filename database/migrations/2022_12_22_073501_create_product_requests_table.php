@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('amount');
             $table->dateTime('order_date');
             $table->dateTime('out_date')->nullable();
-            $table->enum('status', ['sent', 'accepted', 'transferred']);
+            $table->enum('status', ['pending', 'accepted', 'transferred', 'rejected', 'finished']);
             $table->timestamps();
             $table->softDeletes();
         });

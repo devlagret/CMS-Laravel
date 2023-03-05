@@ -27,7 +27,6 @@ class ProductRequestController extends Controller
         if ($request->user()->can('vieww', ProductRequest::class)) {
             $wid = WhsDetail::where('user_id', Auth::id())->first();
             $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
-                                            ->whereNot('status', 'transferred')
                                             ->orderBy('order_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->exists();
@@ -35,13 +34,10 @@ class ProductRequestController extends Controller
                 return response()->json('Tidak Ada Request Produk', 200);
             }
             $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
-                                            ->whereNot('status', 'transferred')
+                                            
                                             ->orderBy('order_date', 'asc')
                                             ->orderBy('product_code', 'asc')
                                             ->paginate(9);
-            ProductRequest::where('warehouse_id', $wid->warehouse_id)
-                          ->whereNot('status', 'transferred')
-                          ->update(['status' => 2]);
             return response()->json($product_reqs);
         }elseif ($request->user()->can('viewAny', ProductRequest::class)) {
             $bid       = Branch::where('user_id', Auth::id())->first();
@@ -159,6 +155,27 @@ class ProductRequestController extends Controller
         }
     }
 
+    public function decline(Request $request)
+    {
+        if ($request->user()->cannot('checkRoleW', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
+        $id = $request->input('request_id');
+        $a = ProductRequest::where('request_id', $id)
+                           ->update(['status' => 4]);
+        return response()->json(['message' => 'Request Rejected']);
+    }
+
+    public function accept(Request $request)
+    {
+        if ($request->user()->cannot('checkRoleW', ProductRequest::class)) {
+            return response('Unauthorized', 401);
+        }
+        $id = $request->input('request_id');
+        $a = ProductRequest::where('request_id', $id)
+                           ->update(['status' => 2]);
+        return response()->json(['message' => 'Request Accepted']);
+    }
     
     public function destroy(Request $request, $id)
     {

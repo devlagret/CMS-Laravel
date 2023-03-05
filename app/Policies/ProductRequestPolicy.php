@@ -64,7 +64,7 @@ class ProductRequestPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['super-admin', 'edit-product-request']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['edit-product-request']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
@@ -79,6 +79,13 @@ class ProductRequestPolicy
         //
         $uh = new UserHelper();
         return $uh->checkPermision($user->user_id, ['super-admin', 'delete-product-request']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
+    }
+    public function checkRoleW(User $user)
+    {
+        $rid = Role::where('name', 'admingudang')->first();
+        $uh = new UserHelper();
+        return $user->role_id == $rid->role_id ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 }
