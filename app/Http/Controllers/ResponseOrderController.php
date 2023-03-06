@@ -79,9 +79,15 @@ class ResponseOrderController extends Controller
 
     public function test(Request $request)
     {
-        $uuid = '1968ec4a-2a73-11df-9aca-00012e27a270';
+        // $uuid = '1968ec4a-2a73-11df-9aca-00012e27a270';
 
-        $binaryUuid = hex2bin(str_replace('-', '', $uuid));
-        return response()->json($binaryUuid);
+        // $binaryUuid = hex2bin(str_replace('-', '', $uuid));
+        // return response()->json($binaryUuid);
+        $batches = Batch::selectRaw('batches.*, SUM(stock) as total, products.name')
+        ->groupBy('batches.product_code', 'status', 'exp_date')
+        ->join('products', 'batches.product_code','=','products.product_code')
+        ->get(['batches.*', 'products.name']);
+        
+        return response()->json($batches);
     }
 }

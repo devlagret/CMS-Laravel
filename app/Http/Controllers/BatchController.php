@@ -21,9 +21,10 @@ class BatchController extends Controller
         // }
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
         $batches = Batch::where('warehouse_id', $wid->warehouse_id)
-        ->selectRaw('*, SUM(stock) as total')
-        ->groupBy('product_code', 'status')
-        ->get();
+        ->selectRaw('batches.*, SUM(stock) as total, products.name')
+        ->groupBy('batches.product_code', 'status', 'exp_date')
+        ->join('products', 'batches.product_code','=','products.product_code')
+        ->get(['batches.*', 'products.name']);
         
         return response()->json($batches);
     }

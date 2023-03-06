@@ -34,14 +34,15 @@ class ProductRequestController extends Controller
                 return response()->json('Tidak Ada Request Produk', 200);
             }
             $product_reqs = ProductRequest::where('warehouse_id', $wid->warehouse_id)
-                                            
+                                            ->join('products', 'product_requests.product_code', '=', 'products.product_code')
                                             ->orderBy('order_date', 'asc')
                                             ->orderBy('product_code', 'asc')
-                                            ->paginate(9);
-            return response()->json($product_reqs);
+                                            ->paginate(9, ['products.name', 'product_requests.*']);
+            return response()->json($product_reqs, 200);
         }elseif ($request->user()->can('viewAny', ProductRequest::class)) {
             $bid       = Branch::where('user_id', Auth::id())->first();
             $product_reqs = ProductRequest::where('branch_id', $bid->branch_id)
+                                            ->join('products', 'product_requests.product_code', '=', 'products.product_code')
                                             ->orderByRaw("CASE status
                                                 WHEN 'transferred' THEN 1
                                                 WHEN 'accepted' THEN 2
@@ -50,8 +51,8 @@ class ProductRequestController extends Controller
                                                 END")
                                             ->orderBy('order_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
-                                            ->paginate(9);
-            return response()->json($product_reqs);
+                                            ->paginate(9, ['products.name', 'product_requests.*']);
+            return response()->json($product_reqs,200);
         }else {
             return response('Unauthorized', 401);
         }
@@ -64,7 +65,7 @@ class ProductRequestController extends Controller
         }
         $validator = $this->validate($request, [
             'product_code'  => 'required',
-            'warehouse_id'  => 'required',
+        'warehouse_id'  => 'required',
             'amount'        => 'required|max:15',
             
         ]);

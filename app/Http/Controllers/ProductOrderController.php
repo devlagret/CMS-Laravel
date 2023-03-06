@@ -21,7 +21,9 @@ class ProductOrderController extends Controller
         if ($request->user()->cannot('viewAny', ProductOrder::class)) {
             return response('Unauthorized', 401);
         }
-        $stockups = ProductOrder::orderBy('product_expired', 'asc')->paginate(9);
+        $stockups = ProductOrder::orderBy('product_expired', 'asc')
+        ->join('products', 'product_order.product_code', '=', 'products.product_code')
+        ->paginate(9, ['products.name','product_order.*']);
         
         return response()->json($stockups, 200);
     }

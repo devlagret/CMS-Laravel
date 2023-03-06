@@ -15,16 +15,18 @@ class ProductOrderRequestController extends Controller
     {
         if ($request->user()->can('vieww', ProductOrderRequest::class)) {
             $Orequests = ProductOrderRequest::whereNot('status', 'rejected')
+                                            ->join('products', 'product_order_requests.product_code', '=', 'products.product_code')
                                             ->orderBy('request_date', 'asc')
                                             ->orderBy('product_code', 'asc')
-                                            ->paginate(9);
+                                            ->paginate(9, ['products.name', 'product_order_requests.*']);
             return response()->json($Orequests, 200);
         }elseif ($request->user()->can('viewAny', ProductOrderRequest::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
             $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
+                                            ->join('products', 'product_order_requests.product_code', '=', 'products.product_code')
                                             ->orderBy('request_date', 'desc')
                                             ->orderBy('product_code', 'asc')   
-                                            ->paginate(9);
+                                            ->paginate(9, ['products.name', 'product_order_requests.*']);
             return response()->json($Orequests, 200);
         }else {
             return response('Unauthorized', 401);

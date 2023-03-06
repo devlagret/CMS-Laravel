@@ -22,7 +22,9 @@ class WarehouseResponseBranchController extends Controller
             return response('Unauthorized', 401);
         }
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
-        $wrespons = WarehouseResponseBranch::where('warehouse_id', $wid->warehouse_id)->paginate(9);
+        $wrespons = WarehouseResponseBranch::where('warehouse_id', $wid->warehouse_id)
+        ->join('products', 'warehouse_response_branches.product_code', '=', 'products.product_code')
+        ->paginate(9, ['products.name', 'warehouse_response_branches.*']);
         
         return response()->json($wrespons);
     }
