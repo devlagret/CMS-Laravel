@@ -20,6 +20,6 @@ public function user()
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'branch_id', 'branch_name', 'leader_name', 'contact', 'address', 'user_id',
+        'branch_id', 'branch_name', 'leader_name', 'contact', 'address', 'user_id', 'warehouse_id'
     ];
 }

@@ -38,13 +38,14 @@ class BranchController extends Controller
             'leader_name'    => 'required',
             'contact'        => 'required|max:15',
             'address'        => 'required',
-            'user_id'        => 'required|unique:Branch',
+            'user_id'        => 'required|unique:Branches',
         ]);
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');
         $contact = $request->input('contact');
         $address = $request->input('address');
         $user_id = $request->input('user_id');
+        $wid = $request->input('warehouse_id');
     
         $branch = Branch::create([
             'branch_id'   => Str::uuid()->toString(),
@@ -53,6 +54,7 @@ class BranchController extends Controller
             'contact'     => $contact,
             'address'     => $address,
             'user_id'     => $user_id,
+            'warehouse_id'     => $wid,
         ]);
         $uh = new UserHelper;
          if ($branch) {
