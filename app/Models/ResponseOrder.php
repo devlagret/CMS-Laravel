@@ -8,7 +8,7 @@ class ResponseOrder extends Model
 {
     
     protected $table = 'response_orders';
-    protected $primaryKey = 'product_order_id';
+    protected $primaryKey = 'response_id';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [

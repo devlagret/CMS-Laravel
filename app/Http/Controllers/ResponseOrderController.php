@@ -26,19 +26,24 @@ class ResponseOrderController extends Controller
         } elseif ($request->user()->can('viewAny', ResponseOrder::class)) {
             $wid = WhsDetail::where('user_id', Auth::id())->first();
             $response = ResponseOrder::where('warehouse_id', $wid->warehouse_id)
-                                    ->paginate(9);
+            ->join('product_order_requests', 'product_order_requests.product_order_requests_id', '=', 'response_orders.
+            product_order_requests_id')
+            ->paginate(9, ['product_order_requests.*', 'is_received']);
             return response()->json($response, 201);
+
         } else {
             return response('Unauthorized', 401);
         }
     }
 
+    // Warehouse Accept Response(Add Batch)
     public function accept(Request $request)
     {
         $scan = $request->input('response_id');
         $wid = WhsDetail::where('user_id', Auth::id())->first();
         $response = ResponseOrder::where('response_id', $scan)
-                                        ->first();
+                                 ->where('is_received', 'Accepted')
+                                 ->first();
         if ($response) {
             $expd = ProductOrder::where('product_order_id', $response->product_order_id)
                                 ->first();
@@ -86,8 +91,16 @@ class ResponseOrderController extends Controller
             }
             return response()->json(['message' => 'This Batch is Not the Product You Requested']);
         }
-        return response()->json(['message' => 'Code Is Not Valid']);
+        return response()->json(['message' => 'Product is Still On The Way']);
         // return response()->json($scan);
+    }
+
+    public function position(Request $request)
+    {
+        $scan = $request->input('response_id');
+        $s = $request->input('status');
+        $response = ResponseOrder::where('response_id', $scan)
+                                 ->update(['is_received', $s]);
     }
 
     public function test(Request $request)

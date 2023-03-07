@@ -15,6 +15,6 @@ class ProductOrderRequest extends Model
   public $incrementing = false;
   protected $keyType = 'string';
   protected $fillable = [
-      'product_order_requests_id','warehouse_id', 'product_code', 'request_date', 'quantity',
+      'product_order_requests_id','warehouse_id', 'product_code', 'request_date', 'quantity','status'
   ];
 }

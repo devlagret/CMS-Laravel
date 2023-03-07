@@ -161,7 +161,7 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->post('warehouse/trash/restore', 'ProductOrderRequestController@restore');
     $router->get('warehouse/trash/{id}', 'ProductOrderRequestController@trash');
     $router->get('warehouse/request', 'ProductOrderRequestController@index');
-    // $router->get('warehouse/request/{productCode}', 'ProductOrderRequestController@showProduct');
+    $router->get('warehouse/request/status', 'ProductOrderRequestController@getResponse');
     $router->post('warehouse/request', 'ProductOrderRequestController@store');
     $router->put('warehouse/request', 'ProductOrderRequestController@edit');
     $router->post('warehouse/request/accept', 'ProductOrderRequestController@accept');

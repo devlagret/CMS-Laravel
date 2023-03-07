@@ -22,7 +22,7 @@ class BranchPolicy
     {
         //
         $uh = new UserHelper();
-        return $uh->checkPermision($user->user_id, ['view-branch']) ? Response::allow()
+        return $uh->checkPermision($user->user_id, ['super-admin','view-branch']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
 
