@@ -40,8 +40,8 @@ class RoleController extends Controller
             if (!$d) {
                 $r = Role::find($id);
                 $privilege = Privilege::where('role_id', $id)->delete();
-                $r->delete();
                 if ($r && $privilege) {
+                    $r->delete();
                     return response('Permision id "'.$p.'" Not Found', 404);
                 }
             }
