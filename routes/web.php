@@ -28,6 +28,7 @@ $prefix = 'api/';
 $router->group(['prefix' => $prefix], function () use ($router) {$router->post('login', 'UserController@login');});
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     $router->get('user/', 'UserController@getUser');
+    $router->get('user/free', 'UserController@getFreeUser');
     $router->get('user/all', 'UserController@getAllUser');
     $router->post('register',  'UserController@register');
     $router->get('user/trash', 'UserController@trash');

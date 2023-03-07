@@ -29,6 +29,20 @@ class UserPolicy
         return $uh->checkPermision($user->user_id, ['super-admin', 'view-all-user']) ? Response::allow()
             : Response::deny('Unauthorized', 401);
     }
+
+    /**
+     * Determine whether the user can view any users.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function viewFree(User $user)
+    {
+        //
+        $uh = new UserHelper();
+        return $uh->checkPermision($user->user_id, ['super-admin', 'add-branch','view-all-user']) ? Response::allow()
+            : Response::deny('Unauthorized', 401);
+    }
     /**
      * Determine whether the user can view the user.
      *

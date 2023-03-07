@@ -186,7 +186,6 @@ class ProductController extends Controller
         if($id!=null){
             $trash = product::onlyTrashed()->find($id);
             if(!$trash){return response('Id Not Found',404);}
-            if($trash->isEmpty()){return response('No Product Trased',404);}
            return response()->json($trash);
         }
         $trash = Product::onlyTrashed()->get();

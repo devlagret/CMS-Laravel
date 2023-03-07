@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\UserHelper;
+use App\Models\Branch;
 use App\Models\Permision;
 use App\Models\Privilege;
 use App\Models\Role;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Log;
 use App\Models\Token;
+use App\Models\WhsDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -294,7 +296,6 @@ class UserController extends Controller
         if($id!=null){
             $trash = User::onlyTrashed()->find($id);
             if(!$trash){return response('Id Not Found',404);}
-            if($trash->isEmpty()){return response('No User Trased',404);}
            return response()->json($trash);
         }
         $trash = User::onlyTrashed()->get();
@@ -346,5 +347,27 @@ class UserController extends Controller
         
         }
         return response('Forbiden Method', 403);
+    }
+    public function getFreeUser(Request $request)
+    {
+        if ($request->user()->cannot('viewFree', User::class)) {
+            return response('Unauthorized', 401);
+        }
+        $ur = array();
+        $adm = Permision::where('name', 'super-admin')->value('permision_id');
+        $r = User::whereIn('role_id',Role::whereIn('role_id', Privilege::where('permision_id',  $adm)->get('role_id'))->get('role_id'))->value('user_id');
+        $ussr = WhsDetail::all('user_id');
+        foreach(Branch::all('user_id') as $k => $d){
+            array_push($ur,$d->user_id);
+        }
+        foreach (WhsDetail::all('user_id') as
+        $k => $d) {
+            array_push($ur, $d->user_id);
+        }
+        array_push($ur, $r);
+      
+        $usr = User::whereNotIn('user_id', $ur)->get(); 
+
+        return response()->json($usr);
     }
 }
