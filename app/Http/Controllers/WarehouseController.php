@@ -35,7 +35,8 @@ class WarehouseController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('view', Warehouse::class)) {
-            $warehouses = Warehouse::paginate(9);
+            $warehouses = Warehouse::join('warehouses','products.product_code','=','warehouses.product_code')
+            ->paginate(9,['warehouses.*', 'name']);
         }elseif ($request->user()->can('viewAny', Warehouse::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
             $warehouses = Warehouse::where('warehouse_id', $wid->warehouse_id)->get();

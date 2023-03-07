@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\ProductOrder;
 use App\Models\ProductOrderRequest;
 use App\Models\ResponseOrder;
+use App\Models\Warehouse;
 use App\Models\WhsDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -67,7 +68,19 @@ class ResponseOrderController extends Controller
                         'exp_date'     => $expd->product_expired,
                         'entry_date'   => Carbon::today('Asia/Jakarta')->toDateString(),
                     ]);
+                    $ch = Warehouse::where('warehouse_id', $wid->warehouse_id)
+                    ->where('product_code', $pc->product_code)->exists();
+                    if($ch){
+                        Warehouse::create([
+                            'warehouse_id'  => $wid->warehouse_id,
+                            'product_code'  => $request->input('product_code'),
+                            'stock'         => $request->input('stock'),
+                            'entry_date'    => Carbon::today()->toDateString(),
+                            'location'      => $wid->adress,
+                        ]);
+                    }
                     ResponseOrder::where('response_id',$scan)->delete();
+                    ProductOrderRequest::where('product_order_requests_id',$response->product_order_requests_id);
                     return response()->json(['message' => 'Batch Saved','data' => $batch], 201);
                 }
             }
