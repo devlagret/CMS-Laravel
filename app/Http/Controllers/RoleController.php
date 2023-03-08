@@ -107,16 +107,16 @@ class RoleController extends Controller
             return response()->json("Can't delete role with 'admin' permision",403);
         }
         $name = $role->name;
-        $privilege = Privilege::where('role_id', $id)->delete();
         $role->delete();
-        if($role&&$privilege){
+        if($role){
             Log::create([
                 'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Delete Role(s)',
                 'detail' => 'Delete "' . $name . '" role, with id "' . $id . '"'
             ]);
-        return response()->json('Deleted');}
+        return response()->json('Deleted');
+    }
         return response('Failure', 500);
        
     }
@@ -171,8 +171,10 @@ class RoleController extends Controller
             return response('Unauthorized', 401);
         }
         if ($request->isMethod('DELETE')) {
-            $delete = Role::onlyTrashed()->forceDelete();
-            if (!$delete) {
+            $delete = Role::onlyTrashed()->value('role_id');
+            $privilege = Privilege::whereIn('role_id',$delete )->delete();
+            $delete -> forceDelete();
+            if (!$delete&&!$privilege) {
                 return response('Failure', 500);
             }
             return response('Restore Sucess');
@@ -181,7 +183,8 @@ class RoleController extends Controller
             $this->validate($request, ['role_id' => 'required|min:36']);
             $id = explode(",", str_replace(" ", "", $request['role_id']));
             $delete = Role::whereIn('role_id', $id)->forceDelete();
-            if (!$delete) {
+            $privilege = Privilege::whereIn('role_id', $id)->delete();
+            if (!$delete && !$privilege) {
                 return response('Failure', 500);
             }
             return response('Restore Sucess');
