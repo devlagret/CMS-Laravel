@@ -21,16 +21,15 @@ class ResponseOrderController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('view', ResponseOrder::class)) {
-            $response = ResponseOrder::paginate(9);
+            $response = ResponseOrder::join('product_order_requests','product_order_requests.product_order_requests_id','=','response_orders.product_order_requests_id')
+                                     ->paginate(9, ['product_order_requests.*', 'response_orders.is_received', 'response_orders.response_id']);
             return response()->json($response, 201);
         } elseif ($request->user()->can('viewAny', ResponseOrder::class)) {
             $wid = WhsDetail::where('user_id', Auth::id())->first();
-            $response = ResponseOrder::where('warehouse_id', $wid->warehouse_id)
-            ->join('product_order_requests', 'product_order_requests.product_order_requests_id', '=', 'response_orders.
-            product_order_requests_id')
-            ->paginate(9, ['product_order_requests.*', 'is_received']);
+            $response = ResponseOrder::where('response_orders.warehouse_id', $wid->warehouse_id)
+                                     ->join('product_order_requests','product_order_requests.product_order_requests_id','=','response_orders.product_order_requests_id')
+                                     ->paginate(9, ['product_order_requests.*', 'response_orders.is_received', 'response_orders.response_id']);
             return response()->json($response, 201);
-
         } else {
             return response('Unauthorized', 401);
         }
@@ -42,14 +41,13 @@ class ResponseOrderController extends Controller
         $scan = $request->input('response_id');
         $wid = WhsDetail::where('user_id', Auth::id())->first();
         $response = ResponseOrder::where('response_id', $scan)
-                                 ->where('is_received', 'Accepted')
                                  ->first();
         if ($response) {
             $expd = ProductOrder::where('product_order_id', $response->product_order_id)
                                 ->first();
-            $check = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
-                                        ->where('product_order_requests_id', $response->product_order_requests_id)
-                                        ->exists();
+            $check = ResponseOrder::where('response_id', $scan)
+                                  ->where('is_received', 'Accepted')
+                                  ->first();
             if ($check) {
                 $pc = ProductOrderRequest::where('product_order_requests_id', $response->product_order_requests_id)
                                          ->first();
@@ -75,23 +73,24 @@ class ResponseOrderController extends Controller
                     ]);
                     $ch = Warehouse::where('warehouse_id', $wid->warehouse_id)
                     ->where('product_code', $pc->product_code)->exists();
-                    if($ch){
-                        Warehouse::create([
+                    if(!$ch){
+                        $w = Warehouse::create([
                             'warehouse_id'  => $wid->warehouse_id,
-                            'product_code'  => $request->input('product_code'),
-                            'stock'         => $request->input('stock'),
+                            'product_code'  => $pc->product_code,
+                            'stock'         => $response->quantity,
                             'entry_date'    => Carbon::today()->toDateString(),
                             'location'      => $wid->adress,
                         ]);
+                        return response()->json(['message' => 'Product Added to Inventory','data' => $w], 201);
                     }
                     ResponseOrder::where('response_id',$scan)->delete();
                     ProductOrderRequest::where('product_order_requests_id',$response->product_order_requests_id);
-                    return response()->json(['message' => 'Batch Saved','data' => $batch], 201);
+                    return response()->json(['message' => 'Batch Saved','data' => $ch], 201);
                 }
             }
-            return response()->json(['message' => 'This Batch is Not the Product You Requested']);
+            return response()->json(['message' => 'Product is Still On The Way']);
         }
-        return response()->json(['message' => 'Product is Still On The Way']);
+        return response()->json(['message' => 'This Response Already Received by ']);
         // return response()->json($scan);
     }
 
@@ -100,7 +99,7 @@ class ResponseOrderController extends Controller
         $scan = $request->input('response_id');
         $s = $request->input('status');
         $response = ResponseOrder::where('response_id', $scan)
-                                 ->update(['is_received', $s]);
+                                 ->update(['is_received' => $s]);
     }
 
     public function test(Request $request)
