@@ -41,6 +41,7 @@ class ResponseOrderController extends Controller
         $scan = $request->input('response_id');
         $wid = WhsDetail::where('user_id', Auth::id())->first();
         $response = ResponseOrder::where('response_id', $scan)
+                                 ->whereNot('status', 'Finished')
                                  ->first();
         if ($response) {
             $expd = ProductOrder::where('product_order_id', $response->product_order_id)
@@ -60,7 +61,7 @@ class ResponseOrderController extends Controller
                         ->where('product_code', $pc->product_code)
                         ->where('exp_date', $expd->product_expired)
                         ->increment('stock', $response->quantity);
-                    ResponseOrder::where('response_id',$scan)->delete();
+                    ResponseOrder::where('response_id',$scan)->update(['status' => 'Finished']);
                     return response()->json(['message' => 'Stock Increase cause product is exist'], 200);
                 }else {
                     $batch = Batch::create([
@@ -83,7 +84,7 @@ class ResponseOrderController extends Controller
                         ]);
                         return response()->json(['message' => 'Product Added to Inventory','data' => $w], 201);
                     }
-                    ResponseOrder::where('response_id',$scan)->delete();
+                    ResponseOrder::where('response_id',$scan)->update(['status' => 'Finished']);
                     ProductOrderRequest::where('product_order_requests_id',$response->product_order_requests_id);
                     return response()->json(['message' => 'Batch Saved','data' => $ch], 201);
                 }
@@ -97,9 +98,8 @@ class ResponseOrderController extends Controller
     public function position(Request $request)
     {
         $scan = $request->input('response_id');
-        $s = $request->input('status');
         $response = ResponseOrder::where('response_id', $scan)
-                                 ->update(['is_received' => $s]);
+                                 ->update(['is_received' => 'Accepted']);
     }
 
     public function test(Request $request)

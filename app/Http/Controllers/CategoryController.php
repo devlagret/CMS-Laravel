@@ -42,25 +42,26 @@ class CategoryController extends Controller
             $cid = preg_replace('/([a-z])/', '', $t).'-'.strtoupper(substr($category_name, 0, $num));
             $a = Category::where('category_id', 'like', $cid . '%')->count();
             $num++;
-        } while ($a > 0);
+        } while (Category::where('category_id', 'like', $cid . '%')->exists());
         
-        $category = Category::create([
-            'category_id'      => $cid,
-            'category_name'    => $category_name,
-            'category_type'    => $category_type,
-        ]);
-        $uh = new UserHelper;
-        if ($category) {
-            Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
-                'datetime' => Carbon::now('Asia/Jakarta'),
-                'activity' => 'Add Category(s)',
-                'detail' => 'Add Category with type "'.$category_type.'" named "'.$category_name
-            ]);
-            return response()->json(['message' => 'Data added successfully'], 201);
-        }else {
-            return response()->json("Failure");
-        }
+        // $category = Category::create([
+        //     'category_id'      => $cid,
+        //     'category_name'    => $category_name,
+        //     'category_type'    => $category_type,
+        // ]);
+        // $uh = new UserHelper;
+        // if ($category) {
+        //     Log::create([
+        //         'user_id' => $uh->getUserData($request->header('token'))->user_id,
+        //         'datetime' => Carbon::now('Asia/Jakarta'),
+        //         'activity' => 'Add Category(s)',
+        //         'detail' => 'Add Category with type "'.$category_type.'" named "'.$category_name
+        //     ]);
+        //     return response()->json(['message' => 'Data added successfully'], 201);
+        // }else {
+        //     return response()->json("Failure");
+        // }
+        return response()->json($cid);
     }
 
     public function show(Request $request,$id)
