@@ -30,7 +30,7 @@ class UserController extends Controller
         if ($request->user()->can('create', User::class)) {
             $this->validate($request, [
                 'name' => 'required|min:3',
-                'username' => 'required|unique:User|min:3',
+                'username' => 'required|unique:user|min:3',
                 'password' => 'required|min:6',
                 'contact' => 'required|min:10|max:15',
                 'email' => 'required|min:5|email',
@@ -106,7 +106,7 @@ class UserController extends Controller
                 }
                 $this->validate($request, [
                     'name' => 'required|min:3|max:255',
-                    'username' => 'required|min:3|max:255|unique:User,username,' . $user->user_id . ',user_id',
+                    'username' => 'required|min:3|max:255|unique:user,username,' . $user->user_id . ',user_id',
                     'contact' => 'required|min:12|max:15',
                     'email' => 'required|email|min:3|max:255'
                 ]);
@@ -129,7 +129,7 @@ class UserController extends Controller
                 }
                 $this->validate($request, [
                     'name' => 'required|min:3|max:255',
-                    'username' => 'required|min:3|max:255|unique:User,username,' . $user->user_id . ',user_id',
+                    'username' => 'required|min:3|max:255|unique:user,username,' . $user->user_id . ',user_id',
                     'contact' => 'required|min:12|max:15',
                     'email' => 'required|email|min:3|max:255',
                     'role_id'=>'required|min:36|max:36'
