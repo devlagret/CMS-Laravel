@@ -12,6 +12,6 @@ class ResponseOrder extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'response_id', 'product_order_id', 'product_order_requests_id', 'warehouse_id','quantity'
+        'response_id', 'product_order_id', 'product_order_requests_id', 'warehouse_id','quantity', 'is_received'
     ];
 }

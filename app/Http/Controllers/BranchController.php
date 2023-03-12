@@ -38,7 +38,7 @@ class BranchController extends Controller
             'leader_name'    => 'required',
             'contact'        => 'required|max:15',
             'address'        => 'required',
-            'user_id'        => 'required|unique:Branches',
+            'user_id'        => 'required|unique:branches',
         ]);
         $branch_name = $request->input('branch_name');
         $leader_name = $request->input('leader_name');

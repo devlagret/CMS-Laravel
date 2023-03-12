@@ -70,22 +70,25 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->cannot('updatew', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
         }
-            $validator = $this->validate($request, [
-                'product_order_requests_id' => 'required',
-                'quantity'      => 'required'
-            ]);
-            $id = $request->input('product_order_requests_id');
-            $pcode = $request->input('product_code');
-            $qu = $request->input('quantity');
-    
+        $validator = $this->validate($request, [
+            'product_order_requests_id' => 'required',
+            'quantity'      => 'required'
+        ]);
+        $id = $request->input('product_order_requests_id');
+        $pcode = $request->input('product_code');
+        $qu = $request->input('quantity');
+        $ch = ProductOrderRequest::where('product_order_requests_id', $id)
+                                ->where('status', 'pending')
+                                ->first();
+        if ($ch) {
             $Orequest = ProductOrderRequest::where('product_order_requests_id', $id)
-                                           ->update([
+                                            ->update([
                 'product_code'  => $pcode,
                 'quantity'      => $qu,
             ]);
-    
             return response()->json(['message' => 'Request Updated successfully', 'data' => $Orequest], 200);
-        
+        }
+        return response()->json(['message' => 'Request Already Processed'], 400);
     }
 
     public function showProduct(Request $request, $productCode)
