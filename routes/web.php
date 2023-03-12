@@ -28,6 +28,7 @@ $prefix = 'api/';
 $router->group(['prefix' => $prefix], function () use ($router) {$router->post('login', 'UserController@login');});
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     $router->get('user/', 'UserController@getUser');
+    $router->get('user/free', 'UserController@getFreeUser');
     $router->get('user/all', 'UserController@getAllUser');
     $router->post('register',  'UserController@register');
     $router->get('user/trash', 'UserController@trash');
@@ -154,12 +155,6 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
 //warehouse related api endpoint
 $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($router) {
     //warehouse order Request api endpoint
-    $router->get('warehouse/trash', 'ProductOrderRequestController@trash');
-    $router->post('warehouse/trash/delete','ProductOrderRequestController@delete');
-    $router->delete('warehouse/trash', 'ProductOrderRequestController@delete');
-    $router->get('warehouse/trash/restore/all', 'ProductOrderRequestController@restoreAll');
-    $router->post('warehouse/trash/restore', 'ProductOrderRequestController@restore');
-    $router->get('warehouse/trash/{id}', 'ProductOrderRequestController@trash');
     $router->get('warehouse/request', 'ProductOrderRequestController@index');
     $router->get('warehouse/request/status', 'ProductOrderRequestController@getResponse');
     $router->post('warehouse/request', 'ProductOrderRequestController@store');
@@ -184,6 +179,12 @@ $router->group(['prefix' => $prefix, 'middleware' => 'auth'], function () use ($
     $router->get('warehouse/detail/{id}', 'WhsDetailController@showEachWarehouse');
     //warehouse api endpoint
     // $router->put('warehouse/expired', 'BatchController@checkExpired');
+    $router->get('warehouse/trash', 'WarehouseController@trash');
+    $router->post('warehouse/trash/delete', 'WarehouseController@delete');
+    $router->delete('warehouse/trash', 'WarehouseController@delete');
+    $router->get('warehouse/trash/restore/all', 'WarehouseController@restoreAll');
+    $router->post('warehouse/trash/restore', 'WarehouseController@restore');
+    $router->get('warehouse/trash/{id}', 'WarehouseController@trash');
     $router->put('warehouse/stock', 'WarehouseController@updateStock');
     $router->get('warehouse/product/{productCode}', 'WarehouseController@showProduct');
     $router->get('warehouse/product', 'WarehouseController@productInWarehouse');
