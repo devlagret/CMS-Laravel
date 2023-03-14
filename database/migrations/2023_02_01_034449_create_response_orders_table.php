@@ -22,7 +22,8 @@ return new class extends Migration
             $table->uuid('warehouse_id')->nullable()->default('0');
             $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouses')->onDelete('set null');
             $table->integer('quantity')->unsigned();
-            $table->enum('is_received', ['On Road', 'Accepted', 'Finished']);
+            $table->enum('status', ['On Road', 'Accepted', 'Finished']);
+            $table->boolean('is_received')->nullable()->default(false);
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 //     Route::get('product', [products::class, 'index'])->name('user.index');
 // });
 
-//  API Version beta 3.5.5.2
+//  API Version beta 3.5.5.3
 
 $prefix = 'api/';
 //user relatet api endpoint
@@ -112,6 +112,7 @@ $router->group(['prefix' =>$prefix, 'middleware' => 'auth'], function () use ($r
     //product response order api endpoint
     $router->get('order/response', 'ResponseOrderController@index');
     $router->post('order/response', 'ResponseOrderController@accept');
+    $router->put('order/response', 'ResponseOrderController@position');
     //product api endpoint
     $router->get('product', 'ProductController@index');
     $router->post('product', 'ProductController@store');

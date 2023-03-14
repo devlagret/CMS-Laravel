@@ -110,7 +110,7 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->cannot('update', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
         }
-        $id = $request->input('product_order_request_id');
+        $id = $request->input('product_order_requests_id');
         $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 4]);
         return response()->json(['message' => 'Request Rejected']);
@@ -121,7 +121,7 @@ class ProductOrderRequestController extends Controller
         if ($request->user()->cannot('update', ProductOrderRequest::class)) {
             return response('Unauthorized', 401);
         }
-        $id = $request->input('product_order_request_id');
+        $id = $request->input('product_order_requests_id');
         $a = ProductOrderRequest::where('product_order_requests_id', $id)
                            ->update(['status' => 2]);
         return response()->json(['message' => 'Request Accepted']);

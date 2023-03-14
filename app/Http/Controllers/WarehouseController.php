@@ -35,13 +35,13 @@ class WarehouseController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->can('view', Warehouse::class)) {
-            $warehouses = Warehouse::join('warehouses','products.product_code','=','warehouses.product_code')
+            $warehouses = Warehouse::join('products','products.product_code','=','warehouses.product_code')
             ->paginate(9,['warehouses.*', 'name']);
         }elseif ($request->user()->can('viewAny', Warehouse::class)) {
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
             $warehouses = Warehouse::where('warehouse_id', $wid->warehouse_id)->get();
             $warehouses = Product::where('warehouse_id', $wid->warehouse_id)
-            ->join('warehouses','products.product_code','=','warehouses.product_code')
+            ->join('warehouses  ','products.product_code','=','warehouses.product_code')
             ->paginate(9,['warehouses.*', 'name']);
         }else {
             return response('Unauthorized', 401);
