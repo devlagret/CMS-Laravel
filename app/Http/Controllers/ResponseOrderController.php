@@ -22,14 +22,16 @@ class ResponseOrderController extends Controller
     {
         if ($request->user()->can('view', ResponseOrder::class)) {
             $response = ResponseOrder::join('product_order_requests','product_order_requests.product_order_requests_id','=','response_orders.product_order_requests_id')
-            ->paginate(9, ['response_orders.response_id', 'product_order_requests.*', 'response_orders.status', 'response_orders.is_received']);
+            ->join('products','products.product_code','=','product_order_requests.product_code')
+            ->paginate(9, ['response_orders.response_id', 'name', 'product_order_requests.*', 'response_orders.status', 'response_orders.is_received']);
             return response()->json($response, 201);
             
         } elseif ($request->user()->can('viewAny', ResponseOrder::class)) {
             $wid = WhsDetail::where('user_id', Auth::id())->first();
             $response = ResponseOrder::where('response_orders.warehouse_id', $wid->warehouse_id)
             ->join('product_order_requests','product_order_requests.product_order_requests_id','=','response_orders.product_order_requests_id')
-            ->paginate(9, ['response_orders.response_id','product_order_requests.*', 'response_orders.status', 'response_orders.is_received']);
+            ->join('products','products.product_code','=','product_order_requests.product_code')
+            ->paginate(9, ['response_orders.response_id', 'name', 'product_order_requests.*', 'response_orders.status', 'response_orders.is_received']);
             return response()->json($response, 201);
         } else {
             return response('Unauthorized', 401);
