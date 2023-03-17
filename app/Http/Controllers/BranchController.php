@@ -59,7 +59,7 @@ class BranchController extends Controller
         $uh = new UserHelper;
          if ($branch) {
              Log::create([
-                 'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                 'user_id' => Auth::id(),
                  'datetime' => Carbon::now('Asia/Jakarta'),
                  'activity' => 'Add Branch(s)',
                  'detail' => 'Add Branch with name "'.$branch_name.'" Lead by "'.$leader_name

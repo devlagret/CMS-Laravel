@@ -87,7 +87,7 @@ class ProductRequestController extends Controller
         $uh = new UserHelper;
         if ($product_req) {
             Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Product Request(s)',
                 'detail' => 'Branch "'.$bid.'" Requested Product "'.$product_code.'" with amount "'.$amount
@@ -145,7 +145,7 @@ class ProductRequestController extends Controller
         $uh = new UserHelper;
         if ($product_req) {
             Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Product Request(s)',
                 'detail' => 'Branch "'.$bid.'" Requested Product "'.$product_code.'" with amount "'.$amount

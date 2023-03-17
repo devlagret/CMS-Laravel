@@ -9,6 +9,7 @@ use App\Models\Token;
 use App\Models\Log;
 use Carbon\Carbon;
 use App\Helpers\UserHelper;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class SupplierController extends Controller
@@ -45,7 +46,7 @@ class SupplierController extends Controller
         $uh = new UserHelper;
         if ($supplier) {
             Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Supplier(s)',
                 'detail' => 'Add Supplier information with name '.$supplier_name
@@ -101,7 +102,7 @@ class SupplierController extends Controller
         $uh = new UserHelper;
         if ($supplier) {
             Log::create([
-                'user_id'   => $uh->getUserData($request->header('token'))->user_id,
+                'user_id'   => Auth::id(),
                 'datetime'  => Carbon::now('Asia/Jakarta'),
                 'activity'  => 'Update Supplier(s)',
                 'detail'    => 'Update Supplier information with name '.$supplier_name

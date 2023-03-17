@@ -67,7 +67,7 @@ class ProductController extends Controller
         $uh = new UserHelper;
         if ($product) {
             Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Add Product(s)',
                 'detail' => 'New Product '.$p_code.'has Been Added'
@@ -137,7 +137,7 @@ class ProductController extends Controller
         $uh = new UserHelper;
         if ($product) {
             Log::create([
-                'user_id' => $uh->getUserData($request->header('token'))->user_id,
+                'user_id' => Auth::id(),
                 'datetime' => Carbon::now('Asia/Jakarta'),
                 'activity' => 'Update Product(s)',
                 'detail' => 'Update Product information with Code '.$product_code
