@@ -16,9 +16,6 @@ use App\Models\WhsDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
-
 class ProductRequestController extends Controller
 {
     
@@ -74,6 +71,9 @@ class ProductRequestController extends Controller
         $product_code = $request->input('product_code');
         $amount = $request->input('amount');
         $order_date = $request->input('order_date');
+        if ($order_date == '') {
+            $order_date = Carbon::today('Asia/Jakarta')->toDateString();
+        }
         
         $product_req = ProductRequest::create([
             'request_id'    => Str::uuid()->toString(),
@@ -81,7 +81,7 @@ class ProductRequestController extends Controller
             'product_code'  => $request->input('product_code'),
             'amount'        => $request->input('amount'),
             'warehouse_id'  => $request->input('warehouse_id'),
-            'order_date'    => isEmpty($order_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $order_date,
+            'order_date'    => $order_date,
             
         ]);
         $uh = new UserHelper;

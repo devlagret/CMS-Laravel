@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-use function PHPUnit\Framework\isEmpty;
 
 class WarehouseResponseBranchController extends Controller
 {
@@ -44,6 +43,9 @@ class WarehouseResponseBranchController extends Controller
         $rid  = $request->input('request_id');
         $detail  = ProductRequest::where('request_id', $rid)->first();
         $wid = WhsDetail::where('user_id', Auth::Id())->first();
+        if ($send_date == '') {
+            $send_date = Carbon::today('Asia/Jakarta')->toDateString();
+        }
 
         $wrespon = WarehouseResponseBranch::create([
             'warehouse_response_id' => Str::uuid()->toString(),
@@ -51,7 +53,7 @@ class WarehouseResponseBranchController extends Controller
             'branch_id'             => $detail->branch_id,
             'request_id'            => $rid,
             'product_code'          => $detail->product_code,
-            'send_date'             => isEmpty($send_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $send_date,
+            'send_date'             => $send_date,
             'quantity'              => $detail->amount,
         ]);
         if (!$wrespon) {

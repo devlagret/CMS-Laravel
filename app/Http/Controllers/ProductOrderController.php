@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\isEmpty;
 
 class ProductOrderController extends Controller
 {
@@ -46,10 +45,14 @@ class ProductOrderController extends Controller
         $total_amount  = $request->input('total_amount');
         $quantity      = $request->input('quantity');
         $exp           = $request->input('expire_date');
+        if ($purchase_date == '') {
+            $purchase_date = Carbon::today('Asia/Jakarta')->toDateString();
+        }
         
         $check = ProductOrder::where('product_code', $pc)
                       ->where('product_expired', $exp)
                       ->exists();
+
 
         if ($check) {
             ProductOrder::where('product_code', $pc)
@@ -61,7 +64,7 @@ class ProductOrderController extends Controller
                 'product_order_id'=> Str::uuid()->toString(),
                 'supplier_id'    => $supllier_id,
                 'product_code'   => $pc,
-                'purchase_date'  => isEmpty($purchase_date) ? Carbon::today('Asia/Jakarta')->toDateString() : $purchase_date,
+                'purchase_date'  => $purchase_date,
                 'total_amount'   => $total_amount,
                 'quantity'       => $quantity,
                 'product_expired'=> $exp,
