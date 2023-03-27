@@ -40,7 +40,7 @@ class WarehouseController extends Controller
             $wid       = WhsDetail::where('user_id', Auth::id())->first();
             $warehouses = Warehouse::where('warehouse_id', $wid->warehouse_id)->get();
             $warehouses = Product::where('warehouse_id', $wid->warehouse_id)
-            ->join('warehouses  ','products.product_code','=','warehouses.product_code')
+            ->join('warehouses','products.product_code','=','warehouses.product_code')
             ->paginate(9,['warehouses.*', 'name']);
         }else {
             return response('Unauthorized', 401);
