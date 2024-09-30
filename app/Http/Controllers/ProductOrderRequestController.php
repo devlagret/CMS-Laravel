@@ -25,7 +25,7 @@ class ProductOrderRequestController extends Controller
             $Orequests = ProductOrderRequest::where('warehouse_id', $wid->warehouse_id)
                                             ->join('products', 'product_order_requests.product_code', '=', 'products.product_code')
                                             ->orderBy('request_date', 'desc')
-                                            ->orderBy('product_code', 'asc')   
+                                            ->orderBy('product_code', 'asc')
                                             ->paginate(9, ['products.name', 'product_order_requests.*']);
             return response()->json($Orequests, 200);
         }else {
@@ -42,7 +42,7 @@ class ProductOrderRequestController extends Controller
             'product_code' => 'required',
             'quantity'     => 'required',
         ]);
-        
+
         $product_code  = $request->input('product_code');
         $quantity      = $request->input('quantity');
         $wid           = WhsDetail::where('user_id', Auth::id())->first();
@@ -86,7 +86,7 @@ class ProductOrderRequestController extends Controller
                 'product_code'  => $pcode,
                 'quantity'      => $qu,
             ]);
-    
+
             return response()->json(['message' => 'Request Updated successfully', 'data' => $Orequest], 200);
         }
         return response()->json(['message' => 'Request Already Processed'], 400);
@@ -100,9 +100,9 @@ class ProductOrderRequestController extends Controller
         $Orequest = ProductOrderRequest::where('product_code', $productCode)
                                        ->whereIn('status', ['pending', 'accepted'])
                                        ->orderBy('request_date', 'desc')
-                                       ->join('whs_detail','product_order_requests.warehouse_id','=','whs_detail.warehouse_id')
+                                       ->join('warehouse_detail','product_order_requests.warehouse_id','=','warehouse_detail.warehouse_id')
                                        ->get(['product_order_requests_id','product_order_requests.warehouse_id','request_date','quantity', 'status', 'name']);
-        
+
         return response()->json($Orequest);
     }
 

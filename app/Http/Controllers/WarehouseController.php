@@ -48,7 +48,7 @@ class WarehouseController extends Controller
         }
         return response()->json($warehouses);
     }
-    
+
     public function store(Request $request)
     {
         if ($request->user()->cannot('create', Warehouse::class)) {
@@ -59,7 +59,7 @@ class WarehouseController extends Controller
             'stock'         => 'required|max:15',
             'location'      => 'required',
         ]);
-        
+
         $product_code = $request->input('product_code');
         $amount       = $request->input('stock');
         $entry_date   = $request->input('entry_date');
@@ -120,8 +120,8 @@ class WarehouseController extends Controller
         }
         $a = array();
         $warehouse = Warehouse::where('product_code', $productCode)
-                            ->join('whs_detail','warehouses.warehouse_id','=','whs_detail.warehouse_id')
-                            ->get(['warehouses.warehouse_id', 'stock','name','adress','contact']);        
+                            ->join('warehouse_detail','warehouses.warehouse_id','=','warehouse_detail.warehouse_id')
+                            ->get(['warehouses.warehouse_id', 'stock','name','adress','contact']);
         return response()->json($warehouse);
     }
 
@@ -173,7 +173,7 @@ class WarehouseController extends Controller
             'stock'         => 'required|max:15',
             'location'      => 'required',
         ]);
-        
+
         $product_code = $request->input('product_code');
         $wid          = WhsDetail::where('user_id', Auth::id())->first();
 

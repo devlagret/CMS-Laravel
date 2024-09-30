@@ -2,54 +2,85 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Str;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Authenticatable
 {
-    use Authenticatable, Authorizable, HasFactory, SoftDeletes;
-/**
- * Get User Role
- */
-public function role()
-{
-   return $this->belongsTo(Role::class,'role_id');
-}
-public function logs()
-{
-    return $this->hasMany(Log::class,'user_id');
-}
-public function branch(){
-    return $this->hasOne(Branch::class,'user_id');
-}
-public function warehouse()
-{
-    return $this->hasOne(WhsDetail::class,'user_id');
-}
-    protected $table = 'user';
+    use HasFactory, Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<int, string>
      */
-    protected $primaryKey = 'user_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = [
-      'user_id', 'name','username','contact', 'email','password', 'role_id'
+       'uuid',
+       'username',
+       'name',
+       'full_name',
+       'contact',
+       'email',
+       'password',
+       'role_id',
+       'remember_token',
+       'email_verified_at',
+       'created_id',
+       'updated_id',
+       'deleted_id',
+       'user_level',
+       'user_token',
+       'adrress',
+       'avatar',
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
+     * The attributes that should be hidden for serialization.
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'user_id');
+    }
+    public function branch()
+    {
+        return $this->hasOne(Branch::class, 'user_id');
+    }
+    public function warehouse()
+    {
+        return $this->hasOne(WhsDetail::class, 'user_id');
+    }
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            if(empty( $user->uuid)){
+                $user->uuid = Str::uuid();
+            }
+        });
+    }
 }

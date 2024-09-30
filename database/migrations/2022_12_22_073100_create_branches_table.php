@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('leader_name', 50);
             $table->string('contact', 20);
             $table->string('address', 100);
-            $table->uuid('user_id')->nullable()->default('0')->unique();
-            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('user_id')->nullable()->default('0')->unique();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->uuid('warehouse_id')->nullable()->default('0');
-            $table->foreign('warehouse_id')->references('warehouse_id')->on('whs_detail')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouse_detail')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -12,7 +12,7 @@ class WhsDetail extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    protected $table = 'whs_detail';
+    protected $table = 'warehouse_detail';
 
     protected $primaryKey = 'warehouse_id';
     public $incrementing = false;

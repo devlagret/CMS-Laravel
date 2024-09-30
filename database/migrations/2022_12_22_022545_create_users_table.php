@@ -1,15 +1,15 @@
 <?php
 
 use Carbon\Carbon;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -17,45 +17,67 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
-            $table->uuid('user_id')->primary();
-            $table->string('username')->unique();
-            $table->string('name');
-            $table->string('contact', 15);
-            $table->string('email');
+        Schema::create('users', callback: function (Blueprint $table) {
+            $table->id();
+            $table->uuid('uuid')->unique()->nullable();
+            $table->string('username')->unique()->nullable();
+            $table->string('name')->nullable();
+            $table->string('full_name', 250)->nullable();
+            $table->string('contact', 15)->nullable();
+            $table->string('email')->nullable();
             $table->string('password')->invinsible()->default('null');
-            $table->uuid('role_id')->nullable()->default('user');
+            $table->uuid('role_id')->nullable();
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null')->onUpdate('cascade');
+            $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->integer('created_id')->nullable();
+            $table->integer('updated_id')->nullable();
+            $table->integer('deleted_id')->nullable();
+            $table->decimal('user_level', 1, 0)->default(0);
+            $table->string('user_token', 250)->nullable();
+            $table->text('adrress')->nullable();
+            $table->text('avatar')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
         //get admin role
-       $role = DB::table('roles')->where('name', 'admin')->first();
-       $role2 = DB::table('roles')->where('name', 'admingudang')->first();
+        $role = DB::table('roles')->where('name', 'admin')->first();
+        $role2 = DB::table('roles')->where('name', 'admingudang')->first();
         // Insert default user
-        DB::table('user')->insert(
+        User::create(
             [
-                [
-                    'user_id' => Str::uuid()->toString(),
-                    'username' => 'admin',
-                    'name' => 'Admin',
-                    'password' => Hash::make('admin'),
-                    'contact' => '081222333444555',
-                    'role_id' => $role->role_id,
-                    'email' => 'admin@exmple.com',
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ], [
-                    'user_id' => Str::uuid()->toString(),
-                    'username' => 'admingudang',
-                    'name' => 'Admin Gudang',
-                    'contact' => '081222333444556',
-                    'email' => 'admingudang@exmple.com',
-                    'role_id' => $role2->role_id,
-                    'password' => Hash::make('admingudang'),
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ]
+                'uuid' => Str::uuid()->toString(),
+                'username' => 'admin',
+                'name' => 'Admin',
+                'password' => Hash::make('admin'),
+                'contact' => '081222333444555',
+                'role_id' => $role->role_id,
+                'email' => 'admin@exmple.com',
+            ]
+        );
+        User::create(
+            [
+                'uuid' => Str::uuid()->toString(),
+                'username' => 'admingudang',
+                'name' => 'Admin Gudang',
+                'contact' => '081222333444556',
+                'email' => 'admingudang@exmple.com',
+                'role_id' => $role2->role_id,
+                'password' => Hash::make('admingudang'),
             ]
         );
     }
@@ -68,5 +90,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('user');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
     }
 };

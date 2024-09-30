@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id('id');
-            $table->uuid('user_id')->nullable()->default('0');
-            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('set null')->onUpdate('cascade');
+            $table->unsignedBigInteger('user_id')->nullable()->default('0');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->datetime('datetime');
             $table->string('activity', 50);
             $table->string('detail', 100);

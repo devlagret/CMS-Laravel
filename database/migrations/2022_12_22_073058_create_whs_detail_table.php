@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('whs_detail', function (Blueprint $table) {
+        Schema::create('warehouse_detail', function (Blueprint $table) {
             $table->uuid('warehouse_id')->primary();
-            $table->uuid('user_id')->nullable()->default('0')->unique();
-            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('set null')->onUpdate('cascade');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->string('name');
             $table->string('manager_name',50);
             $table->string('contact', 50);
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whs_detail');
+        Schema::dropIfExists('warehouse_detail');
     }
 };
